@@ -29,6 +29,29 @@
       cursor: pointer !important;
       z-index: 10 !important;
     }
+    
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      .glass {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      input, button {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+      }
+      
+      .min-h-screen {
+        min-height: 100vh;
+        padding: 1rem;
+      }
+    }
+    
+    /* Enhanced mobile touch targets */
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
   </style>
 </head>
 <body class="min-h-screen p-4">
@@ -248,33 +271,33 @@
      });
      
      // Mobile-friendly alert function
-     function showMobileAlert(message) {
-       // Create mobile-friendly alert overlay
-       const alertOverlay = document.createElement('div');
-       alertOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-       alertOverlay.innerHTML = `
-         <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
-           <div class="text-center">
-             <div class="text-red-500 text-4xl mb-4">⚠️</div>
-             <h3 class="text-lg font-semibold text-gray-900 mb-2">Error</h3>
-             <p class="text-gray-600 mb-6">${message}</p>
-             <button onclick="this.parentElement.parentElement.parentElement.remove()" 
-                     class="btn btn-primary w-full">
-               OK
-             </button>
-           </div>
-         </div>
-       `;
-       
-       document.body.appendChild(alertOverlay);
-       
-       // Auto-remove after 5 seconds
-       setTimeout(() => {
-         if (alertOverlay.parentElement) {
-           alertOverlay.remove();
-         }
-       }, 5000);
-     }
+           function showMobileAlert(message) {
+        // Create mobile-friendly alert overlay
+        const alertOverlay = document.createElement('div');
+        alertOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+        alertOverlay.innerHTML = `
+          <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-2xl">
+            <div class="text-center">
+              <div class="text-red-500 text-4xl mb-4">⚠️</div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Network Error</h3>
+              <p class="text-gray-600 mb-6 text-sm">${message}</p>
+              <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                      class="w-full bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                OK
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(alertOverlay);
+        
+        // Auto-remove after 8 seconds for mobile
+        setTimeout(() => {
+          if (alertOverlay.parentElement) {
+            alertOverlay.remove();
+          }
+        }, 8000);
+      }
   </script>
 </body>
 </html>
