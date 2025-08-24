@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Your Bonus - Café Business Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">☕ Café Business Masterclass</h1>
+                </div>
+                <nav class="flex space-x-8">
+                    <a href="/" class="text-gray-500 hover:text-gray-900">🏠 Home</a>
+                    <a href="/bonuses.html" class="text-gray-500 hover:text-gray-900">🎁 Bonuses</a>
+                    <a href="/dashboard.html" class="text-gray-500 hover:text-gray-900">📊 Dashboard</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="py-16 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center">
+                <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Verifying Your Purchase...</h2>
+                <p class="text-gray-600">Please wait while we confirm your bonus access.</p>
+            </div>
+
+            <!-- Success State -->
+            <div id="successState" class="hidden text-center">
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-8">
+                    <div class="flex items-center justify-center">
+                        <span class="text-2xl mr-2">✅</span>
+                        <span class="font-bold">Access Verified!</span>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-8">
+                    <div class="flex items-center justify-center">
+                        <span class="text-lg">💡 Need help? <a href="/bonus-access-instructions.html" class="underline hover:text-blue-800">View detailed instructions</a></span>
+                    </div>
+                </div>
+
+                <h1 class="text-4xl font-bold text-gray-900 mb-6">🎉 Your Bonus is Ready!</h1>
+                
+                <div id="bonusInfo" class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <div class="text-center mb-6">
+                        <div id="bonusIcon" class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span id="iconText" class="text-3xl">🎁</span>
+                        </div>
+                        <h2 id="bonusTitle" class="text-2xl font-bold text-gray-900 mb-2">Loading...</h2>
+                        <p id="bonusDesc" class="text-gray-600">Loading description...</p>
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <div class="text-3xl font-bold text-green-600 mb-2">Ready to Download</div>
+                        <p class="text-sm text-gray-500">Your bonus PDF is now unlocked</p>
+                    </div>
+                </div>
+
+                <!-- Download Section -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h3 class="text-xl font-semibold text-center mb-6">📥 Download Your Bonus</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <button 
+                            id="downloadBtn"
+                            onclick="downloadBonus()"
+                            class="bg-green-600 text-white py-4 px-8 rounded-xl hover:bg-green-700 transition-colors font-semibold text-lg"
+                        >
+                            📥 Download PDF
+                        </button>
+                        
+                        <button 
+                            onclick="viewBonus()"
+                            class="bg-blue-600 text-white py-4 px-8 rounded-xl hover:bg-blue-700 transition-colors font-semibold text-lg"
+                        >
+                            👁️ View Online
+                        </button>
+                    </div>
+                    
+                    <p class="text-sm text-gray-500 text-center">
+                        You can download this bonus multiple times. Keep it safe!
+                    </p>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl p-8 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">🚀 What's Next?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <div class="text-2xl mb-2">📚</div>
+                            <p class="text-sm">Study your bonus material thoroughly</p>
+                        </div>
+                        <div>
+                            <div class="text-2xl mb-2">💡</div>
+                            <p class="text-sm">Apply the concepts to your café</p>
+                        </div>
+                        <div>
+                            <div class="text-2xl mb-2">🎯</div>
+                            <p class="text-sm">Get the complete masterclass for more bonuses</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/bonuses.html" class="bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors text-center">
+                        🎁 Get More Bonuses
+                    </a>
+                    <a href="/buy.html" class="bg-white text-purple-600 border-2 border-purple-600 px-8 py-4 rounded-xl font-semibold hover:bg-purple-50 transition-colors text-center">
+                        🎯 Complete Masterclass
+                    </a>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="hidden text-center">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-8">
+                    <div class="flex items-center justify-center">
+                        <span class="text-2xl mr-2">❌</span>
+                        <span class="font-bold">Access Denied</span>
+                    </div>
+                </div>
+
+                <h1 class="text-4xl font-bold text-gray-900 mb-6">🚫 Access Restricted</h1>
+                <p class="text-xl text-gray-600 mb-8">
+                    It looks like you haven't purchased this bonus yet, or there was an issue with your payment.
+                </p>
+                
+                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-8">
+                    <div class="flex items-center justify-center">
+                        <span class="text-lg">🔧 Having trouble? <a href="/bonus-access-instructions.html" class="underline hover:text-yellow-800">Get help here</a></span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">🔍 What Happened?</h3>
+                    <ul class="text-left space-y-2 text-gray-600">
+                        <li>• Payment verification failed</li>
+                        <li>• Bonus not found in your account</li>
+                        <li>• Session expired</li>
+                        <li>• Technical error occurred</li>
+                    </ul>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/bonuses.html" class="bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors text-center">
+                        🎁 Purchase This Bonus
+                    </a>
+                    <a href="/" class="bg-gray-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-700 transition-colors text-center">
+                        🏠 Go Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-4 mt-16">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-gray-400">© 2024 Café Business Masterclass. All rights reserved.</p>
+            <p class="text-gray-500 mt-2">Need help? Contact us at support@www.yuvapreneur.in</p>
+        </div>
+    </footer>
+
+    <script>
+        // Bonus data mapping
+        const BONUS_DATA = {
+            'bonus-menu-psych': {
+                title: 'Café Menu Psychology Blueprint',
+                desc: 'Design menus that increase average order value and customer satisfaction',
+                icon: '🧠',
+                filename: 'bonus-menu-psych.pdf'
+            },
+            'bonus-festival': {
+                title: 'Festival & Seasonal Marketing Guide',
+                desc: 'Ready-to-use ideas & creatives to boost festive sales',
+                icon: '🎉',
+                filename: 'bonus-festival.pdf'
+            },
+            'bonus-loyalty': {
+                title: 'How to Create a Café Loyalty Program',
+                desc: 'Step-by-step template for a loyalty program that brings repeat customers',
+                icon: '💎',
+                filename: 'bonus-loyalty.pdf'
+            },
+            'bonus-photo': {
+                title: 'Photography Cheat Sheet',
+                desc: 'Quick setups for mouth-watering food & café photos (phone ready)',
+                icon: '📸',
+                filename: 'bonus-photo.pdf'
+            },
+
+        };
+
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const bonusSku = urlParams.get('sku');
+        const userEmail = urlParams.get('email');
+
+        // Global variables
+        let currentBonus = null;
+        let downloadUrl = '';
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!bonusSku || !userEmail) {
+                showError('Missing bonus information. Please try again.');
+                return;
+            }
+
+            // Check if bonus exists
+            if (!BONUS_DATA[bonusSku]) {
+                showError('Invalid bonus. Please check your link.');
+                return;
+            }
+
+            currentBonus = BONUS_DATA[bonusSku];
+            updateBonusInfo();
+            
+            // Verify purchase
+            verifyPurchase();
+        });
+
+        // Update bonus information display
+        function updateBonusInfo() {
+            document.getElementById('bonusTitle').textContent = currentBonus.title;
+            document.getElementById('bonusDesc').textContent = currentBonus.desc;
+            document.getElementById('iconText').textContent = currentBonus.icon;
+            document.getElementById('bonusIcon').className = `w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4`;
+        }
+
+        // Verify purchase with backend
+        async function verifyPurchase() {
+            try {
+                const response = await fetch('/check-bonus-purchase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        bonusSku: bonusSku,
+                        userEmail: userEmail
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    downloadUrl = result.downloadUrl;
+                    showSuccess();
+                } else {
+                    showError(result.message || 'Purchase verification failed.');
+                }
+            } catch (error) {
+                console.error('Verification error:', error);
+                showError('Network error. Please try again.');
+            }
+        }
+
+        // Show success state
+        function showSuccess() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('successState').classList.remove('hidden');
+        }
+
+        // Show error state
+        function showError(message) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+            
+            // Update error message if needed
+            const errorMsg = document.querySelector('#errorState p');
+            if (errorMsg) {
+                errorMsg.textContent = message;
+            }
+        }
+
+        // Download bonus
+        function downloadBonus() {
+            if (downloadUrl) {
+                // Create temporary link and click it
+                const link = document.createElement('a');
+                // Add email parameter to the download URL
+                const downloadUrlWithEmail = `${downloadUrl}?email=${encodeURIComponent(userEmail)}`;
+                link.href = downloadUrlWithEmail;
+                link.download = currentBonus.filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success message
+                alert('✅ Download started! Check your downloads folder.');
+            } else {
+                alert('❌ Download URL not available. Please refresh the page.');
+            }
+        }
+
+        // View bonus online
+        function viewBonus() {
+            if (downloadUrl) {
+                // Add email parameter to the view URL
+                const viewUrlWithEmail = `${downloadUrl}?email=${encodeURIComponent(userEmail)}`;
+                window.open(viewUrlWithEmail, '_blank');
+            } else {
+                alert('❌ View URL not available. Please refresh the page.');
+            }
+        }
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Registration</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <style>
+    /* Ensure password field text is always visible */
+    #password {
+      color: white !important;
+      -webkit-text-fill-color: white !important;
+      caret-color: white !important;
+    }
+    
+    #password::placeholder {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    #password:focus {
+      color: white !important;
+      -webkit-text-fill-color: white !important;
+      background-color: rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    /* Ensure toggle button is clickable */
+    #togglePassword {
+      cursor: pointer !important;
+      z-index: 10 !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4">
+  <!-- Navigation -->
+  <nav class="glass p-4 mb-8 glow-border">
+    <div class="flex justify-between items-center">
+      <div class="flex space-x-6">
+        <a href="index.html" class="text-white hover:text-purple-300 transition-colors">Home</a>
+        <a href="bonuses.html" class="text-white hover:text-purple-300 transition-colors">Bonuses</a>
+        <a href="login.html" class="text-white hover:text-purple-300 transition-colors">Login</a>
+        <a href="dashboard.html" class="text-white hover:text-purple-300 transition-colors">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="text-center mb-12 fade-in-up">
+    <h1 class="text-5xl font-bold text-white mb-4 glow-text">Café Business Masterclass</h1>
+    <p class="text-xl text-white/80 mb-8">Learn to start and run a successful café business in 12 comprehensive modules</p>
+    
+    <!-- Pricing -->
+    <div class="glass p-6 inline-block mb-8 glow-border">
+      <div class="text-4xl font-bold text-white mb-2">₹199</div>
+      <div class="text-white/60 line-through">₹2,584</div>
+      <div class="text-green-400 text-sm">Save ₹2,385 (92.3% OFF!)</div>
+      <div class="text-white/80 text-xs mt-2">Course + Bonuses Worth ₹1,785</div>
+    </div>
+  </div>
+
+  <!-- First Promotional Image - Above Courses -->
+  <div class="max-w-4xl mx-auto mb-12 fade-in-up">
+    <div class="glass p-6 glow-border text-center">
+      <h3 class="text-2xl font-bold text-white mb-4 glow-text">🎯 BEFORE BUYING THIS COURSE BLUEPRINT</h3>
+      <div class="bg-gradient-to-br from-purple-900/40 to-blue-900/40 rounded-2xl p-8 border border-purple-400/30">
+        <div class="text-center mb-6">
+          <div class="text-6xl mb-4">😰</div>
+          <p class="text-white/80 text-lg mb-4">Struggling with these café business challenges?</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+          <div class="space-y-2">
+            <div class="text-2xl">💻</div>
+            <div class="text-white/70 text-sm">DIGITAL MARKETING</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">💬</div>
+            <div class="text-white/70 text-sm">CUSTOMER FEEDBACK</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">🚚</div>
+            <div class="text-white/70 text-sm">SUPPLIERS</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">📊</div>
+            <div class="text-white/70 text-sm">MENU</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">👔</div>
+            <div class="text-white/70 text-sm">STAFF TENSION</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Modules -->
+  <div class="max-w-6xl mx-auto mb-12 fade-in-up">
+    <h2 class="text-3xl font-bold text-white text-center mb-8 glow-text">You Will Learn These 12 Modules</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="modulesGrid">
+      <!-- Modules will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Second Promotional Image - Below 12 Modules -->
+  <div class="max-w-4xl mx-auto mb-12 fade-in-up">
+    <div class="glass p-6 glow-border text-center">
+      <h3 class="text-2xl font-bold text-white mb-4 glow-text">🚀 AFTER BUYING THIS COURSE</h3>
+      <div class="bg-gradient-to-br from-green-900/40 to-blue-900/40 rounded-2xl p-8 border border-green-400/30">
+        <div class="text-center mb-6">
+          <div class="text-6xl mb-4">😊</div>
+          <p class="text-white/80 text-lg mb-4">Transform your café business with these powerful skills!</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+          <div class="space-y-2">
+            <div class="text-2xl">🚀</div>
+            <div class="text-white/70 text-sm">SUPPLIERS</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">💬</div>
+            <div class="text-white/70 text-sm">CUSTOMER FEEDBACK</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">📈</div>
+            <div class="text-white/70 text-sm">SALES INCREASING</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">💻</div>
+            <div class="text-white/70 text-sm">ONLINE PRESENCE</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">🎯</div>
+            <div class="text-white/70 text-sm">HOW TO START</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">🔍</div>
+            <div class="text-white/70 text-sm">MARKET RESEARCH</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">💡</div>
+            <div class="text-white/70 text-sm">NEW IDEAS</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">💰</div>
+            <div class="text-white/70 text-sm">PROFIT</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl">📈</div>
+            <div class="text-white/70 text-sm">GROWTH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bonus Section -->
+  <div class="max-w-6xl mx-auto mb-12 fade-in-up">
+    <h2 class="text-3xl font-bold text-white text-center mb-8 glow-text">🎁 Exclusive Bonuses (Worth ₹1,785)</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="bonusesGrid">
+      <!-- Bonuses will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Registration Form -->
+  <div class="max-w-md mx-auto fade-in-up">
+    <!-- Info Box for Existing Users -->
+    <div class="glass p-6 mb-6 glow-border bg-blue-900/20 border border-blue-400/30">
+      <h3 class="text-blue-300 font-semibold mb-2 flex items-center">
+        <span class="text-blue-400 mr-2">ℹ️</span>
+        Already Have an Account?
+      </h3>
+      <div class="text-blue-200/80 text-sm space-y-2">
+        <p><strong>If you've enrolled before:</strong> Just fill out the form again to update your details and proceed to payment.</p>
+        <p><strong>If you already have course access:</strong> <a href="/login.html" class="text-blue-300 hover:underline">Click here to login</a></p>
+        <p><strong>Need help?</strong> Contact support@www.yuvapreneur.in</p>
+      </div>
+    </div>
+    
+    <div class="glass p-8 glow-border">
+      <h2 class="text-3xl font-bold text-center mb-8 text-white glow-text">Get Started Today</h2>
+      <form id="userForm" class="space-y-6">
+        <div>
+          <input type="text" name="name" placeholder="Full Name" required 
+                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-500 transition-colors">
+        </div>
+        <div>
+          <input type="text" name="phone" placeholder="Phone Number" required 
+                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-500 transition-colors">
+        </div>
+        <div>
+          <input type="email" name="email" placeholder="Email Address" required 
+                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-500 transition-colors">
+        </div>
+        <div>
+          <div class="relative">
+            <input type="password" name="password" id="password" placeholder="Create Password" required 
+                   class="w-full px-4 py-3 pr-12 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-500 focus:bg-white/30 transition-colors"
+                   style="color: white !important; -webkit-text-fill-color: white !important;">
+            <button type="button" id="togglePassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white transition-colors cursor-pointer z-10">
+              👁️
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="glossy w-full px-6 py-3 font-semibold text-lg">
+          Enroll Now - ₹199
+        </button>
+        
+
+        
+        <!-- View Bonuses Button -->
+        <div class="mt-4 text-center">
+          <a href="/bonuses.html" class="inline-block glossy-button px-6 py-3 font-semibold text-lg bg-purple-600 hover:bg-purple-700 transition-colors duration-200">
+            🎁 View All Bonuses
+          </a>
+        </div>
+        
+
+  </form>
+    </div>
+  </div>
+
+  <!-- Q&A Section -->
+  <div class="max-w-4xl mx-auto mb-12 fade-in-up">
+    <div class="glass p-8 glow-border">
+      <h2 class="text-3xl font-bold text-white text-center mb-8 glow-text">❓ Frequently Asked Questions</h2>
+      
+      <div class="space-y-6">
+        <div class="border-b border-white/20 pb-6">
+          <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+            <span class="text-purple-accent mr-2">Q:</span>
+            What will I learn in this course?
+          </h3>
+          <p class="text-white/80">You'll learn everything from market research and location selection to kitchen setup, team management, marketing strategies, and business expansion. The course covers all 12 essential modules needed to start and run a successful café business.</p>
+        </div>
+        
+        <div class="border-b border-white/20 pb-6">
+          <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+            <span class="text-purple-accent mr-2">Q:</span>
+            How long does it take to complete the course?
+          </h3>
+          <p class="text-white/80">The course contains over 10 hours of content across 12 modules. You can learn at your own pace and access the material anytime. Most students complete it within 2-4 weeks while implementing the strategies.</p>
+        </div>
+        
+        <div class="border-b border-white/20 pb-6">
+          <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+            <span class="text-purple-accent mr-2">Q:</span>
+            Do I get access to the bonuses?
+          </h3>
+          <p class="text-white/80">Yes! When you purchase the main course for ₹199, you automatically get access to ALL bonus materials worth ₹1,785, including the Menu Psychology Blueprint, Festival Marketing Guide, Loyalty Program Template, and Photography Cheat Sheet.</p>
+        </div>
+        
+        <div class="border-b border-white/20 pb-6">
+          <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+            <span class="text-purple-accent mr-2">Q:</span>
+            What if I'm not satisfied with the course?
+          </h3>
+          <p class="text-white/80">We offer a 7-day money-back guarantee. If you're not completely satisfied with the course content or value, we'll refund your purchase, no questions asked.</p>
+        </div>
+        
+        <div class="border-b border-white/20 pb-6">
+          <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+            <span class="text-purple-accent mr-2">Q:</span>
+            Can I access the course on mobile devices?
+          </h3>
+          <p class="text-white/80">Absolutely! The course is fully responsive and works perfectly on all devices - desktop, tablet, and mobile. You can learn on-the-go from anywhere.</p>
+        </div>
+        
+        <div class="pb-6">
+          <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+            <span class="text-purple-accent mr-2">Q:</span>
+            How do I get started after purchase?
+          </h3>
+          <p class="text-white/80">After successful payment, you'll get instant access to all course materials. You can start with Module 1 and progress through the modules at your own pace. The bonuses are also immediately available for download.</p>
+        </div>
+      </div>
+      
+      <div class="text-center mt-8">
+        <p class="text-white/60 mb-4">Still have questions?</p>
+        <a href="mailto:yuvapreneur@gmail.com" class="inline-block glossy-button px-6 py-3 font-semibold text-lg bg-purple-600 hover:bg-purple-700 transition-colors duration-200">
+          📧 Contact Support
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12 px-4 mt-16">
+    <div class="max-w-7xl mx-auto text-center">
+      <p class="text-gray-400 mb-2">
+        Need help? Contact <a href="mailto:yuvapreneur@gmail.com" class="text-blue-400 hover:text-blue-300 underline">yuvapreneur@gmail.com</a>
+      </p>
+      <p class="text-gray-500">© 2025 Youthpreneur. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+// Course Data
+const MODULES = [
+  { no:1, title:"Introduction to the Café Industry", minutes:45, desc:"Landscape, types, trends, business models." },
+  { no:2, title:"Research & Market Analysis", minutes:60, desc:"Audience, competitors, SWOT, positioning." },
+  { no:3, title:"Location Selection & Setup", minutes:50, desc:"Footfall, rent, layouts, negotiation." },
+  { no:4, title:"Financial Planning & Investment", minutes:75, desc:"Budgeting, forecasting, margins, break-even." },
+  { no:5, title:"Kitchen Setup & Operations", minutes:65, desc:"Equipment list, staff, daily ops." },
+  { no:6, title:"Hiring & Team Management", minutes:55, desc:"JD, interviews, onboarding, shifts." },
+  { no:7, title:"Menu Design & Pricing", minutes:70, desc:"Pricing strategies, menu engineering." },
+  { no:8, title:"Marketing (Online + Offline)", minutes:80, desc:"Campaigns, influencers, local ads." },
+  { no:9, title:"Growth & Expansion", minutes:60, desc:"Franchising, multi-outlet, cloud kitchens." },
+  { no:10, title:"Legal & Compliance", minutes:45, desc:"FSSAI, GST, fire safety, licenses." },
+  { no:11, title:"Crisis Management & Problem Solving", minutes:55, desc:"Sales dips, costs, turnover, SOPs." },
+  { no:12, title:"Success Roadmap for Your Café", minutes:70, desc:"Branding, innovation, culture." }
+];
+
+// Bonus Data with correct prices
+const BONUSES = [
+  { 
+    sku: "bonus-menu-psych",  
+    price: 1, 
+    title: "Café Menu Psychology Blueprint", 
+    desc: "Design menus that increase average order value and customer satisfaction." 
+  },
+  { 
+    sku: "bonus-festival",     
+    price: 249, 
+    title: "Festival & Seasonal Marketing Guide", 
+    desc: "Ready-to-use ideas & creatives to boost festive sales." 
+  },
+  { 
+    sku: "bonus-loyalty",      
+    price: 199, 
+    title: "How to Create a Café Loyalty Program", 
+    desc: "Step-by-step template for a loyalty program that brings repeat customers." 
+  },
+  { 
+    sku: "bonus-photo",        
+    price: 249, 
+    title: "Photography Cheat Sheet", 
+    desc: "Quick setups for mouth-watering food & café photos (phone ready)." 
+  }
+];
+
+// Populate modules
+const modulesGrid = document.getElementById('modulesGrid');
+MODULES.forEach(module => {
+  const moduleCard = document.createElement('div');
+  moduleCard.className = 'module-card glass p-6 interactive-element';
+  moduleCard.innerHTML = `
+    <div class="flex items-start justify-between mb-4">
+      <div class="text-2xl font-bold text-purple-accent">${module.no.toString().padStart(2, '0')}</div>
+      <div class="text-sm text-white/60">${module.minutes} min</div>
+    </div>
+    <h3 class="text-lg font-semibold text-white mb-2">${module.title}</h3>
+    <p class="text-white/70 text-sm">${module.desc}</p>
+  `;
+  modulesGrid.appendChild(moduleCard);
+});
+
+// Populate bonuses
+const bonusesGrid = document.getElementById('bonusesGrid');
+BONUSES.forEach(bonus => {
+  const bonusCard = document.createElement('div');
+  bonusCard.className = 'bonus-card glass p-6 interactive-element';
+  bonusCard.innerHTML = `
+    <div class="flex items-start justify-between mb-4">
+      <div class="text-2xl font-bold text-purple-accent">🎁</div>
+      <div class="text-sm text-white/60">₹${bonus.price}</div>
+    </div>
+    <h3 class="text-lg font-semibold text-white mb-2">${bonus.title}</h3>
+    <p class="text-white/70 text-sm">${bonus.desc}</p>
+    <div class="mt-3 text-xs text-green-400 font-semibold">Individual Purchase</div>
+  `;
+  bonusesGrid.appendChild(bonusCard);
+});
+
+// Toggle password visibility
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('password');
+
+// Ensure elements exist
+if (togglePassword && passwordInput) {
+  console.log('✅ Password toggle elements found on home page');
+  
+  togglePassword.addEventListener('click', () => {
+    const currentType = passwordInput.getAttribute('type');
+    const newType = currentType === 'password' ? 'text' : 'password';
+    
+    passwordInput.setAttribute('type', newType);
+    togglePassword.textContent = newType === 'password' ? '👁️' : '🙈';
+    
+    console.log('🔄 Password type changed to:', newType);
+    
+    // Ensure text is visible
+    passwordInput.style.color = 'white';
+    passwordInput.style.webkitTextFillColor = 'white';
+  });
+  
+  // Add input event listener to ensure text is always visible
+  passwordInput.addEventListener('input', () => {
+    passwordInput.style.color = 'white';
+    passwordInput.style.webkitTextFillColor = 'white';
+    console.log('📝 Input detected on home page, text color set to visible');
+  });
+  
+  // Add focus event listener
+  passwordInput.addEventListener('focus', () => {
+    passwordInput.style.color = 'white';
+    passwordInput.style.webkitTextFillColor = 'white';
+    passwordInput.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+    console.log('🎯 Password field focused on home page');
+  });
+  
+} else {
+  console.error('❌ Password toggle elements not found on home page');
+}
+
+// Form submission
+const form = document.getElementById('userForm');
+
+form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+  const data = {
+    name: form.name.value,
+    phone: form.phone.value,
+    email: form.email.value,
+    password: form.password.value
+      };
+
+      try {
+    const res = await fetch('/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      alert('Request failed: ' + errorText);
+      return;
+    }
+
+    const result = await res.json();
+    
+    if (result.status === 'success') {
+      if (result.existingUser && result.needsPayment) {
+        // Existing user needs to make payment
+        const message = `${result.message}\n\nWould you like to proceed to payment now?`;
+        if (confirm(message)) {
+          window.location.href = '/buy.html';
+        }
+      } else {
+        // New user or user with updated password
+        alert(result.message || 'Enrollment successful! Now proceed to payment to get instant access.');
+        form.reset();
+        // Redirect to payment page
+        window.location.href = '/buy.html';
+      }
+    } else {
+      if (result.hasAccount && result.hasCourseAccess) {
+        // User already has account and course access
+        const message = `${result.error}\n\nWould you like to go to the login page?`;
+        if (confirm(message)) {
+          window.location.href = '/login.html';
+        }
+      } else {
+        // Other errors
+        alert('Error: ' + (result.error || 'Something went wrong. Please try again.'));
+      }
+    }
+      } catch (err) {
+    console.error('Form submission error:', err);
+    alert('Network error. Please check your connection and try again.');
+      }
+    });
+  </script>
+</body>
+</html>

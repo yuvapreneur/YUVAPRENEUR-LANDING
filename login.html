@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Café Business Masterclass</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <style>
+    /* Ensure password field text is always visible */
+    #password {
+      color: white !important;
+      -webkit-text-fill-color: white !important;
+      caret-color: white !important;
+    }
+    
+    #password::placeholder {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    #password:focus {
+      color: white !important;
+      -webkit-text-fill-color: white !important;
+      background-color: rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    /* Ensure toggle button is clickable */
+    #togglePassword {
+      cursor: pointer !important;
+      z-index: 10 !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4">
+  <div class="max-w-md mx-auto mt-8">
+    <!-- Header -->
+    <div class="text-center mb-8 fade-in-up">
+      <h1 class="text-3xl font-bold text-white mb-2 glow-text">Welcome Back</h1>
+      <p class="text-white/70">Access your Café Business Masterclass</p>
+    </div>
+
+    <!-- Login Form -->
+    <div class="glass p-8 glow-border fade-in-up">
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label class="block text-white text-sm font-medium mb-2">Email Address</label>
+          <input type="email" name="email" required 
+                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                 placeholder="Enter your email address">
+        </div>
+        
+        <div>
+          <label class="block text-white text-sm font-medium mb-2">Password</label>
+          <div class="relative">
+            <input type="password" name="password" id="password" required 
+                   class="w-full px-4 py-3 pr-12 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-accent focus:bg-white/30 transition-colors"
+                   placeholder="Enter your password"
+                   style="color: white !important; -webkit-text-fill-color: white !important;">
+            <button type="button" id="togglePassword" 
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white transition-colors cursor-pointer z-10">
+              👁️
+            </button>
+          </div>
+        </div>
+        
+        <button type="submit" class="glossy w-full px-6 py-3 font-semibold text-lg">
+          Login to Dashboard
+        </button>
+      </form>
+      
+      <!-- Navigation Links -->
+      <div class="mt-6 text-center space-y-3">
+        <p class="text-white/60 text-sm">
+          <a href="/forgot-password.html" class="text-purple-accent hover:underline">🔑 Forgot Password?</a>
+        </p>
+        <p class="text-white/60 text-sm">
+          <a href="/reset-payment-password.html" class="text-purple-accent hover:underline">💳 Reset Payment Password</a>
+        </p>
+
+
+        <p class="text-white/60 text-sm">
+          <a href="/" class="text-purple-accent hover:underline">🏠 Go to Home Page</a>
+        </p>
+        <p class="text-white/60 text-sm">
+          Don't have an account? 
+          <a href="/signup.html" class="text-purple-accent hover:underline">Sign up here</a>
+        </p>
+        <p class="text-white/60 text-sm">
+          <a href="/" class="text-purple-accent hover:underline">← Back to Home</a>
+        </p>
+      </div>
+      
+      <!-- Course Purchase Help Box -->
+      <div class="bg-orange-900/20 border border-orange-400/30 rounded-lg p-4 mt-6">
+        <h3 class="text-orange-300 font-semibold mb-2">💳 Need Course Access?</h3>
+        <p class="text-orange-200/80 text-sm mb-3">
+          Getting "Please purchase the main course" error?
+        </p>
+        <div class="text-orange-200/70 text-sm space-y-2">
+          <p><strong>Step 1:</strong> <a href="/" class="text-orange-300 hover:underline">Go to Home Page</a></p>
+          <p><strong>Step 2:</strong> Fill out the form and create your password</p>
+          <p><strong>Step 3:</strong> Make payment (₹199) to get instant access</p>
+          <p><strong>Step 4:</strong> Come back here and login with your credentials</p>
+        </div>
+        <div class="mt-3 text-center">
+          <a href="/" class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            🚀 Get Course Access Now
+          </a>
+        </div>
+      </div>
+      
+      <!-- Quick Action Box -->
+      <div class="bg-blue-900/20 border border-blue-400/30 rounded-lg p-4 mt-4">
+        <h3 class="text-blue-300 font-semibold mb-2">⚡ Quick Actions</h3>
+        <div class="grid grid-cols-1 gap-3">
+          <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
+            🏠 Go to Home Page & Enroll
+          </a>
+          <a href="/buy.html" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
+            💳 Buy Course Directly (₹199)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Important Information -->
+    <div class="glass p-6 mt-6 glow-border">
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+        <span class="text-blue-400 mr-2">ℹ️</span>
+        Important Information
+      </h3>
+      <ul class="text-white/80 text-sm space-y-2">
+        <li><strong>New users:</strong> Purchase the main course first to create your account</li>
+        <li><strong>Existing customers:</strong> Use the email and password from your checkout</li>
+        <li><strong>Just purchased?</strong> Use the credentials you entered during payment</li>
+        <li><strong>Forgot password?</strong> Use the "Forgot Password" link above</li>
+        <li><strong>Need help?</strong> Contact support@www.yuvapreneur.in</li>
+      </ul>
+      <p class="text-white/60 text-xs mt-4">
+        Only customers who have purchased the main course (₹199) can access the dashboard.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    // Ensure elements exist
+    if (togglePassword && passwordInput) {
+      console.log('✅ Password toggle elements found');
+      
+      togglePassword.addEventListener('click', () => {
+        const currentType = passwordInput.getAttribute('type');
+        const newType = currentType === 'password' ? 'text' : 'password';
+        
+        passwordInput.setAttribute('type', newType);
+        togglePassword.textContent = newType === 'password' ? '👁️' : '🙈';
+        
+        console.log('🔄 Password type changed to:', newType);
+        
+        // Ensure text is visible
+        passwordInput.style.color = 'white';
+        passwordInput.style.webkitTextFillColor = 'white';
+      });
+      
+      // Add input event listener to ensure text is always visible
+      passwordInput.addEventListener('input', () => {
+        passwordInput.style.color = 'white';
+        passwordInput.style.webkitTextFillColor = 'white';
+      });
+      
+      // Add focus event listener
+      passwordInput.addEventListener('focus', () => {
+        passwordInput.style.color = 'white';
+        passwordInput.style.webkitTextFillColor = 'white';
+        passwordInput.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+      });
+      
+    } else {
+      console.error('❌ Password toggle elements not found');
+    }
+    
+    const form = document.getElementById('loginForm');
+    
+    form.addEventListener('submit', async (e) => {
+       e.preventDefault();
+       
+       const formData = new FormData(form);
+       const data = {
+         email: formData.get('email'),
+         password: formData.get('password')
+       };
+       
+       try {
+         const response = await fetch('/api/auth/login', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify(data)
+         });
+         
+         const result = await response.json();
+         
+         if (result.success) {
+           alert('✅ Login successful! Redirecting to dashboard...');
+           window.location.href = '/dashboard.html';
+         } else {
+           if (result.needsPurchase) {
+             const instructions = result.instructions ? '\n\n' + result.instructions.join('\n') : '';
+             const message = `❌ ${result.error}${instructions}\n\nWould you like to go to the home page to purchase the course?`;
+             if (confirm(message)) {
+               window.location.href = result.helpUrl || '/';
+             }
+           } else {
+             alert('❌ Error: ' + (result.error || 'Invalid credentials'));
+           }
+         }
+       } catch (err) {
+         console.error('Login error:', err);
+         alert('❌ Network error. Please try again.');
+       }
+     });
+  </script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Café Business Masterclass</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen p-4">
+  <!-- Navigation -->
+  <nav class="glass p-4 mb-8 glow-border">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <h1 class="text-2xl font-bold text-white glow-text">☕ Café Business Masterclass</h1>
+      </div>
+      <div class="flex items-center space-x-6">
+        <a href="/" class="text-white/80 hover:text-white transition-colors">🏠 Home</a>
+        <a href="/buy.html" class="text-white/80 hover:text-white transition-colors">💳 Payment</a>
+        <a href="/bonuses.html" class="text-white/80 hover:text-white transition-colors">🎁 Bonuses</a>
+        <button id="logoutBtn" class="text-red-400 hover:text-red-300 transition-colors">🚪 Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto">
+    <!-- Welcome Section -->
+    <div class="text-center mb-12 fade-in-up">
+      <h1 class="text-4xl font-bold text-white mb-4 glow-text">Welcome to Your Dashboard</h1>
+      <p class="text-xl text-white/80" id="welcomeMessage">Loading your profile...</p>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Profile Section -->
+      <div class="lg:col-span-1">
+        <div class="glass p-6 glow-border fade-in-up">
+          <h2 class="text-2xl font-bold text-white mb-4 glow-text">👤 Your Profile</h2>
+          <div id="profileInfo" class="space-y-3 text-white/80">
+            <p><strong>Name:</strong> <span id="userName">Loading...</span></p>
+            <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
+            <p><strong>Phone:</strong> <span id="userPhone">Loading...</span></p>
+            <p><strong>Profession:</strong> <span id="userProfession">Loading...</span></p>
+            <p><strong>Location:</strong> <span id="userLocation">Loading...</span></p>
+            <p><strong>Member Since:</strong> <span id="userSince">Loading...</span></p>
+          </div>
+          
+          <div class="mt-6 pt-6 border-t border-white/20">
+            <h3 class="text-lg font-semibold text-white mb-3">📊 Account Status</h3>
+            <div class="space-y-2">
+              <div class="flex justify-between">
+                <span class="text-white/70">Main Course:</span>
+                <span id="courseStatus" class="text-yellow-400">Checking...</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-white/70">Bonuses Purchased:</span>
+                <span id="bonusCount" class="text-purple-accent">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Access Section -->
+      <div class="lg:col-span-2">
+        <div class="glass p-6 glow-border fade-in-up">
+          <h2 class="text-2xl font-bold text-white mb-4 glow-text">📚 Course Access</h2>
+          <div id="courseAccess" class="space-y-4">
+            <p class="text-white/80">Checking your course access...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bonuses Section -->
+      <div class="lg:col-span-3">
+        <div class="glass p-6 glow-border fade-in-up">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold text-white glow-text">🎁 Your Bonuses</h2>
+            <a href="/bonus-access-instructions.html" class="text-purple-accent hover:text-purple-300 text-sm underline">
+              💡 Need help accessing bonuses?
+            </a>
+          </div>
+          <div id="bonusesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <p class="text-white/80">Loading your bonuses...</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+         // Global variables
+        let userEmail = '';
+
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+          // Check if user is authenticated via session
+          checkAuthStatus();
+        });
+
+     // Check authentication status
+     async function checkAuthStatus() {
+       try {
+         const response = await fetch('/auth-status');
+         const data = await response.json();
+         
+         if (!data.authenticated) {
+           alert('❌ Please login to access the dashboard');
+           window.location.href = '/login.html';
+           return;
+         }
+         
+         // Load user data using session
+         loadUserProfile();
+         loadCourseAccess();
+         loadUserBonuses();
+       } catch (error) {
+         console.error('Auth check failed:', error);
+         alert('❌ Authentication check failed. Please login again.');
+         window.location.href = '/login.html';
+       }
+     }
+
+         // Load user profile
+     async function loadUserProfile() {
+       try {
+         const response = await fetch('/api/dashboard/profile');
+        
+        if (response.ok) {
+          const data = await response.json();
+          const user = data.user;
+          
+          // Store user email globally
+          userEmail = user.email;
+          
+          // Update profile display
+          document.getElementById('userName').textContent = user.name || 'Not specified';
+          document.getElementById('userEmail').textContent = user.email;
+          document.getElementById('userPhone').textContent = user.phone || 'Not specified';
+          document.getElementById('userProfession').textContent = user.profession || 'Not specified';
+          document.getElementById('userLocation').textContent = `${user.city || 'Not specified'}, ${user.state || 'Not specified'}`;
+          document.getElementById('userSince').textContent = new Date(user.createdAt).toLocaleDateString();
+          
+          // Update welcome message
+          document.getElementById('welcomeMessage').textContent = `Welcome back, ${user.name}!`;
+          
+          // Update account status
+          document.getElementById('courseStatus').textContent = user.hasMainCourse ? '✅ Access Granted' : '❌ Purchase Required';
+          document.getElementById('bonusCount').textContent = user.totalBonuses;
+          
+        } else {
+          throw new Error('Failed to load profile');
+        }
+      } catch (err) {
+        console.error('Profile load error:', err);
+        document.getElementById('profileInfo').innerHTML = '<p class="text-red-400">❌ Failed to load profile</p>';
+      }
+    }
+
+         // Load course access
+     async function loadCourseAccess() {
+       try {
+         const response = await fetch('/api/dashboard/course-access');
+        
+        if (response.ok) {
+          const data = await response.json();
+          const courseAccessDiv = document.getElementById('courseAccess');
+          
+          if (data.hasMainCourse) {
+            courseAccessDiv.innerHTML = `
+              <div class="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
+                <h3 class="text-lg font-semibold text-green-400 mb-2">✅ Course Access Granted</h3>
+                <p class="text-white/80 mb-4">You have access to all 12 course modules</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  ${data.availablePdfs.map(pdf => `
+                    <div class="bg-white/10 rounded-lg p-3">
+                      <h4 class="font-medium text-white">${pdf.displayName}</h4>
+                      <a href="${pdf.downloadUrl}" class="text-purple-accent hover:underline text-sm">📥 Download PDF</a>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          } else {
+            courseAccessDiv.innerHTML = `
+              <div class="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
+                <h3 class="text-lg font-semibold text-yellow-400 mb-2">🔒 Course Access Required</h3>
+                <p class="text-white/80 mb-4">Purchase the main course to access all modules</p>
+                <a href="/buy.html" class="glossy-button px-6 py-2 text-sm">
+                                      🚀 Buy Course - ₹199
+                </a>
+              </div>
+            `;
+          }
+        } else {
+          throw new Error('Failed to load course access');
+        }
+      } catch (err) {
+        console.error('Course access load error:', err);
+        document.getElementById('courseAccess').innerHTML = '<p class="text-red-400">❌ Failed to load course access</p>';
+      }
+    }
+
+         // Load user bonuses
+     async function loadUserBonuses() {
+       try {
+         const response = await fetch('/api/dashboard/my-purchases');
+        
+        if (response.ok) {
+          const data = await response.json();
+          const bonusesGrid = document.getElementById('bonusesGrid');
+          
+          if (data.bonuses && data.bonuses.length > 0) {
+            bonusesGrid.innerHTML = data.bonuses.map(bonus => `
+              <div class="bonus-card glass p-6 interactive-element">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="text-2xl font-bold text-purple-accent">🎁</div>
+                  <div class="text-sm text-white/60">₹${bonus.price}</div>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">${bonus.title}</h3>
+                <p class="text-white/70 text-sm mb-4">${bonus.desc}</p>
+                
+                ${bonus.purchased ? `
+                  <div class="space-y-2">
+                    <div class="text-xs text-green-400">✅ Purchased on ${new Date(bonus.purchaseDate).toLocaleDateString()}</div>
+                    <a href="/bonus-download.html?sku=${bonus.sku}&email=${encodeURIComponent(userEmail)}" 
+                       class="glossy-button px-4 py-2 text-sm w-full text-center">
+                      📥 Download Bonus
+                    </a>
+                  </div>
+                ` : `
+                  <button onclick="buyBonus('${bonus.sku}', ${bonus.price}, '${bonus.title}')" 
+                          class="glossy-button px-4 py-2 text-sm w-full">
+                    💳 Buy Now - ₹${bonus.price}
+                  </button>
+                `}
+              </div>
+            `).join('');
+          } else {
+            bonusesGrid.innerHTML = `
+              <div class="col-span-full text-center py-8">
+                <p class="text-white/60 mb-4">No bonuses purchased yet</p>
+                <a href="/bonuses.html" class="glossy-button px-6 py-3">
+                  🎁 Browse Available Bonuses
+                </a>
+              </div>
+            `;
+          }
+        } else {
+          throw new Error('Failed to load bonuses');
+        }
+      } catch (err) {
+        console.error('Bonuses load error:', err);
+        document.getElementById('bonusesGrid').innerHTML = '<p class="text-red-400">❌ Failed to load bonuses</p>';
+      }
+    }
+
+    // Buy bonus function
+    function buyBonus(sku, price, title) {
+      if (confirm(`Purchase "${title}" for ₹${price}?`)) {
+        window.location.href = `/bonuses.html?buy=${sku}`;
+      }
+    }
+
+         // Logout function
+     document.getElementById('logoutBtn').addEventListener('click', async function() {
+       if (confirm('Are you sure you want to logout?')) {
+         try {
+           const response = await fetch('/logout', { method: 'POST' });
+           if (response.ok) {
+             window.location.href = '/login.html';
+           } else {
+             alert('Logout failed. Please try again.');
+           }
+         } catch (error) {
+           console.error('Logout error:', error);
+           // Force redirect anyway
+           window.location.href = '/login.html';
+         }
+       }
+     });
+  </script>
+</body>
+</html>
