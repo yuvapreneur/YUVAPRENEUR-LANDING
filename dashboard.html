@@ -30,6 +30,15 @@
       <p class="text-xl text-white/80" id="welcomeMessage">Loading your profile...</p>
     </div>
 
+    <!-- Demo Site Notice -->
+    <div class="mb-6 p-4 bg-yellow-900/20 border border-yellow-400/30 rounded-lg">
+      <h3 class="text-yellow-300 font-semibold mb-2 flex items-center">
+        <span class="text-yellow-400 mr-2">⚠️</span>
+        Demo Site Notice
+      </h3>
+      <p class="text-yellow-200/80 text-sm">This is a static preview site. Contact support for full dashboard functionality.</p>
+    </div>
+    
     <!-- Dashboard Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       
@@ -100,33 +109,52 @@
           checkAuthStatus();
         });
 
-     // Check authentication status
+     // Check authentication status - Demo Mode
      async function checkAuthStatus() {
        try {
-         const response = await fetch('/auth-status');
-         const data = await response.json();
+         // For GitHub Pages (static site), we'll simulate authentication
+         // In production, this would check with your backend server
          
-         if (!data.authenticated) {
-           alert('❌ Please login to access the dashboard');
-           window.location.href = '/login.html';
-           return;
-         }
+         // Simulate successful authentication
+         console.log('Demo mode: Simulating successful authentication');
          
-         // Load user data using session
+         // Load demo user data
          loadUserProfile();
          loadCourseAccess();
          loadUserBonuses();
        } catch (error) {
          console.error('Auth check failed:', error);
-         alert('❌ Authentication check failed. Please login again.');
-         window.location.href = '/login.html';
+         alert('❌ Demo mode: Authentication simulation failed.');
        }
      }
 
-         // Load user profile
+         // Load user profile - Demo Mode
      async function loadUserProfile() {
        try {
-         const response = await fetch('/api/dashboard/profile');
+         // For GitHub Pages (static site), we'll show demo data
+         // In production, this would fetch from your backend server
+         
+         // Set demo user data
+         userEmail = 'demo@yuvapreneur.in';
+         document.getElementById('userName').textContent = 'Demo User';
+         document.getElementById('userEmail').textContent = userEmail;
+         document.getElementById('userPhone').textContent = '+91 98765 43210';
+         document.getElementById('userProfession').textContent = 'Café Owner';
+         document.getElementById('userLocation').textContent = 'Mumbai, Maharashtra';
+         document.getElementById('userSince').textContent = new Date().toLocaleDateString();
+         
+         // Update welcome message
+         document.getElementById('welcomeMessage').textContent = 'Welcome to your demo dashboard!';
+         
+         // Update account status
+         document.getElementById('courseStatus').textContent = '✅ Active';
+         document.getElementById('bonusCount').textContent = '1';
+         
+       } catch (error) {
+         console.error('Profile load error:', error);
+         document.getElementById('profileInfo').innerHTML = '<p class="text-red-400">❌ Demo mode: Failed to load profile</p>';
+       }
+     }
         
         if (response.ok) {
           const data = await response.json();
@@ -150,135 +178,106 @@
           document.getElementById('courseStatus').textContent = user.hasMainCourse ? '✅ Access Granted' : '❌ Purchase Required';
           document.getElementById('bonusCount').textContent = user.totalBonuses;
           
-        } else {
-          throw new Error('Failed to load profile');
-        }
-      } catch (err) {
-        console.error('Profile load error:', err);
-        document.getElementById('profileInfo').innerHTML = '<p class="text-red-400">❌ Failed to load profile</p>';
-      }
-    }
+        // Demo mode: Profile loaded successfully
 
-         // Load course access
+         // Load course access - Demo Mode
      async function loadCourseAccess() {
        try {
-         const response = await fetch('/api/dashboard/course-access');
-        
-        if (response.ok) {
-          const data = await response.json();
-          const courseAccessDiv = document.getElementById('courseAccess');
-          
-          if (data.hasMainCourse) {
-            courseAccessDiv.innerHTML = `
-              <div class="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
-                <h3 class="text-lg font-semibold text-green-400 mb-2">✅ Course Access Granted</h3>
-                <p class="text-white/80 mb-4">You have access to all 12 course modules</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  ${data.availablePdfs.map(pdf => `
-                    <div class="bg-white/10 rounded-lg p-3">
-                      <h4 class="font-medium text-white">${pdf.displayName}</h4>
-                      <a href="${pdf.downloadUrl}" class="text-purple-accent hover:underline text-sm">📥 Download PDF</a>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            `;
-          } else {
-            courseAccessDiv.innerHTML = `
-              <div class="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
-                <h3 class="text-lg font-semibold text-yellow-400 mb-2">🔒 Course Access Required</h3>
-                <p class="text-white/80 mb-4">Purchase the main course to access all modules</p>
-                <a href="/buy.html" class="glossy-button px-6 py-2 text-sm">
-                                      🚀 Buy Course - ₹199
-                </a>
-              </div>
-            `;
-          }
-        } else {
-          throw new Error('Failed to load course access');
-        }
-      } catch (err) {
-        console.error('Course access load error:', err);
-        document.getElementById('courseAccess').innerHTML = '<p class="text-red-400">❌ Failed to load course access</p>';
-      }
-    }
+         // For GitHub Pages (static site), we'll show demo content
+         // In production, this would fetch from your backend server
+         
+         const courseAccessDiv = document.getElementById('courseAccess');
+         
+         // Show demo course access
+         courseAccessDiv.innerHTML = `
+           <div class="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
+             <h3 class="text-lg font-semibold text-green-400 mb-2">✅ Demo: Course Access Granted</h3>
+             <p class="text-white/80 mb-4">You have access to all 12 course modules (Demo Mode)</p>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div class="bg-white/10 rounded-lg p-3">
+                 <h4 class="font-medium text-white">Module 1: Introduction to Café Industry</h4>
+                 <button onclick="showDemoMessage()" class="text-purple-accent hover:underline text-sm">📥 Download PDF (Demo)</button>
+               </div>
+               <div class="bg-white/10 rounded-lg p-3">
+                 <h4 class="font-medium text-white">Module 2: Research & Market Analysis</h4>
+                 <button onclick="showDemoMessage()" class="text-purple-accent hover:underline text-sm">📥 Download PDF (Demo)</button>
+               </div>
+             </div>
+           </div>
+         `;
+         
+       } catch (err) {
+         console.error('Course access load error:', err);
+         document.getElementById('courseAccess').innerHTML = '<p class="text-red-400">❌ Demo mode: Failed to load course access</p>';
+       }
+     }
 
-         // Load user bonuses
+         // Load user bonuses - Demo Mode
      async function loadUserBonuses() {
        try {
-         const response = await fetch('/api/dashboard/my-purchases');
-        
-        if (response.ok) {
-          const data = await response.json();
-          const bonusesGrid = document.getElementById('bonusesGrid');
-          
-          if (data.bonuses && data.bonuses.length > 0) {
-            bonusesGrid.innerHTML = data.bonuses.map(bonus => `
-              <div class="bonus-card glass p-6 interactive-element">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="text-2xl font-bold text-purple-accent">🎁</div>
-                  <div class="text-sm text-white/60">₹${bonus.price}</div>
-                </div>
-                <h3 class="text-lg font-semibold text-white mb-2">${bonus.title}</h3>
-                <p class="text-white/70 text-sm mb-4">${bonus.desc}</p>
-                
-                ${bonus.purchased ? `
-                  <div class="space-y-2">
-                    <div class="text-xs text-green-400">✅ Purchased on ${new Date(bonus.purchaseDate).toLocaleDateString()}</div>
-                    <a href="/bonus-download.html?sku=${bonus.sku}&email=${encodeURIComponent(userEmail)}" 
-                       class="glossy-button px-4 py-2 text-sm w-full text-center">
-                      📥 Download Bonus
-                    </a>
-                  </div>
-                ` : `
-                  <button onclick="buyBonus('${bonus.sku}', ${bonus.price}, '${bonus.title}')" 
-                          class="glossy-button px-4 py-2 text-sm w-full">
-                    💳 Buy Now - ₹${bonus.price}
-                  </button>
-                `}
-              </div>
-            `).join('');
-          } else {
-            bonusesGrid.innerHTML = `
-              <div class="col-span-full text-center py-8">
-                <p class="text-white/60 mb-4">No bonuses purchased yet</p>
-                <a href="/bonuses.html" class="glossy-button px-6 py-3">
-                  🎁 Browse Available Bonuses
-                </a>
-              </div>
-            `;
-          }
-        } else {
-          throw new Error('Failed to load bonuses');
-        }
-      } catch (err) {
-        console.error('Bonuses load error:', err);
-        document.getElementById('bonusesGrid').innerHTML = '<p class="text-red-400">❌ Failed to load bonuses</p>';
-      }
-    }
+         // For GitHub Pages (static site), we'll show demo content
+         // In production, this would fetch from your backend server
+         
+         const bonusesGrid = document.getElementById('bonusesGrid');
+         
+         // Show demo bonuses
+         bonusesGrid.innerHTML = `
+           <div class="bonus-card glass p-6 interactive-element">
+             <div class="flex items-start justify-between mb-4">
+               <div class="text-2xl font-bold text-purple-accent">🎁</div>
+               <div class="text-sm text-white/60">₹149</div>
+             </div>
+             <h3 class="text-lg font-semibold text-white mb-2">Café Menu Psychology Blueprint</h3>
+             <p class="text-white/70 text-sm mb-4">Design menus that increase average order value</p>
+             
+             <div class="space-y-2">
+               <div class="text-xs text-green-400">✅ Demo: Purchased on ${new Date().toLocaleDateString()}</div>
+               <button onclick="showDemoMessage()" class="glossy-button px-4 py-2 text-sm w-full text-center">
+                 📥 Download Bonus (Demo)
+               </button>
+             </div>
+           </div>
+           
+           <div class="bonus-card glass p-6 interactive-element">
+             <div class="flex items-start justify-between mb-4">
+               <div class="text-2xl font-bold text-purple-accent">🎁</div>
+               <div class="text-sm text-white/60">₹249</div>
+             </div>
+             <h3 class="text-lg font-semibold text-white mb-2">Festival Marketing Guide</h3>
+             <p class="text-white/70 text-sm mb-4">Ready-to-use ideas for festive sales</p>
+             
+             <button onclick="buyBonus('bonus-festival', 249, 'Festival Marketing Guide')" 
+                     class="glossy-button px-4 py-2 text-sm w-full">
+               💳 Buy Now - ₹249
+             </button>
+           </div>
+         `;
+         
+       } catch (err) {
+         console.error('Bonuses load error:', err);
+         document.getElementById('bonusesGrid').innerHTML = '<p class="text-red-400">❌ Demo mode: No bonuses available</p>';
+       }
+     }
 
-    // Buy bonus function
+    // Buy bonus function - Demo Mode
     function buyBonus(sku, price, title) {
       if (confirm(`Purchase "${title}" for ₹${price}?`)) {
-        window.location.href = `/bonuses.html?buy=${sku}`;
+        // For GitHub Pages (static site), show demo message
+        alert(`This is a demo site. In production, this would process your payment for:\n\n🎁 ${title}\n💰 Price: ₹${price}\n\nPlease contact support for actual bonus purchase.`);
       }
     }
+    
+    // Show demo message function
+    function showDemoMessage() {
+      alert('This is a demo site. In production, this would download your purchased bonus content. Please contact support for actual bonus access.');
+    }
 
-         // Logout function
+         // Logout function - Demo Mode
      document.getElementById('logoutBtn').addEventListener('click', async function() {
        if (confirm('Are you sure you want to logout?')) {
-         try {
-           const response = await fetch('/logout', { method: 'POST' });
-           if (response.ok) {
-             window.location.href = '/login.html';
-           } else {
-             alert('Logout failed. Please try again.');
-           }
-         } catch (error) {
-           console.error('Logout error:', error);
-           // Force redirect anyway
-           window.location.href = '/login.html';
-         }
+         // For GitHub Pages (static site), we'll just redirect
+         // In production, this would call your backend server
+         window.location.href = '/login.html';
        }
      });
   </script>

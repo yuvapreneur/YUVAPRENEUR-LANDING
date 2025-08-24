@@ -45,6 +45,13 @@
                     <a href="/bonus-access-instructions.html" class="underline hover:text-blue-600">Click here to learn how to access your purchased bonuses</a>
                 </p>
             </div>
+            
+            <!-- Demo Site Notice -->
+            <div class="bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded mt-4">
+                <p class="text-yellow-800 text-center">
+                    <strong>⚠️ Demo Site Notice:</strong> This is a static preview. Contact support for actual bonus purchases.
+                </p>
+            </div>
         </div>
     </section>
 
@@ -232,73 +239,19 @@
     </footer>
 
     <script>
-        // Buy Bonus Function
+        // Buy Bonus Function - Demo Mode
         async function buyBonus(sku, price, title) {
             try {
-                // Get user email (you can modify this based on your user system)
+                // For GitHub Pages (static site), we'll simulate bonus purchase
+                // In production, this would connect to your backend server
+                
+                // Get user email
                 const userEmail = prompt("Please enter your email address:");
                 if (!userEmail) return;
 
-                // Create order
-                const orderRes = await fetch('/create-bonus-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        amount: price,
-                        currency: 'INR',
-                        bonusSku: sku,
-                        userEmail: userEmail
-                    })
-                });
-
-                if (!orderRes.ok) {
-                    throw new Error('Failed to create order');
-                }
-
-                const order = await orderRes.json();
-
-                // Razorpay checkout
-                const options = {
-                    key: 'rzp_live_R8p0w858yQYzuu', // Your Razorpay key
-                    amount: price * 100, // Convert to paise
-                    currency: 'INR',
-                    name: 'Café Business Masterclass',
-                    description: title,
-                    order_id: order.orderId,
-                    handler: async function (response) {
-                        // Verify payment
-                        const verifyRes = await fetch('/verify-bonus-payment', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                ...response,
-                                bonusSku: sku,
-                                userEmail: userEmail
-                            })
-                        });
-
-                                                 const result = await verifyRes.json();
-                         if (result.success) {
-                             alert('✅ Payment Successful! Your bonus is now unlocked.\n\nBonus: ' + title + '\n\nYou can now access this bonus content. Contact support for the actual PDF file.');
-                             // Optionally redirect to dashboard or stay on page
-                             if (confirm('Would you like to go to your dashboard to see all your bonuses?')) {
-                                 window.location.href = '/dashboard.html';
-                             }
-                         } else {
-                             alert('❌ Payment verification failed: ' + (result.error || 'Unknown error') + '\n\nPlease contact support.');
-                         }
-                    },
-                    prefill: {
-                        email: userEmail,
-                    },
-                    theme: {
-                        color: '#7C3AED'
-                    }
-                };
-
-                const rzp = new window.Razorpay(options);
-                rzp.open();
-
+                // Show demo message
+                alert(`This is a demo site. In production, this would process your payment for:\n\n🎁 ${title}\n💰 Price: ₹${price}\n📧 Email: ${userEmail}\n\nPlease contact support for actual bonus purchase.`);
+                
             } catch (error) {
                 console.error('Error:', error);
                 alert('❌ Something went wrong. Please try again.');
