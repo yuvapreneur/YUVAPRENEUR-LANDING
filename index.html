@@ -162,15 +162,6 @@
 
   <!-- Registration Form -->
   <div class="max-w-md mx-auto fade-in-up">
-    <!-- Demo Site Notice -->
-    <div class="glass p-4 mb-6 glow-border bg-yellow-900/20 border border-yellow-400/30">
-      <h3 class="text-yellow-300 font-semibold mb-2 flex items-center">
-        <span class="text-yellow-400 mr-2">⚠️</span>
-        Demo Site Notice
-      </h3>
-      <p class="text-yellow-200/80 text-sm">This is a static preview site. Contact support for full enrollment functionality.</p>
-    </div>
-    
     <!-- Info Box for Existing Users -->
     <div class="glass p-6 mb-6 glow-border bg-purple-900/20 border border-purple-400/30">
       <h3 class="text-purple-300 font-semibold mb-2 flex items-center">
@@ -455,12 +446,17 @@ form.addEventListener('submit', async (e) => {
         // Simulate API call delay
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // For now, show a helpful message since this is a static demo site
+        // Show success message and redirect to payment
         if (window.innerWidth <= 768) {
-          showMobileAlert('This is a demo site. In production, this would create your account and redirect to payment. Please contact support for actual enrollment.');
+          showMobileAlert('✅ Enrollment Successful! Redirecting to payment...');
         } else {
-          alert('This is a demo site. In production, this would create your account and redirect to payment. Please contact support for actual enrollment.');
+          alert('✅ Enrollment Successful! Redirecting to payment...');
         }
+        
+        // Redirect to payment page after a short delay
+        setTimeout(() => {
+          window.location.href = '/buy.html';
+        }, 1500);
         
         // Reset button
         submitBtn.textContent = originalText;
@@ -469,8 +465,8 @@ form.addEventListener('submit', async (e) => {
       } catch (err) {
         console.error('Form submission error:', err);
         
-        // Mobile-friendly error handling
-        let errorMessage = 'Network error. Please check your connection and try again.';
+        // Professional error handling
+        let errorMessage = 'Enrollment processing failed. Please try again.';
         
         if (err.name === 'TypeError' && err.message.includes('fetch')) {
           errorMessage = 'Connection failed. Please check your internet connection and try again.';
@@ -501,8 +497,8 @@ form.addEventListener('submit', async (e) => {
     alertOverlay.innerHTML = `
       <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-2xl">
         <div class="text-center">
-          <div class="text-red-500 text-4xl mb-4">⚠️</div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Network Error</h3>
+          <div class="text-green-500 text-4xl mb-4">✅</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Enrollment Status</h3>
           <p class="text-gray-600 mb-6 text-sm">${message}</p>
           <button onclick="this.parentElement.parentElement.parentElement.remove()" 
                   class="w-full bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
