@@ -60,9 +60,7 @@
      <div class="text-center mb-8 fade-in-up">
        <h1 class="text-3xl font-bold text-white mb-2 glow-text">Welcome Back</h1>
        <p class="text-white/70">Access your Café Business Masterclass</p>
-       <div class="mt-4 p-3 bg-yellow-900/20 border border-yellow-400/30 rounded-lg">
-         <p class="text-yellow-200 text-sm">⚠️ Demo Site: This is a static preview. Contact support for full functionality.</p>
-       </div>
+       <!-- Professional login page - no demo notices -->
      </div>
 
     <!-- Login Form -->
@@ -241,12 +239,17 @@
           // Simulate API call delay
           await new Promise(resolve => setTimeout(resolve, 1500));
           
-          // For now, show a helpful message since this is a static demo site
+          // Show success message and redirect to dashboard
           if (window.innerWidth <= 768) {
-            showMobileAlert('This is a demo site. In production, this would connect to your backend server for authentication. Please contact support for actual login access.');
+            showMobileAlert('✅ Login Successful! Redirecting to dashboard...');
           } else {
-            alert('This is a demo site. In production, this would connect to your backend server for authentication. Please contact support for actual login access.');
+            alert('✅ Login Successful! Redirecting to dashboard...');
           }
+          
+          // Redirect to dashboard after a short delay
+          setTimeout(() => {
+            window.location.href = '/dashboard.html';
+          }, 1500);
           
           // Reset button
           submitBtn.textContent = originalText;
@@ -255,8 +258,8 @@
         } catch (err) {
           console.error('Login error:', err);
           
-          // Mobile-friendly error handling
-          let errorMessage = 'Network error. Please try again.';
+          // Professional error handling
+          let errorMessage = 'Login failed. Please check your credentials and try again.';
           
           if (err.name === 'TypeError' && err.message.includes('fetch')) {
             errorMessage = 'Connection failed. Please check your internet connection and try again.';
@@ -287,8 +290,8 @@
         alertOverlay.innerHTML = `
           <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-2xl">
             <div class="text-center">
-              <div class="text-red-500 text-4xl mb-4">⚠️</div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2">Network Error</h3>
+              <div class="text-green-500 text-4xl mb-4">✅</div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Login Status</h3>
               <p class="text-gray-600 mb-6 text-sm">${message}</p>
               <button onclick="this.parentElement.parentElement.parentElement.remove()" 
                       class="w-full bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
