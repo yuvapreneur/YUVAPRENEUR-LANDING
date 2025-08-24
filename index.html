@@ -162,6 +162,15 @@
 
   <!-- Registration Form -->
   <div class="max-w-md mx-auto fade-in-up">
+    <!-- Demo Site Notice -->
+    <div class="glass p-4 mb-6 glow-border bg-yellow-900/20 border border-yellow-400/30">
+      <h3 class="text-yellow-300 font-semibold mb-2 flex items-center">
+        <span class="text-yellow-400 mr-2">⚠️</span>
+        Demo Site Notice
+      </h3>
+      <p class="text-yellow-200/80 text-sm">This is a static preview site. Contact support for full enrollment functionality.</p>
+    </div>
+    
     <!-- Info Box for Existing Users -->
     <div class="glass p-6 mb-6 glow-border bg-purple-900/20 border border-purple-400/30">
       <h3 class="text-purple-300 font-semibold mb-2 flex items-center">
@@ -434,65 +443,53 @@ form.addEventListener('submit', async (e) => {
       };
 
       try {
-    const res = await fetch('/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      alert('Request failed: ' + errorText);
-      return;
-    }
-
-    const result = await res.json();
-    
-    if (result.status === 'success') {
-      if (result.existingUser && result.needsPayment) {
-        // Existing user needs to make payment
-        const message = `${result.message}\n\nWould you like to proceed to payment now?`;
-        if (confirm(message)) {
-          window.location.href = '/buy.html';
+        // For GitHub Pages (static site), we'll simulate form submission
+        // In production, this would connect to your backend server
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = '🔄 Processing...';
+        submitBtn.disabled = true;
+        
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // For now, show a helpful message since this is a static demo site
+        if (window.innerWidth <= 768) {
+          showMobileAlert('This is a demo site. In production, this would create your account and redirect to payment. Please contact support for actual enrollment.');
+        } else {
+          alert('This is a demo site. In production, this would create your account and redirect to payment. Please contact support for actual enrollment.');
         }
-      } else {
-        // New user or user with updated password
-        alert(result.message || 'Enrollment successful! Now proceed to payment to get instant access.');
-        form.reset();
-        // Redirect to payment page
-        window.location.href = '/buy.html';
-      }
-    } else {
-      if (result.hasAccount && result.hasCourseAccess) {
-        // User already has account and course access
-        const message = `${result.error}\n\nWould you like to go to the login page?`;
-        if (confirm(message)) {
-          window.location.href = '/login.html';
-        }
-      } else {
-        // Other errors
-        alert('Error: ' + (result.error || 'Something went wrong. Please try again.'));
-      }
-    }
+        
+        // Reset button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        
       } catch (err) {
-    console.error('Form submission error:', err);
-    
-    // Mobile-friendly error handling
-    let errorMessage = 'Network error. Please check your connection and try again.';
-    
-    if (err.name === 'TypeError' && err.message.includes('fetch')) {
-      errorMessage = 'Connection failed. Please check your internet connection and try again.';
-    } else if (err.name === 'AbortError') {
-      errorMessage = 'Request was cancelled. Please try again.';
-    }
-    
-    // Use a more mobile-friendly alert
-    if (window.innerWidth <= 768) {
-      // Mobile device - use a custom alert
-      showMobileAlert(errorMessage);
-    } else {
-      alert(errorMessage);
-    }
+        console.error('Form submission error:', err);
+        
+        // Mobile-friendly error handling
+        let errorMessage = 'Network error. Please check your connection and try again.';
+        
+        if (err.name === 'TypeError' && err.message.includes('fetch')) {
+          errorMessage = 'Connection failed. Please check your internet connection and try again.';
+        } else if (err.name === 'AbortError') {
+          errorMessage = 'Request was cancelled. Please try again.';
+        }
+        
+        // Use a more mobile-friendly alert
+        if (window.innerWidth <= 768) {
+          // Mobile device - use a custom alert
+          showMobileAlert(errorMessage);
+        } else {
+          alert(errorMessage);
+        }
+        
+        // Reset button
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Enroll Now - ₹199';
+        submitBtn.disabled = false;
       }
       });
   

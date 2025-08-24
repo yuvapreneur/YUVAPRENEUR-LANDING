@@ -56,11 +56,14 @@
 </head>
 <body class="min-h-screen p-4">
   <div class="max-w-md mx-auto mt-8">
-    <!-- Header -->
-    <div class="text-center mb-8 fade-in-up">
-      <h1 class="text-3xl font-bold text-white mb-2 glow-text">Welcome Back</h1>
-      <p class="text-white/70">Access your Café Business Masterclass</p>
-    </div>
+         <!-- Header -->
+     <div class="text-center mb-8 fade-in-up">
+       <h1 class="text-3xl font-bold text-white mb-2 glow-text">Welcome Back</h1>
+       <p class="text-white/70">Access your Café Business Masterclass</p>
+       <div class="mt-4 p-3 bg-yellow-900/20 border border-yellow-400/30 rounded-lg">
+         <p class="text-yellow-200 text-sm">⚠️ Demo Site: This is a static preview. Contact support for full functionality.</p>
+       </div>
+     </div>
 
     <!-- Login Form -->
     <div class="glass p-8 glow-border fade-in-up">
@@ -225,49 +228,55 @@
          password: formData.get('password')
        };
        
-       try {
-         const response = await fetch('/api/auth/login', {
-           method: 'POST',
-           headers: { 'Content-Type': 'application/json' },
-           body: JSON.stringify(data)
-         });
-         
-         const result = await response.json();
-         
-         if (result.success) {
-           alert('✅ Login successful! Redirecting to dashboard...');
-           window.location.href = '/dashboard.html';
-         } else {
-           if (result.needsPurchase) {
-             const instructions = result.instructions ? '\n\n' + result.instructions.join('\n') : '';
-             const message = `❌ ${result.error}${instructions}\n\nWould you like to go to the home page to purchase the course?`;
-             if (confirm(message)) {
-               window.location.href = result.helpUrl || '/';
-             }
-           } else {
-             alert('❌ Error: ' + (result.error || 'Invalid credentials'));
-           }
-         }
-       } catch (err) {
-         console.error('Login error:', err);
-         
-         // Mobile-friendly error handling
-         let errorMessage = 'Network error. Please try again.';
-         
-         if (err.name === 'TypeError' && err.message.includes('fetch')) {
-           errorMessage = 'Connection failed. Please check your internet connection and try again.';
-         } else if (err.name === 'AbortError') {
-           errorMessage = 'Request was cancelled. Please try again.';
-         }
-         
-         // Use a more mobile-friendly alert
-         if (window.innerWidth <= 768) {
-           // Mobile device - use a custom alert
-           showMobileAlert(errorMessage);
-         } else {
-           alert(errorMessage);
-         }
-       }
+               try {
+          // For GitHub Pages (static site), we'll simulate a login check
+          // In production, this would connect to your backend server
+          
+          // Show loading state
+          const submitBtn = form.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.textContent = '🔄 Checking...';
+          submitBtn.disabled = true;
+          
+          // Simulate API call delay
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          
+          // For now, show a helpful message since this is a static demo site
+          if (window.innerWidth <= 768) {
+            showMobileAlert('This is a demo site. In production, this would connect to your backend server for authentication. Please contact support for actual login access.');
+          } else {
+            alert('This is a demo site. In production, this would connect to your backend server for authentication. Please contact support for actual login access.');
+          }
+          
+          // Reset button
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+          
+        } catch (err) {
+          console.error('Login error:', err);
+          
+          // Mobile-friendly error handling
+          let errorMessage = 'Network error. Please try again.';
+          
+          if (err.name === 'TypeError' && err.message.includes('fetch')) {
+            errorMessage = 'Connection failed. Please check your internet connection and try again.';
+          } else if (err.name === 'AbortError') {
+            errorMessage = 'Request was cancelled. Please try again.';
+          }
+          
+          // Use a more mobile-friendly alert
+          if (window.innerWidth <= 768) {
+            // Mobile device - use a custom alert
+            showMobileAlert(errorMessage);
+          } else {
+            alert(errorMessage);
+          }
+          
+          // Reset button
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.textContent = 'Login to Dashboard';
+          submitBtn.disabled = false;
+        }
      });
      
      // Mobile-friendly alert function
