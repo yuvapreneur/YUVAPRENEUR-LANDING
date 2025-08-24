@@ -6,7 +6,7 @@ console.log('📁 Current working directory:', process.cwd());
 const BONUSES = [
   { 
     sku: "bonus-menu-psych",  
-    price: 1, 
+    price: 149, 
     title: "Café Menu Psychology Blueprint", 
     desc: "Design menus that increase average order value and customer satisfaction.",
     filename: "bonus-menu-psych.pdf"
