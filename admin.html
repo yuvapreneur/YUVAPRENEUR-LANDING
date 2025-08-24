@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Enrollments</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen p-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="glass p-8">
+      <h1 class="text-3xl font-bold text-white mb-8">📊 Enrollment Dashboard</h1>
+      
+      <div class="mb-4 flex flex-wrap gap-4 items-center">
+        <button onclick="loadEnrollments()" class="glossy px-4 py-2 font-semibold">
+          🔄 Refresh Data
+        </button>
+        <button onclick="exportToCSV()" class="glossy px-4 py-2 font-semibold bg-green-600 hover:bg-green-700">
+          📊 Export to CSV
+        </button>
+        <button onclick="exportToExcel()" class="glossy px-4 py-2 font-semibold bg-blue-600 hover:bg-blue-700">
+          📈 Export to Excel
+        </button>
+        <span class="text-white/60 ml-4" id="lastUpdated"></span>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-white">
+          <thead>
+            <tr class="border-b border-white/20">
+              <th class="text-left p-3">Name</th>
+              <th class="text-left p-3">Email</th>
+              <th class="text-left p-3">Phone</th>
+              <th class="text-left p-3">Date</th>
+              <th class="text-left p-3">ID</th>
+            </tr>
+          </thead>
+          <tbody id="enrollmentsTable">
+            <tr>
+              <td colspan="5" class="text-center p-8 text-white/60">Loading enrollments...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="mt-4 text-white/60 text-sm">
+        Total Enrollments: <span id="totalCount">0</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadEnrollments() {
+      try {
+        const response = await fetch('/admin/enrollments');
+        const enrollments = await response.json();
+        
+        const tableBody = document.getElementById('enrollmentsTable');
+        const totalCount = document.getElementById('totalCount');
+        
+        if (enrollments.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="5" class="text-center p-8 text-white/60">No enrollments found</td></tr>';
+          totalCount.textContent = '0';
+          return;
+        }
+        
+        tableBody.innerHTML = enrollments.map(enrollment => `
+          <tr class="border-b border-white/10 hover:bg-white/5">
+            <td class="p-3">${enrollment.name}</td>
+            <td class="p-3">${enrollment.email}</td>
+            <td class="p-3">${enrollment.phone}</td>
+            <td class="p-3">${new Date(enrollment.createdAt).toLocaleDateString()}</td>
+            <td class="p-3 text-xs text-white/50">${enrollment._id}</td>
+          </tr>
+        `).join('');
+        
+        totalCount.textContent = enrollments.length;
+        document.getElementById('lastUpdated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        
+      } catch (error) {
+        console.error('Error loading enrollments:', error);
+        document.getElementById('enrollmentsTable').innerHTML = 
+          '<tr><td colspan="5" class="text-center p-8 text-red-400">Error loading data</td></tr>';
+      }
+    }
+    
+    // Load enrollments on page load
+    loadEnrollments();
+    
+    // Auto-refresh every 30 seconds
+    setInterval(loadEnrollments, 30000);
+    
+    // Export functions
+    function exportToCSV() {
+      const table = document.getElementById('enrollmentsTable');
+      const rows = table.querySelectorAll('tr');
+      let csv = 'Name,Email,Phone,Date,ID\n';
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length > 0) {
+          const rowData = Array.from(cells).map(cell => 
+            `"${cell.textContent.replace(/"/g, '""')}"`
+          );
+          csv += rowData.join(',') + '\n';
+        }
+      });
+      
+      downloadFile(csv, 'enrollments.csv', 'text/csv');
+    }
+    
+    function exportToExcel() {
+      const table = document.getElementById('enrollmentsTable');
+      const rows = table.querySelectorAll('tr');
+      let html = '<table>';
+      
+      // Add header
+      html += '<tr><th>Name</th><th>Email</th><th>Phone</th><th>Date</th><th>ID</th></tr>';
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length > 0) {
+          html += '<tr>';
+          cells.forEach(cell => {
+            html += `<td>${cell.textContent}</td>`;
+          });
+          html += '</tr>';
+        }
+      });
+      
+      html += '</table>';
+      downloadFile(html, 'enrollments.xls', 'application/vnd.ms-excel');
+    }
+    
+    function downloadFile(content, filename, contentType) {
+      const blob = new Blob([content], { type: contentType });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

@@ -3,13 +3,13 @@
 ## 📋 **Steps to Host on GitHub:**
 
 ### 1. **Create GitHub Repository**
-```bash
+   ```bash
 # Create new repo on GitHub.com named: yuvapreneur-landing
 # Make it PUBLIC (required for GitHub Pages)
-```
+   ```
 
 ### 2. **Push Your Code**
-```bash
+   ```bash
 git init
 git add .
 git commit -m "Initial commit"

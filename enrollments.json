@@ -1,0 +1,64 @@
+[
+  {
+    "_id": "1755960015826",
+    "name": "Abhijeet vishnu wankhede",
+    "email": "learnwithabhijeet01@gmail.com",
+    "phone": "9022005019",
+    "profession": "",
+    "city": "",
+    "state": "",
+    "hasMainCourse": false,
+    "bonuses": [],
+    "createdAt": "2025-08-23T14:40:15.826Z",
+    "updatedAt": "2025-08-23T14:40:15.826Z"
+  },
+  {
+    "_id": "1756005451463",
+    "name": "abhijjet",
+    "email": "abhijeetwankhede61@gmail.com",
+    "phone": "9022005019",
+    "profession": "",
+    "city": "",
+    "state": "",
+    "hasMainCourse": false,
+    "bonuses": [],
+    "createdAt": "2025-08-24T03:17:31.463Z",
+    "updatedAt": "2025-08-24T03:41:58.008Z",
+    "password": "123456"
+  },
+  {
+    "_id": "1755921533365",
+    "name": "abhijjetwa",
+    "email": "yuvapreneur@gmail.com",
+    "phone": "9022005019",
+    "profession": "",
+    "city": "",
+    "state": "",
+    "hasMainCourse": true,
+    "bonuses": [
+      {
+        "sku": "bonus-menu-psych",
+        "paymentId": "pay_R93rouNcDptF7R",
+        "orderId": "order_R93rOmcjcznSdS",
+        "purchasedAt": "2025-08-24T05:47:15.418Z"
+      }
+    ],
+    "createdAt": "2025-08-23T03:58:53.365Z",
+    "updatedAt": "2025-08-24T05:40:00.000Z",
+    "password": "12345678"
+  },
+  {
+    "_id": "1756021276601",
+    "name": "abhijjet",
+    "email": "abhijeetwankhede143@gmail.com",
+    "phone": "9022005019",
+    "password": "abcdefghi",
+    "profession": "",
+    "city": "",
+    "state": "",
+    "hasMainCourse": true,
+    "bonuses": [],
+    "createdAt": "2025-08-24T07:41:16.603Z",
+    "updatedAt": "2025-08-24T08:13:30.296Z"
+  }
+]

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Payment & Login Flow</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .step { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+        .log { background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 3px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Payment & Login Flow</h1>
+    
+    <div class="step">
+        <h3>Step 1: Test Server Connection</h3>
+        <button onclick="testServer()">Test Server</button>
+        <div id="serverResult" class="log"></div>
+    </div>
+    
+    <div class="step">
+        <h3>Step 2: Test Payment Flow</h3>
+        <input type="email" id="testEmail" placeholder="Enter email" value="test@example.com">
+        <input type="password" id="testPassword" placeholder="Enter password" value="testpass123">
+        <input type="text" id="testName" placeholder="Enter name" value="Test User">
+        <input type="text" id="testPhone" placeholder="Enter phone" value="1234567890">
+        <button onclick="testPayment()">Test Payment (₹199)</button>
+        <div id="paymentResult" class="log"></div>
+    </div>
+    
+    <div class="step">
+        <h3>Step 3: Test Login</h3>
+        <button onclick="testLogin()">Test Login</button>
+        <div id="loginResult" class="log"></div>
+    </div>
+    
+    <div class="step">
+        <h3>Step 4: Check User Data</h3>
+        <button onclick="checkUserData()">Check User Data</button>
+        <div id="userDataResult" class="log"></div>
+    </div>
+
+    <script>
+        let testUserEmail = '';
+        let testUserPassword = '';
+        
+        function log(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            element.innerHTML += logEntry + '<br>';
+            element.scrollTop = element.scrollHeight;
+            
+            if (isError) {
+                element.style.backgroundColor = '#f8d7da';
+            } else {
+                element.style.backgroundColor = '#d4edda';
+            }
+        }
+        
+        async function testServer() {
+            const resultDiv = document.getElementById('serverResult');
+            resultDiv.innerHTML = '';
+            
+            try {
+                log('serverResult', 'Testing server connection...');
+                const response = await fetch('/test');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    log('serverResult', '✅ Server is running successfully!');
+                    log('serverResult', `Message: ${data.message}`);
+                    log('serverResult', `Razorpay: ${data.razorpay}`);
+                } else {
+                    log('serverResult', '❌ Server test failed', true);
+                }
+            } catch (error) {
+                log('serverResult', `❌ Server test error: ${error.message}`, true);
+            }
+        }
+        
+        async function testPayment() {
+            const resultDiv = document.getElementById('paymentResult');
+            resultDiv.innerHTML = '';
+            
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            const name = document.getElementById('testName').value;
+            const phone = document.getElementById('testPhone').value;
+            
+            if (!email || !password || !name || !phone) {
+                log('paymentResult', '❌ Please fill all fields', true);
+                return;
+            }
+            
+            testUserEmail = email;
+            testUserPassword = password;
+            
+            try {
+                log('paymentResult', 'Creating order...');
+                const orderResponse = await fetch('/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: 1,
+                        currency: 'INR',
+                        userEmail: email,
+                        userPassword: password,
+                        userName: name,
+                        userPhone: phone
+                    })
+                });
+                
+                const orderData = await orderResponse.json();
+                
+                if (orderData.status === 'success') {
+                    log('paymentResult', '✅ Order created successfully!');
+                    log('paymentResult', `Order ID: ${orderData.order.id}`);
+                    
+                    // Initialize Razorpay
+                    const options = {
+                        key: 'rzp_live_R8p0w858yQYzuu',
+                        amount: orderData.order.amount,
+                        currency: orderData.order.currency,
+                        name: 'Café Business Masterclass',
+                        description: 'Test Payment - ₹199',
+                        order_id: orderData.order.id,
+                        handler: async function (response) {
+                            try {
+                                log('paymentResult', 'Payment completed, verifying...');
+                                
+                                const verifyResponse = await fetch('/verify-payment', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_signature: response.razorpay_signature
+                                    })
+                                });
+                                
+                                const verifyData = await verifyResponse.json();
+                                
+                                if (verifyData.status === 'success') {
+                                    log('paymentResult', '✅ Payment verified successfully!');
+                                    log('paymentResult', `Redirect: ${verifyData.redirect}`);
+                                } else {
+                                    log('paymentResult', `❌ Payment verification failed: ${verifyData.error}`, true);
+                                }
+                            } catch (error) {
+                                log('paymentResult', `❌ Payment verification error: ${error.message}`, true);
+                            }
+                        },
+                        prefill: { name: name, email: email, contact: phone },
+                        theme: { color: '#FF6B35' }
+                    };
+                    
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                    
+                } else {
+                    log('paymentResult', `❌ Order creation failed: ${orderData.error}`, true);
+                }
+            } catch (error) {
+                log('paymentResult', `❌ Payment error: ${error.message}`, true);
+            }
+        }
+        
+        async function testLogin() {
+            const resultDiv = document.getElementById('loginResult');
+            resultDiv.innerHTML = '';
+            
+            if (!testUserEmail || !testUserPassword) {
+                log('loginResult', '❌ Please complete payment first', true);
+                return;
+            }
+            
+            try {
+                log('loginResult', `Attempting login with: ${testUserEmail}`);
+                
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: testUserEmail,
+                        password: testUserPassword
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('loginResult', '✅ Login successful!');
+                    log('loginResult', `User: ${data.user.name}`);
+                    log('loginResult', `Has main course: ${data.user.hasMainCourse}`);
+                } else {
+                    log('loginResult', `❌ Login failed: ${data.error}`, true);
+                }
+            } catch (error) {
+                log('loginResult', `❌ Login error: ${error.message}`, true);
+            }
+        }
+        
+        async function checkUserData() {
+            const resultDiv = document.getElementById('userDataResult');
+            resultDiv.innerHTML = '';
+            
+            try {
+                log('userDataResult', 'Checking user data...');
+                
+                const response = await fetch('/admin/enrollments');
+                const enrollments = await response.json();
+                
+                log('userDataResult', `Total enrollments: ${enrollments.length}`);
+                
+                if (testUserEmail) {
+                    const user = enrollments.find(e => e.email === testUserEmail);
+                    if (user) {
+                        log('userDataResult', '✅ User found in enrollments:');
+                        log('userDataResult', `  Name: ${user.name}`);
+                        log('userDataResult', `  Email: ${user.email}`);
+                        log('userDataResult', `  Has main course: ${user.hasMainCourse}`);
+                        log('userDataResult', `  Has password: ${!!user.password}`);
+                        log('userDataResult', `  Created: ${user.createdAt}`);
+                    } else {
+                        log('userDataResult', '❌ User not found in enrollments', true);
+                    }
+                }
+                
+                // Show last 3 enrollments
+                log('userDataResult', 'Last 3 enrollments:');
+                enrollments.slice(-3).forEach((enrollment, index) => {
+                    log('userDataResult', `  ${index + 1}. ${enrollment.email} - Main course: ${enrollment.hasMainCourse} - Password: ${!!enrollment.password}`);
+                });
+                
+            } catch (error) {
+                log('userDataResult', `❌ Error checking user data: ${error.message}`, true);
+            }
+        }
+        
+        // Auto-test server on page load
+        window.onload = function() {
+            testServer();
+        };
+    </script>
+</body>
+</html>

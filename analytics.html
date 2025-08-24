@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics - Café Business Masterclass</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="min-h-screen p-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="glass p-8">
+      <h1 class="text-3xl font-bold text-white mb-8">📈 Analytics Dashboard</h1>
+      
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="glass p-6 text-center">
+          <div class="text-3xl font-bold text-white" id="totalEnrollments">0</div>
+          <div class="text-white/60">Total Enrollments</div>
+        </div>
+        <div class="glass p-6 text-center">
+          <div class="text-3xl font-bold text-white" id="todayEnrollments">0</div>
+          <div class="text-white/60">Today's Enrollments</div>
+        </div>
+        <div class="glass p-6 text-center">
+          <div class="text-3xl font-bold text-white" id="thisWeek">0</div>
+          <div class="text-white/60">This Week</div>
+        </div>
+        <div class="glass p-6 text-center">
+          <div class="text-3xl font-bold text-white" id="thisMonth">0</div>
+          <div class="text-white/60">This Month</div>
+        </div>
+      </div>
+      
+      <!-- Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="glass p-6">
+          <h3 class="text-xl font-bold text-white mb-4">Enrollments by Day</h3>
+          <canvas id="dailyChart" width="400" height="200"></canvas>
+        </div>
+        <div class="glass p-6">
+          <h3 class="text-xl font-bold text-white mb-4">Enrollments by Hour</h3>
+          <canvas id="hourlyChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+      
+      <div class="mt-8">
+        <button onclick="loadAnalytics()" class="glossy px-4 py-2 font-semibold">
+          🔄 Refresh Analytics
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let dailyChart, hourlyChart;
+    
+    async function loadAnalytics() {
+      try {
+        const response = await fetch('/admin/enrollments');
+        const enrollments = await response.json();
+        
+        // Calculate statistics
+        const total = enrollments.length;
+        const today = new Date().toDateString();
+        const todayCount = enrollments.filter(e => 
+          new Date(e.createdAt).toDateString() === today
+        ).length;
+        
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        const thisWeekCount = enrollments.filter(e => 
+          new Date(e.createdAt) >= weekAgo
+        ).length;
+        
+        const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const thisMonthCount = enrollments.filter(e => 
+          new Date(e.createdAt) >= monthAgo
+        ).length;
+        
+        // Update stats
+        document.getElementById('totalEnrollments').textContent = total;
+        document.getElementById('todayEnrollments').textContent = todayCount;
+        document.getElementById('thisWeek').textContent = thisWeekCount;
+        document.getElementById('thisMonth').textContent = thisMonthCount;
+        
+        // Create charts
+        createDailyChart(enrollments);
+        createHourlyChart(enrollments);
+        
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+      }
+    }
+    
+    function createDailyChart(enrollments) {
+      const ctx = document.getElementById('dailyChart').getContext('2d');
+      
+      // Group by day
+      const dailyData = {};
+      enrollments.forEach(e => {
+        const day = new Date(e.createdAt).toDateString();
+        dailyData[day] = (dailyData[day] || 0) + 1;
+      });
+      
+      const labels = Object.keys(dailyData).slice(-7); // Last 7 days
+      const data = labels.map(day => dailyData[day] || 0);
+      
+      if (dailyChart) dailyChart.destroy();
+      
+      dailyChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Enrollments',
+            data: data,
+            borderColor: 'rgb(147, 51, 234)',
+            backgroundColor: 'rgba(147, 51, 234, 0.1)',
+            tension: 0.1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: { color: 'white' }
+            }
+          },
+          scales: {
+            y: {
+              ticks: { color: 'white' }
+            },
+            x: {
+              ticks: { color: 'white' }
+            }
+          }
+        }
+      });
+    }
+    
+    function createHourlyChart(enrollments) {
+      const ctx = document.getElementById('hourlyChart').getContext('2d');
+      
+      // Group by hour
+      const hourlyData = {};
+      enrollments.forEach(e => {
+        const hour = new Date(e.createdAt).getHours();
+        hourlyData[hour] = (hourlyData[hour] || 0) + 1;
+      });
+      
+      const labels = Array.from({length: 24}, (_, i) => `${i}:00`);
+      const data = labels.map((_, i) => hourlyData[i] || 0);
+      
+      if (hourlyChart) hourlyChart.destroy();
+      
+      hourlyChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Enrollments',
+            data: data,
+            backgroundColor: 'rgba(147, 51, 234, 0.8)',
+            borderColor: 'rgb(147, 51, 234)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: { color: 'white' }
+            }
+          },
+          scales: {
+            y: {
+              ticks: { color: 'white' }
+            },
+            x: {
+              ticks: { color: 'white' }
+            }
+          }
+        }
+      });
+    }
+    
+    // Load analytics on page load
+    loadAnalytics();
+    
+    // Auto-refresh every 5 minutes
+    setInterval(loadAnalytics, 5 * 60 * 1000);
+  </script>
+</body>
+</html>

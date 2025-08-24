@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bonus Download - Café Business Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8">🧪 Test Bonus Download System</h1>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Test Parameters</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Bonus SKU:</label>
+                    <input type="text" id="bonusSku" value="bonus-menu-psych" class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">User Email:</label>
+                    <input type="text" id="userEmail" value="yuvapreneur@gmail.com" class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Test Purchase Verification -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">1. Test Purchase Verification</h3>
+                <button onclick="testPurchaseVerification()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                    🔍 Verify Purchase
+                </button>
+                <div id="verificationResult" class="mt-4 p-3 bg-gray-100 rounded-md text-sm hidden"></div>
+            </div>
+
+            <!-- Test PDF Access -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">2. Test PDF Access</h3>
+                <button onclick="testPdfAccess()" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700">
+                    📄 Test PDF Access
+                </button>
+                <div id="pdfResult" class="mt-4 p-3 bg-gray-100 rounded-md text-sm hidden"></div>
+            </div>
+
+            <!-- Test Download Page -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">3. Test Download Page</h3>
+                <button onclick="testDownloadPage()" class="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700">
+                    🌐 Open Download Page
+                </button>
+                <div id="downloadResult" class="mt-4 p-3 bg-gray-100 rounded-md text-sm hidden"></div>
+            </div>
+
+            <!-- Test Complete Flow -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">4. Test Complete Flow</h3>
+                <button onclick="testCompleteFlow()" class="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700">
+                    🚀 Test Complete Flow
+                </button>
+                <div id="completeResult" class="mt-4 p-3 bg-gray-100 rounded-md text-sm hidden"></div>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold mb-4">Test Results Log</h3>
+            <div id="testLog" class="bg-gray-100 p-4 rounded-md text-sm font-mono max-h-64 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('testLog');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function testPurchaseVerification() {
+            const bonusSku = document.getElementById('bonusSku').value;
+            const userEmail = document.getElementById('userEmail').value;
+            const resultDiv = document.getElementById('verificationResult');
+
+            try {
+                log(`Testing purchase verification for ${bonusSku} and ${userEmail}`);
+                
+                const response = await fetch('/check-bonus-purchase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bonusSku, userEmail })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `<span class="text-green-600">✅ Success: ${result.message}</span><br><span class="text-blue-600">Download URL: ${result.downloadUrl}</span>`;
+                    log(`✅ Purchase verification successful: ${result.message}`);
+                } else {
+                    resultDiv.innerHTML = `<span class="text-red-600">❌ Failed: ${result.message}</span>`;
+                    log(`❌ Purchase verification failed: ${result.message}`);
+                }
+                
+                resultDiv.classList.remove('hidden');
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="text-red-600">❌ Error: ${error.message}</span>`;
+                resultDiv.classList.remove('hidden');
+                log(`❌ Purchase verification error: ${error.message}`);
+            }
+        }
+
+        async function testPdfAccess() {
+            const bonusSku = document.getElementById('bonusSku').value;
+            const userEmail = document.getElementById('userEmail').value;
+            const resultDiv = document.getElementById('pdfResult');
+
+            try {
+                log(`Testing PDF access for ${bonusSku}`);
+                
+                const response = await fetch(`/bonus-pdf/${bonusSku}?email=${encodeURIComponent(userEmail)}`);
+                
+                if (response.ok) {
+                    const contentLength = response.headers.get('content-length');
+                    resultDiv.innerHTML = `<span class="text-green-600">✅ PDF access successful</span><br><span class="text-blue-600">File size: ${contentLength} bytes</span>`;
+                    log(`✅ PDF access successful - File size: ${contentLength} bytes`);
+                } else {
+                    const error = await response.json();
+                    resultDiv.innerHTML = `<span class="text-red-600">❌ PDF access failed: ${error.error}</span>`;
+                    log(`❌ PDF access failed: ${error.error}`);
+                }
+                
+                resultDiv.classList.remove('hidden');
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="text-red-600">❌ Error: ${error.message}</span>`;
+                resultDiv.classList.remove('hidden');
+                log(`❌ PDF access error: ${error.message}`);
+            }
+        }
+
+        function testDownloadPage() {
+            const bonusSku = document.getElementById('bonusSku').value;
+            const userEmail = document.getElementById('userEmail').value;
+            const resultDiv = document.getElementById('downloadResult');
+
+            try {
+                log(`Opening download page for ${bonusSku}`);
+                
+                const downloadUrl = `/bonus-download.html?sku=${bonusSku}&email=${encodeURIComponent(userEmail)}`;
+                window.open(downloadUrl, '_blank');
+                
+                resultDiv.innerHTML = `<span class="text-green-600">✅ Download page opened in new tab</span>`;
+                resultDiv.classList.remove('hidden');
+                log(`✅ Download page opened: ${downloadUrl}`);
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="text-red-600">❌ Error: ${error.message}</span>`;
+                resultDiv.classList.remove('hidden');
+                log(`❌ Download page error: ${error.message}`);
+            }
+        }
+
+        async function testCompleteFlow() {
+            const resultDiv = document.getElementById('completeResult');
+            resultDiv.innerHTML = '<span class="text-blue-600">🔄 Testing complete flow...</span>';
+            resultDiv.classList.remove('hidden');
+            
+            log(`🚀 Starting complete flow test`);
+            
+            // Test 1: Purchase verification
+            await testPurchaseVerification();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Test 2: PDF access
+            await testPdfAccess();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Test 3: Download page
+            testDownloadPage();
+            
+            resultDiv.innerHTML = '<span class="text-green-600">✅ Complete flow test finished! Check results above.</span>';
+            log(`✅ Complete flow test finished`);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            log(`🧪 Bonus download test system initialized`);
+            log(`📋 Testing with user: yuvapreneur@gmail.com`);
+            log(`📋 Testing with bonus: bonus-menu-psych`);
+        });
+    </script>
+</body>
+</html>

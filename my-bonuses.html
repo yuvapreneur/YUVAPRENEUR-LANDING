@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bonuses - Café Business Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen p-4">
+    <!-- Navigation -->
+    <nav class="glass p-4 mb-8 glow-border">
+        <div class="flex justify-between items-center">
+            <div class="flex space-x-6">
+                <a href="index.html" class="text-white hover:text-purple-300 transition-colors">Home</a>
+                <a href="bonuses.html" class="text-white hover:text-purple-300 transition-colors">Bonuses</a>
+                <a href="login.html" class="text-white hover:text-purple-300 transition-colors">Login</a>
+                <a href="dashboard.html" class="text-white hover:text-purple-300 transition-colors">Dashboard</a>
+            </div>
+            <button id="logoutBtn" class="glossy px-4 py-2 text-sm">Logout</button>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12 fade-in-up">
+            <h1 class="text-4xl font-bold text-white mb-4 glow-text">🎁 My Bonuses</h1>
+            <p class="text-xl text-white/80">Access your purchased bonus materials</p>
+        </div>
+
+        <!-- Bonuses Grid -->
+        <div id="bonusesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Bonuses will be loaded here -->
+        </div>
+
+        <!-- No Bonuses Message -->
+        <div id="noBonusesMessage" class="hidden text-center py-12">
+            <div class="glass p-8 glow-border fade-in-up">
+                <h3 class="text-2xl font-bold text-white mb-4">No Bonuses Purchased Yet</h3>
+                <p class="text-white/70 mb-6">You haven't purchased any bonuses yet. Check out our exclusive bonus offers!</p>
+                <a href="bonuses.html" class="glossy px-6 py-3 text-lg font-semibold">Browse Bonuses</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please login to access your bonuses');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            loadUserBonuses();
+        });
+
+        async function loadUserBonuses() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('/api/user/my-bonuses', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch bonuses');
+                }
+
+                const bonuses = await response.json();
+                displayBonuses(bonuses);
+            } catch (error) {
+                console.error('Error loading bonuses:', error);
+                document.getElementById('noBonusesMessage').classList.remove('hidden');
+            }
+        }
+
+        function displayBonuses(bonuses) {
+            const container = document.getElementById('bonusesContainer');
+            const noBonusesMessage = document.getElementById('noBonusesMessage');
+
+            if (bonuses.length === 0) {
+                container.classList.add('hidden');
+                noBonusesMessage.classList.remove('hidden');
+                return;
+            }
+
+            container.innerHTML = bonuses.map(bonus => `
+                <div class="glass p-6 glow-border fade-in-up bonus-card">
+                    <h3 class="text-xl font-bold text-white mb-3">${bonus.title}</h3>
+                    <p class="text-white/70 mb-4">${bonus.desc}</p>
+                    <a href="${bonus.pdfUrl}" target="_blank" class="glossy px-4 py-2 text-sm font-semibold">
+                        📖 Open Bonus PDF
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            alert('Logged out successfully!');
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Access - Café Business Masterclass</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen p-4">
+  <div class="max-w-4xl mx-auto">
+    <div class="glass p-8">
+      <h1 class="text-3xl font-bold text-white mb-8 text-center">📚 Café Business Masterclass - Course Access</h1>
+      
+      <div class="mb-8 text-center">
+        <p class="text-white/80 mb-4">Welcome to your complete course materials!</p>
+        <p class="text-white/60">Click on any module to download or view the PDF</p>
+      </div>
+      
+      <!-- Course Modules -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="modulesList">
+        <div class="text-center text-white/60">Loading course modules...</div>
+      </div>
+      
+      <div class="mt-8 text-center">
+        <a href="/" class="glossy px-6 py-3 font-semibold text-lg inline-block">
+          ← Back to Home
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadModules() {
+      try {
+        const response = await fetch('/pdfs');
+        const data = await response.json();
+        const modulesList = document.getElementById('modulesList');
+        
+        if (data.pdfs && data.pdfs.length > 0) {
+          // Sort PDFs by module number
+          const sortedPdfs = data.pdfs.sort((a, b) => {
+            const aNum = parseInt(a.match(/Module\s*(\d+)/)?.[1] || '0');
+            const bNum = parseInt(b.match(/Module\s*(\d+)/)?.[1] || '0');
+            return aNum - bNum;
+          });
+          
+          modulesList.innerHTML = sortedPdfs.map(pdf => {
+            const moduleName = pdf.replace('.pdf', '');
+            const moduleNumber = pdf.match(/Module\s*(\d+)/)?.[1] || '?';
+            const encodedFilename = encodeURIComponent(pdf);
+            
+            return `
+              <div class="glass p-4 hover:scale-105 transition-transform">
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-purple-400 mb-2">📖</div>
+                  <h3 class="text-white font-semibold mb-2">Module ${moduleNumber}</h3>
+                  <p class="text-white/70 text-sm mb-4">${moduleName}</p>
+                  <a href="/pdfs/${encodedFilename}" 
+                     target="_blank" 
+                     class="glossy px-4 py-2 text-sm font-semibold inline-block">
+                    📄 View PDF
+                  </a>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          modulesList.innerHTML = '<div class="text-center text-white/60">No course modules found</div>';
+        }
+      } catch (error) {
+        console.error('Error loading modules:', error);
+        document.getElementById('modulesList').innerHTML = 
+          '<div class="text-center text-red-400">Error loading course modules</div>';
+      }
+    }
+    
+    // Load modules on page load
+    loadModules();
+  </script>
+</body>
+</html>
