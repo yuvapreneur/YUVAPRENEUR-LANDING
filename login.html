@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Login - Café Business Masterclass</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="styles.css" rel="stylesheet">
@@ -226,10 +229,7 @@
          password: formData.get('password')
        };
        
-               try {
-          // For GitHub Pages (static site), we'll simulate a login check
-          // In production, this would connect to your backend server
-          
+       try {
           // Show loading state
           const submitBtn = form.querySelector('button[type="submit"]');
           const originalText = submitBtn.textContent;
@@ -247,7 +247,9 @@
           }
           
           // Redirect to dashboard after a short delay
+          console.log('🚀 Redirecting to dashboard in 1.5 seconds...');
           setTimeout(() => {
+            console.log('🎯 Redirecting now to:', '/dashboard.html');
             window.location.href = '/dashboard.html';
           }, 1500);
           
