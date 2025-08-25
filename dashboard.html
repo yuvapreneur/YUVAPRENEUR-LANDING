@@ -139,7 +139,7 @@
         
         // Update account status
         document.getElementById('courseStatus').textContent = '✅ Active';
-        document.getElementById('bonusCount').textContent = '1';
+        document.getElementById('bonusCount').textContent = '4';
         
         console.log('✅ Profile loaded successfully');
       } catch (error) {
@@ -153,7 +153,7 @@
       try {
         const courseAccessDiv = document.getElementById('courseAccess');
         
-        // Show course access with working download links
+        // Show course access with working PDF download links
         courseAccessDiv.innerHTML = `
           <div class="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
             <h3 class="text-lg font-semibold text-green-400 mb-2">✅ Course Access Granted</h3>
@@ -161,43 +161,76 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="bg-white/10 rounded-lg p-3">
                 <h4 class="font-medium text-white">Module 1: Introduction to Café Industry</h4>
-                <a href="/course-modules/module-1-introduction.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                  📖 View Module
+                <a href="/uploads/pdfs/Module1 (2).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
                 </a>
               </div>
               <div class="bg-white/10 rounded-lg p-3">
                 <h4 class="font-medium text-white">Module 2: Research & Market Analysis</h4>
-                <a href="/course-modules/module-2-research.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                  📖 View Module
+                <a href="/uploads/pdfs/Module 2  (1).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
                 </a>
               </div>
               <div class="bg-white/10 rounded-lg p-3">
                 <h4 class="font-medium text-white">Module 3: Business Plan Development</h4>
-                <a href="/course-modules/module-3-business-plan.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                  📖 View Module
+                <a href="/uploads/pdfs/Module 3  (1).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
                 </a>
               </div>
               <div class="bg-white/10 rounded-lg p-3">
                 <h4 class="font-medium text-white">Module 4: Location & Setup</h4>
-                <a href="/course-modules/module-4-location.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                  📖 View Module
+                <a href="/uploads/pdfs/Module 4  (2).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
                 </a>
               </div>
               <div class="bg-white/10 rounded-lg p-3">
                 <h4 class="font-medium text-white">Module 5: Menu Planning & Pricing</h4>
-                <a href="/course-modules/module-5-menu.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                  📖 View Module
+                <a href="/uploads/pdfs/Module 5  (3).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
                 </a>
               </div>
               <div class="bg-white/10 rounded-lg p-3">
                 <h4 class="font-medium text-white">Module 6: Staffing & Operations</h4>
-                <a href="/course-modules/module-6-staffing.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                  📖 View Module
+                <a href="/uploads/pdfs/Module 6  (1).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
                 </a>
               </div>
-            </div>
-            <div class="mt-4 text-center">
-              <p class="text-white/60 text-sm">More modules coming soon...</p>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 7: Marketing & Branding</h4>
+                <a href="/uploads/pdfs/Module 7  (2).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
+                </a>
+              </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 8: Financial Management</h4>
+                <a href="/uploads/pdfs/Module 8  (1).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
+                </a>
+              </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 9: Customer Service Excellence</h4>
+                <a href="/uploads/pdfs/Module 9  (2).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
+                </a>
+              </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 10: Technology & Innovation</h4>
+                <a href="/uploads/pdfs/Module 10  (3).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
+                </a>
+              </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 11: Growth & Expansion</h4>
+                <a href="/uploads/pdfs/Module 11 (4).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
+                </a>
+              </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 12: Success Strategies</h4>
+                <a href="/uploads/pdfs/Module 12 (4).pdf" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📥 Download PDF
+                </a>
+              </div>
             </div>
           </div>
         `;
@@ -214,7 +247,7 @@
       try {
         const bonusesGrid = document.getElementById('bonusesGrid');
         
-        // Show demo bonuses
+        // Show all 4 bonuses with working PDF download links
         bonusesGrid.innerHTML = `
           <div class="bonus-card glass p-6 interactive-element">
             <div class="flex items-start justify-between mb-4">
@@ -225,10 +258,42 @@
             <p class="text-white/70 text-sm mb-4">Design menus that increase average order value</p>
             
             <div class="space-y-2">
-              <div class="text-xs text-green-400">✅ Demo: Purchased on ${new Date().toLocaleDateString()}</div>
-              <button onclick="showDemoMessage()" class="glossy-button px-4 py-2 text-sm w-full text-center">
-                📥 Download Bonus (Demo)
-              </button>
+              <div class="text-xs text-green-400">✅ Purchased on ${new Date().toLocaleDateString()}</div>
+              <a href="/uploads/bonuses/bonus-menu-psych.pdf" target="_blank" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+                📥 Download Bonus
+              </a>
+            </div>
+          </div>
+          
+          <div class="bonus-card glass p-6 interactive-element">
+            <div class="flex items-start justify-between mb-4">
+              <div class="text-2xl font-bold text-purple-accent">🎁</div>
+              <div class="text-sm text-white/60">₹199</div>
+            </div>
+            <h3 class="text-lg font-semibold text-white mb-2">Photo Marketing Mastery</h3>
+            <p class="text-white/70 text-sm mb-4">Create stunning visuals that attract customers</p>
+            
+            <div class="space-y-2">
+              <div class="text-xs text-green-400">✅ Purchased on ${new Date().toLocaleDateString()}</div>
+              <a href="/uploads/bonuses/bonus-photo.pdf" target="_blank" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+                📥 Download Bonus
+              </a>
+            </div>
+          </div>
+          
+          <div class="bonus-card glass p-6 interactive-element">
+            <div class="flex items-start justify-between mb-4">
+              <div class="text-2xl font-bold text-purple-accent">🎁</div>
+              <div class="text-sm text-white/60">₹299</div>
+            </div>
+            <h3 class="text-lg font-semibold text-white mb-2">Loyalty Program Blueprint</h3>
+            <p class="text-white/70 text-sm mb-4">Build customer retention strategies</p>
+            
+            <div class="space-y-2">
+              <div class="text-xs text-green-400">✅ Purchased on ${new Date().toLocaleDateString()}</div>
+              <a href="/uploads/bonuses/bonus-loyalty.pdf" target="_blank" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+                📥 Download Bonus
+              </a>
             </div>
           </div>
           
@@ -240,10 +305,12 @@
             <h3 class="text-lg font-semibold text-white mb-2">Festival Marketing Guide</h3>
             <p class="text-white/70 text-sm mb-4">Ready-to-use ideas for festive sales</p>
             
-            <button onclick="buyBonus('bonus-festival', 249, 'Festival Marketing Guide')" 
-                    class="glossy-button px-4 py-2 text-sm w-full">
-              💳 Buy Now - ₹249
-            </button>
+            <div class="space-y-2">
+              <div class="text-xs text-green-400">✅ Purchased on ${new Date().toLocaleDateString()}</div>
+              <a href="/uploads/bonuses/bonus-festival.pdf" target="_blank" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+                📥 Download Bonus
+              </a>
+            </div>
           </div>
         `;
         
