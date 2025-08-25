@@ -214,7 +214,7 @@
                 payButton.textContent = '⏳ Processing...';
                 payButton.disabled = true;
                 
-                // Razorpay configuration
+                // Razorpay configuration - using simpler checkout method
                 const options = {
                     key: 'rzp_live_R8p0w858yQYzuu',
                     amount: 19900, // Amount in paise (₹199 = 19900 paise)
@@ -222,7 +222,6 @@
                     name: 'Café Business Masterclass',
                     description: 'Complete 12-module course with lifetime access',
                     image: 'https://your-logo-url.com/logo.png', // Replace with your logo URL
-                    order_id: 'order_' + Date.now(), // Generate unique order ID
                     handler: function (response) {
                         // Payment successful
                         alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
@@ -239,6 +238,13 @@
                     },
                     theme: {
                         color: '#8B5CF6'
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            // Reset button when modal is dismissed
+                            payButton.textContent = originalText;
+                            payButton.disabled = false;
+                        }
                     }
                 };
                 

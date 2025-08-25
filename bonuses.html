@@ -241,32 +241,37 @@
                 const userEmail = prompt("Please enter your email address:");
                 if (!userEmail) return;
 
-                // Razorpay configuration for bonus
-                const options = {
-                    key: 'rzp_live_R8p0w858yQYzuu',
-                    amount: price * 100, // Convert to paise
-                    currency: 'INR',
-                    name: 'Café Business Masterclass',
-                    description: `Bonus: ${title}`,
-                    image: 'https://your-logo-url.com/logo.png', // Replace with your logo URL
-                    order_id: 'bonus_' + sku + '_' + Date.now(), // Generate unique order ID
-                    handler: function (response) {
-                        // Payment successful
-                        alert(`Payment successful for ${title}! Payment ID: ${response.razorpay_payment_id}`);
-                        // Redirect to dashboard or success page
-                        window.location.href = '/dashboard.html';
-                    },
-                    prefill: {
-                        email: userEmail
-                    },
-                    notes: {
-                        bonus_sku: sku,
-                        bonus_title: title
-                    },
-                    theme: {
-                        color: '#8B5CF6'
-                    }
-                };
+                                 // Razorpay configuration for bonus - using simpler checkout method
+                 const options = {
+                     key: 'rzp_live_R8p0w858yQYzuu',
+                     amount: price * 100, // Convert to paise
+                     currency: 'INR',
+                     name: 'Café Business Masterclass',
+                     description: `Bonus: ${title}`,
+                     image: 'https://your-logo-url.com/logo.png', // Replace with your logo URL
+                     handler: function (response) {
+                         // Payment successful
+                         alert(`Payment successful for ${title}! Payment ID: ${response.razorpay_payment_id}`);
+                         // Redirect to dashboard or success page
+                         window.location.href = '/dashboard.html';
+                     },
+                     prefill: {
+                         email: userEmail
+                     },
+                     notes: {
+                         bonus_sku: sku,
+                         bonus_title: title
+                     },
+                     theme: {
+                         color: '#8B5CF6'
+                     },
+                     modal: {
+                         ondismiss: function() {
+                             // Reset button when modal is dismissed
+                             console.log('Payment modal dismissed');
+                         }
+                     }
+                 };
                 
                 // Initialize Razorpay checkout
                 const rzp = new Razorpay(options);
