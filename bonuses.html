@@ -46,12 +46,7 @@
                 </p>
             </div>
             
-            <!-- Demo Site Notice -->
-            <div class="bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded mt-4">
-                <p class="text-yellow-800 text-center">
-                    <strong>⚠️ Demo Site Notice:</strong> This is a static preview. Contact support for actual bonus purchases.
-                </p>
-            </div>
+
         </div>
     </section>
 
@@ -239,18 +234,43 @@
     </footer>
 
     <script>
-        // Buy Bonus Function - Demo Mode
+        // Buy Bonus Function with Razorpay
         async function buyBonus(sku, price, title) {
             try {
-                // For GitHub Pages (static site), we'll simulate bonus purchase
-                // In production, this would connect to your backend server
-                
                 // Get user email
                 const userEmail = prompt("Please enter your email address:");
                 if (!userEmail) return;
 
-                // Show demo message
-                alert(`This is a demo site. In production, this would process your payment for:\n\n🎁 ${title}\n💰 Price: ₹${price}\n📧 Email: ${userEmail}\n\nPlease contact support for actual bonus purchase.`);
+                // Razorpay configuration for bonus
+                const options = {
+                    key: 'rzp_live_R8p0w858yQYzuu',
+                    amount: price * 100, // Convert to paise
+                    currency: 'INR',
+                    name: 'Café Business Masterclass',
+                    description: `Bonus: ${title}`,
+                    image: 'https://your-logo-url.com/logo.png', // Replace with your logo URL
+                    order_id: 'bonus_' + sku + '_' + Date.now(), // Generate unique order ID
+                    handler: function (response) {
+                        // Payment successful
+                        alert(`Payment successful for ${title}! Payment ID: ${response.razorpay_payment_id}`);
+                        // Redirect to dashboard or success page
+                        window.location.href = '/dashboard.html';
+                    },
+                    prefill: {
+                        email: userEmail
+                    },
+                    notes: {
+                        bonus_sku: sku,
+                        bonus_title: title
+                    },
+                    theme: {
+                        color: '#8B5CF6'
+                    }
+                };
+                
+                // Initialize Razorpay checkout
+                const rzp = new Razorpay(options);
+                rzp.open();
                 
             } catch (error) {
                 console.error('Error:', error);

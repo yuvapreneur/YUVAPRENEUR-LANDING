@@ -105,10 +105,7 @@
 
 
 
-                        <!-- Demo Site Notice -->
-                        <div class="mb-4 p-3 bg-yellow-900/20 border border-yellow-400/30 rounded-lg">
-                          <p class="text-yellow-200 text-sm text-center">⚠️ Demo Site: This is a static preview. Contact support for actual payment.</p>
-                        </div>
+
                         
                         <!-- Payment Button -->
                         <button 
@@ -208,7 +205,7 @@
             }
         }
 
-        // Handle payment
+        // Handle payment with Razorpay
         document.getElementById('payButton').addEventListener('click', async () => {
             try {
                 // Show loading state
@@ -217,26 +214,42 @@
                 payButton.textContent = '⏳ Processing...';
                 payButton.disabled = true;
                 
-                // For GitHub Pages (static site), we'll simulate order creation
-                // In production, this would connect to your backend server
+                // Razorpay configuration
+                const options = {
+                    key: 'rzp_live_R8p0w858yQYzuu',
+                    amount: 19900, // Amount in paise (₹199 = 19900 paise)
+                    currency: 'INR',
+                    name: 'Café Business Masterclass',
+                    description: 'Complete 12-module course with lifetime access',
+                    image: 'https://your-logo-url.com/logo.png', // Replace with your logo URL
+                    order_id: 'order_' + Date.now(), // Generate unique order ID
+                    handler: function (response) {
+                        // Payment successful
+                        alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+                        // Redirect to dashboard or success page
+                        window.location.href = '/dashboard.html';
+                    },
+                    prefill: {
+                        name: 'Student Name',
+                        email: 'student@example.com',
+                        contact: '+91 98765 43210'
+                    },
+                    notes: {
+                        address: 'Café Business Masterclass Course'
+                    },
+                    theme: {
+                        color: '#8B5CF6'
+                    }
+                };
                 
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // Show demo message
-                alert('This is a demo site. In production, this would create a payment order and redirect to Razorpay. Please contact support for actual payment processing.');
+                // Initialize Razorpay checkout
+                const rzp = new Razorpay(options);
+                rzp.open();
                 
                 // Reset button
                 payButton.textContent = originalText;
                 payButton.disabled = false;
-                return;
                 
-                // Demo mode - payment functionality disabled for GitHub Pages
-                // In production, this would create a payment order and redirect to Razorpay
-                
-                // Reset button state
-                payButton.textContent = originalText;
-                payButton.disabled = false;
             } catch (error) {
                 console.error('Payment error:', error);
                 alert('Payment initialization failed. Please try again.');

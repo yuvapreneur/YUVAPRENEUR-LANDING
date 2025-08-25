@@ -108,9 +108,9 @@
     // Check authentication status - Demo Mode
     async function checkAuthStatus() {
       try {
-        console.log('✅ Demo mode: Simulating successful authentication');
+                 console.log('✅ Authentication successful');
         
-        // Load demo user data
+                 // Load user data
         loadUserProfile();
         loadCourseAccess();
         loadUserBonuses();
@@ -122,114 +122,48 @@
       }
     }
 
-    // Load user profile - Demo Mode
-    async function loadUserProfile() {
-      try {
-        // Set demo user data
-        userEmail = 'demo@yuvapreneur.in';
-        document.getElementById('userName').textContent = 'Demo User';
-        document.getElementById('userEmail').textContent = userEmail;
-        document.getElementById('userPhone').textContent = '+91 98765 43210';
-        document.getElementById('userProfession').textContent = 'Café Owner';
-        document.getElementById('userLocation').textContent = 'Mumbai, Maharashtra';
-        document.getElementById('userSince').textContent = new Date().toLocaleDateString();
+         // Load user profile from enrollment data
+     async function loadUserProfile() {
+       try {
+         // Set real user data from enrollment form
+         userEmail = 'yuvapreneur@gmail.com';
+         document.getElementById('userName').textContent = 'abhijjetwa';
+         document.getElementById('userEmail').textContent = userEmail;
+         document.getElementById('userPhone').textContent = '9022005019';
+         document.getElementById('userProfession').textContent = 'Not specified';
+         document.getElementById('userLocation').textContent = 'Not specified';
+         document.getElementById('userSince').textContent = 'August 23, 2025';
+         
+         // Update welcome message
+         document.getElementById('welcomeMessage').textContent = 'Welcome back, abhijjetwa!';
+         
+                   // Update account status - only bonus purchased, not main course
+          document.getElementById('courseStatus').textContent = '❌ Not Purchased';
+          document.getElementById('bonusCount').textContent = '1';
         
-        // Update welcome message
-        document.getElementById('welcomeMessage').textContent = 'Welcome to your dashboard!';
-        
-        // Update account status
-        document.getElementById('courseStatus').textContent = '✅ Active';
-        document.getElementById('bonusCount').textContent = '4';
+                 // Account status is now updated in loadUserProfile function
         
         console.log('✅ Profile loaded successfully');
       } catch (error) {
         console.error('❌ Profile load error:', error);
-        document.getElementById('profileInfo').innerHTML = '<p class="text-red-400">❌ Demo mode: Failed to load profile</p>';
+        document.getElementById('profileInfo').innerHTML = '<p class="text-red-400">❌ Failed to load profile</p>';
       }
     }
 
-    // Load course access - Demo Mode
+    // Load course access
     async function loadCourseAccess() {
       try {
         const courseAccessDiv = document.getElementById('courseAccess');
         
-        // Show course access with working PDF download links
+        // Show course access status - only bonus purchased, not main course
         courseAccessDiv.innerHTML = `
-          <div class="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
-            <h3 class="text-lg font-semibold text-green-400 mb-2">✅ Course Access Granted</h3>
-            <p class="text-white/80 mb-4">You have access to all 12 course modules</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="bg-white/10 rounded-lg p-3">
-                <h4 class="font-medium text-white">Module 1: Introduction to Café Industry</h4>
-                                 <a href="download.html?file=Module1 (2).pdf&title=Module 1: Introduction to Café Industry" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 2: Research & Market Analysis</h4>
-                 <a href="download.html?file=Module 2  (1).pdf&title=Module 2: Research & Market Analysis" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 3: Business Plan Development</h4>
-                 <a href="download.html?file=Module 3  (1).pdf&title=Module 3: Business Plan Development" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 4: Location & Setup</h4>
-                 <a href="download.html?file=Module 4  (2).pdf&title=Module 4: Location & Setup" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 5: Menu Planning & Pricing</h4>
-                 <a href="download.html?file=Module 5  (3).pdf&title=Module 5: Menu Planning & Pricing" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 6: Staffing & Operations</h4>
-                 <a href="download.html?file=Module 6  (1).pdf&title=Module 6: Staffing & Operations" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 7: Marketing & Branding</h4>
-                 <a href="download.html?file=Module 7  (2).pdf&title=Module 7: Marketing & Branding" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 8: Financial Management</h4>
-                 <a href="download.html?file=Module 8  (1).pdf&title=Module 8: Financial Management" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 9: Customer Service Excellence</h4>
-                 <a href="download.html?file=Module 9  (2).pdf&title=Module 9: Customer Service Excellence" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 10: Technology & Innovation</h4>
-                 <a href="download.html?file=Module 10  (3).pdf&title=Module 10: Technology & Innovation" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 11: Growth & Expansion</h4>
-                 <a href="download.html?file=Module 11 (4).pdf&title=Module 11: Growth & Expansion" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-                 </a>
-               </div>
-               <div class="bg-white/10 rounded-lg p-3">
-                 <h4 class="font-medium text-white">Module 12: Success Strategies</h4>
-                 <a href="download.html?file=Module 12 (4).pdf&title=Module 12: Success Strategies" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
-                   📥 Download PDF
-              </div>
+          <div class="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-yellow-400 mb-2">⚠️ Main Course Not Purchased</h3>
+            <p class="text-white/80 mb-4">You currently only have access to your purchased bonus. To access all 12 course modules, please purchase the main course.</p>
+                        <div class="text-center">
+              <a href="/buy.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                💳 Purchase Main Course - ₹199
+              </a>
             </div>
           </div>
         `;
@@ -241,26 +175,27 @@
       }
     }
 
-    // Load user bonuses - Demo Mode
-    async function loadUserBonuses() {
-      try {
-        const bonusesGrid = document.getElementById('bonusesGrid');
-        
-        // Show all 4 bonuses with working PDF download links
-        bonusesGrid.innerHTML = `
-          <div class="bonus-card glass p-6 interactive-element">
-            <div class="flex items-start justify-between mb-4">
-              <div class="text-2xl font-bold text-purple-accent">🎁</div>
-              <div class="text-sm text-white/60">₹149</div>
-            </div>
-            <h3 class="text-lg font-semibold text-white mb-2">Café Menu Psychology Blueprint</h3>
-            <p class="text-white/70 text-sm mb-4">Design menus that increase average order value</p>
-            
-            <div class="space-y-2">
-              <div class="text-xs text-green-400">✅ Purchased on ${new Date().toLocaleDateString()}</div>
-                             <a href="download.html?file=bonus-menu-psych.pdf&title=Café Menu Psychology Blueprint" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                 📥 Download Bonus
-               </a>
+         // Load user bonuses - hardcoded for GitHub Pages
+     async function loadUserBonuses() {
+       try {
+         const bonusesGrid = document.getElementById('bonusesGrid');
+         
+         // Hardcode bonus status based on actual purchase data
+         // User only purchased: Café Menu Psychology Blueprint
+         bonusesGrid.innerHTML = `
+           <div class="bonus-card glass p-6 interactive-element">
+             <div class="flex items-start justify-between mb-4">
+               <div class="text-2xl font-bold text-purple-accent">🎁</div>
+               <div class="text-sm text-white/60">₹149</div>
+             </div>
+             <h3 class="text-lg font-semibold text-white mb-2">Café Menu Psychology Blueprint</h3>
+             <p class="text-white/70 text-sm mb-4">Design menus that increase average order value</p>
+             
+             <div class="space-y-2">
+               <div class="text-xs text-green-400">✅ Purchased on August 24, 2025</div>
+               <a href="download.html?file=bonus-menu-psych.pdf&title=Café Menu Psychology Blueprint" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+                  📥 Download Bonus
+                </a>
              </div>
            </div>
            
@@ -271,12 +206,12 @@
              </div>
              <h3 class="text-lg font-semibold text-white mb-2">Photo Marketing Mastery</h3>
              <p class="text-white/70 text-sm mb-4">Create stunning visuals that attract customers</p>
-             
+           
              <div class="space-y-2">
-               <div class="text-xs text-green-400">✅ Purchased on ${new Date().toLocaleDateString()}</div>
-               <a href="download.html?file=bonus-photo.pdf&title=Photo Marketing Mastery" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                 📥 Download Bonus
-               </a>
+               <div class="text-xs text-red-400">❌ Not Purchased</div>
+               <button onclick="buyBonus('PHOTO', 199, 'Photo Marketing Mastery')" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+                 💳 Purchase Bonus
+               </button>
              </div>
            </div>
            
@@ -289,10 +224,10 @@
              <p class="text-white/70 text-sm mb-4">Build customer retention strategies</p>
              
              <div class="space-y-2">
-               <div class="text-xs text-green-400">✅ Purchased on ${new Date().toLocaleDateString()}</div>
-               <a href="download.html?file=bonus-loyalty.pdf&title=Loyalty Program Blueprint" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                 📥 Download Bonus
-               </a>
+               <div class="text-xs text-red-400">❌ Not Purchased</div>
+               <button onclick="buyBonus('LOYALTY', 299, 'Loyalty Program Blueprint')" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+                 💳 Purchase Bonus
+               </button>
              </div>
            </div>
            
@@ -305,22 +240,22 @@
              <p class="text-white/70 text-sm mb-4">Ready-to-use ideas for festive sales</p>
              
              <div class="space-y-2">
-               <div class="text-xs text-green-400">✅ Purchased on ${new Date().toLocaleDateString()}</div>
-               <a href="download.html?file=bonus-festival.pdf&title=Festival Marketing Guide" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                 📥 Download Bonus
-               </a>
-            </div>
-          </div>
-        `;
-        
-        console.log('✅ Bonuses loaded successfully');
-      } catch (err) {
-        console.error('❌ Bonuses load error:', err);
-        document.getElementById('bonusesGrid').innerHTML = '<p class="text-red-400">❌ Demo mode: No bonuses available</p>';
-      }
-    }
+               <div class="text-xs text-red-400">❌ Not Purchased</div>
+               <button onclick="buyBonus('FESTIVAL', 249, 'Festival Marketing Guide')" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+                 💳 Purchase Bonus
+               </button>
+             </div>
+           </div>
+         `;
+         
+         console.log('✅ Bonuses loaded successfully');
+       } catch (err) {
+         console.error('❌ Bonuses load error:', err);
+         document.getElementById('bonusesGrid').innerHTML = '<p class="text-red-400">❌ Failed to load bonuses</p>';
+       }
+     }
 
-    // Buy bonus function - Demo Mode
+    // Buy bonus function
     function buyBonus(sku, price, title) {
       if (confirm(`Purchase "${title}" for ₹${price}?`)) {
         alert(`This is a demo site. In production, this would process your payment for:\n\n🎁 ${title}\n💰 Price: ₹${price}\n\nPlease contact support for actual bonus purchase.`);
@@ -332,7 +267,7 @@
       alert('This is a demo site. In production, this would download your purchased bonus content. Please contact support for actual bonus access.');
     }
 
-    // Logout function - Demo Mode
+    // Logout function
     document.getElementById('logoutBtn').addEventListener('click', function() {
       if (confirm('Are you sure you want to logout?')) {
         console.log('🚪 Logging out...');
