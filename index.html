@@ -202,7 +202,7 @@
         
         <div class="text-center space-y-4">
           <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 px-8 rounded-xl font-semibold text-lg transition-colors duration-200">
-            🚀 Enroll Now - ₹199
+            🚀 Enroll & Pay - ₹199
           </button>
           
           <a href="https://wa.me/919876543210?text=Hi! I'm interested in the Café Business Masterclass. Can you tell me more?" 
@@ -413,11 +413,24 @@
       const formData = new FormData(this);
       const data = Object.fromEntries(formData);
       
-      // Show success message
-      alert('🎉 Thank you for your interest! We will contact you soon with course access details.');
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = '🔄 Processing...';
+      submitBtn.disabled = true;
       
-      // Reset form
-      this.reset();
+      // Simulate processing delay
+      setTimeout(() => {
+        // Show success message and redirect to payment
+        alert('✅ Enrollment Successful! Redirecting to payment...');
+        
+        // Redirect to payment page
+        window.location.href = 'buy.html';
+        
+        // Reset button (though we're redirecting)
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }, 1500);
     });
   </script>
 </body>
