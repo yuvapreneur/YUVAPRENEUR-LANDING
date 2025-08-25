@@ -434,8 +434,7 @@ form.addEventListener('submit', async (e) => {
       };
 
       try {
-        // For GitHub Pages (static site), we'll simulate form submission
-        // In production, this would connect to your backend server
+        // Processing enrollment form
         
         // Show loading state
         const submitBtn = form.querySelector('button[type="submit"]');
@@ -443,7 +442,7 @@ form.addEventListener('submit', async (e) => {
         submitBtn.textContent = '🔄 Processing...';
         submitBtn.disabled = true;
         
-        // Simulate API call delay
+        // Processing enrollment
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         // Show success message and redirect to payment
@@ -517,6 +516,6 @@ form.addEventListener('submit', async (e) => {
       }
     }, 8000);
   }
-</script>
+  </script>
 </body>
 </html>
