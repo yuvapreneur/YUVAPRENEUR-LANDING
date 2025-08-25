@@ -128,8 +128,9 @@
 
   <!-- Bonus Section -->
   <div class="max-w-6xl mx-auto mb-12 fade-in-up" id="bonuses">
-    <h2 class="text-3xl font-bold text-white text-center mb-8 glow-text">🎁 Exclusive Bonuses (Worth ₹1,785)</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="bonusesGrid">
+                                    <h2 class="text-3xl font-bold text-white text-center mb-4 glow-text">🎁 Exclusive Bonuses - FREE with Enrollment! (Worth ₹1,785)</h2>
+                <p class="text-white/80 text-center mb-8 text-lg">When you enroll in the main course, you get ALL these bonuses absolutely FREE!</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="bonusesGrid">
       <!-- Bonuses will be populated by JavaScript -->
     </div>
   </div>
@@ -392,15 +393,15 @@
     BONUSES.forEach(bonus => {
       const bonusCard = document.createElement('div');
       bonusCard.className = 'bonus-card glass p-6 interactive-element';
-      bonusCard.innerHTML = `
-        <div class="flex items-start justify-between mb-4">
-          <div class="text-2xl font-bold text-purple-accent">🎁</div>
-          <div class="text-sm text-white/60">₹${bonus.price}</div>
-        </div>
-        <h3 class="text-lg font-semibold text-white mb-2">${bonus.title}</h3>
-        <p class="text-white/70 text-sm">${bonus.desc}</p>
-        <div class="mt-3 text-xs text-green-400 font-semibold">Individual Purchase</div>
-      `;
+              bonusCard.innerHTML = `
+          <div class="flex items-start justify-between mb-4">
+            <div class="text-2xl font-bold text-purple-accent">🎁</div>
+            <div class="text-sm text-green-400 font-semibold">FREE!</div>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">${bonus.title}</h3>
+          <p class="text-white/70 text-sm">${bonus.desc}</p>
+          <div class="mt-3 text-xs text-green-400 font-semibold">🎁 FREE with Enrollment!</div>
+        `;
       bonusesGrid.appendChild(bonusCard);
     });
 
