@@ -198,43 +198,41 @@
       { sku: "bonus-photo", title: "Photography Cheat Sheet", desc: "Quick setups for mouth-watering food & café photos (phone ready)." }
     ];
 
-    // Load user profile
-    function loadUserProfile() {
-      // Check if user is enrolled
-      const enrollmentData = localStorage.getItem('userEnrollment');
-      
-      if (enrollmentData) {
-        try {
-          const userData = JSON.parse(enrollmentData);
-          
-          // Show enrolled user data
-          document.getElementById('username').textContent = userData.name || 'Enrolled User';
-          document.getElementById('email').textContent = userData.email || 'user@example.com';
-          
-          if (userData.status === 'enrolled' && userData.courseAccess === 'full') {
-            document.getElementById('courseStatus').textContent = '✅ Fully Enrolled';
-            document.getElementById('bonusCount').textContent = '4 (All Bonuses Included)';
-            
-            // Update course access to show enrolled status
-            updateCourseAccessForEnrolledUser();
-          } else if (userData.status === 'pending_payment') {
-            document.getElementById('courseStatus').textContent = '⏳ Payment Pending';
-            document.getElementById('bonusCount').textContent = '0 (Complete Payment Required)';
-            loadCourseAccess();
-          } else {
-            document.getElementById('courseStatus').textContent = '❌ Payment Failed';
-            document.getElementById('bonusCount').textContent = '0 (Payment Required)';
-            loadCourseAccess();
-          }
-          
-        } catch (error) {
-          console.error('Error loading enrollment data:', error);
-          loadDefaultProfile();
-        }
-      } else {
-        loadDefaultProfile();
-      }
-    }
+         // ✅ Load user profile from database (separate from login)
+     function loadUserProfile() {
+       const userEmail = localStorage.getItem('userEmail');
+       
+       if (userEmail) {
+         // Get user data from our database
+         const userData = getUserDataFromDatabase(userEmail);
+         
+         if (userData) {
+           // Show user data from database
+           document.getElementById('username').textContent = userData.name || 'User';
+           document.getElementById('email').textContent = userEmail;
+           
+           if (userData.hasPurchasedCourse && userData.status === 'enrolled' && userData.courseAccess === 'full') {
+             document.getElementById('courseStatus').textContent = '✅ Fully Enrolled';
+             document.getElementById('bonusCount').textContent = '4 (All Bonuses Included)';
+             
+             // Update course access to show enrolled status
+             updateCourseAccessForEnrolledUser();
+           } else if (userData.status === 'pending_payment') {
+             document.getElementById('courseStatus').textContent = '⏳ Payment Pending';
+             document.getElementById('bonusCount').textContent = '0 (Complete Payment Required)';
+             loadCourseAccess();
+           } else {
+             document.getElementById('courseStatus').textContent = '❌ Payment Required';
+             document.getElementById('bonusCount').textContent = '0 (Payment Required)';
+             loadCourseAccess();
+           }
+         } else {
+           loadDefaultProfile();
+         }
+       } else {
+         loadDefaultProfile();
+       }
+     }
     
          // Load default profile for non-enrolled users
      function loadDefaultProfile() {
@@ -360,20 +358,14 @@
       }
     }
 
-         // Load course modules
+         // ✅ Load course modules based on database course access
      function loadCourseModules() {
        const modulesGrid = document.getElementById('modulesGrid');
-       const enrollmentData = localStorage.getItem('userEnrollment');
+       const userEmail = localStorage.getItem('userEmail');
        
-       // Check if user is fully enrolled
-       const isFullyEnrolled = enrollmentData && (() => {
-         try {
-           const userData = JSON.parse(enrollmentData);
-           return userData.status === 'enrolled' && userData.courseAccess === 'full';
-         } catch (error) {
-           return false;
-         }
-       })();
+       // Check if user has course access from database
+       const userData = getUserDataFromDatabase(userEmail);
+       const isFullyEnrolled = userData && userData.hasPurchasedCourse && userData.status === 'enrolled' && userData.courseAccess === 'full';
        
        MODULES.forEach(module => {
          const moduleCard = document.createElement('div');
@@ -417,20 +409,14 @@
        });
      }
 
-    // Load user bonuses
+    // ✅ Load user bonuses based on database course access
     function loadUserBonuses() {
       const bonusesGrid = document.getElementById('bonusesGrid');
-      const enrollmentData = localStorage.getItem('userEnrollment');
+      const userEmail = localStorage.getItem('userEmail');
       
-      // Check if user is fully enrolled
-      const isFullyEnrolled = enrollmentData && (() => {
-        try {
-          const userData = JSON.parse(enrollmentData);
-          return userData.status === 'enrolled' && userData.courseAccess === 'full';
-        } catch (error) {
-          return false;
-        }
-      })();
+      // Check if user has course access from database
+      const userData = getUserDataFromDatabase(userEmail);
+      const isFullyEnrolled = userData && userData.hasPurchasedCourse && userData.status === 'enrolled' && userData.courseAccess === 'full';
       
       if (isFullyEnrolled) {
         // Show all bonuses as accessible for enrolled users
@@ -585,25 +571,26 @@
        }
      }
      
-     // Verify dashboard access - security check with enhanced protection
+     // ✅ COURSE ACCESS CHECK: Separate from login verification
      function verifyDashboardAccess() {
-       // ✅ SECURITY CHECK 1: Verify authentication tokens
+       // ✅ STEP 1: Verify user is logged in (basic authentication)
        const isAuthenticated = localStorage.getItem('userAuthenticated');
        const loginTimestamp = localStorage.getItem('loginTimestamp');
        const sessionToken = localStorage.getItem('sessionToken');
+       const userEmail = localStorage.getItem('userEmail');
        
-       if (!isAuthenticated || !loginTimestamp || !sessionToken) {
-         showAccessDenied('❌ Access Denied\n\nYou must login first to access the dashboard.\n\nRedirecting to login page...');
+       if (!isAuthenticated || !loginTimestamp || !sessionToken || !userEmail) {
+         showAccessDenied('❌ Login Required\n\nYou must login first to access the dashboard.\n\nRedirecting to login page...');
          setTimeout(() => {
            window.location.href = 'login.html';
          }, 3000);
          return false;
        }
        
-       // ✅ SECURITY CHECK 2: Verify session token validity
+       // ✅ STEP 2: Verify session token validity
        try {
          const decodedToken = atob(sessionToken);
-         if (!decodedToken.includes('yuvapreneur@gmail.com')) {
+         if (!decodedToken.includes(userEmail)) {
            showAccessDenied('❌ Invalid Session\n\nSession token verification failed.\n\nPlease login again.\n\nRedirecting to login page...');
            setTimeout(() => {
              window.location.href = 'login.html';
@@ -618,15 +605,13 @@
          return false;
        }
        
-       // ✅ SECURITY CHECK 3: Check session expiry (24 hours)
+       // ✅ STEP 3: Check session expiry (24 hours)
        const loginTime = parseInt(loginTimestamp);
        const currentTime = Date.now();
        const sessionExpiry = 24 * 60 * 60 * 1000; // 24 hours
        
        if (currentTime - loginTime > sessionExpiry) {
-         // Session expired, clear all data and redirect to login
          clearAllSessionData();
-         
          showAccessDenied('⏰ Session Expired\n\nYour login session has expired.\n\nPlease login again to continue.\n\nRedirecting to login page...');
          setTimeout(() => {
            window.location.href = 'login.html';
@@ -634,61 +619,93 @@
          return false;
        }
        
-       // ✅ SECURITY CHECK 4: Verify user enrollment data exists
-       const enrollmentData = localStorage.getItem('userEnrollment');
+       // ✅ STEP 4: Check course purchase status (separate from login)
+       const courseAccessData = checkCourseAccess(userEmail);
        
-       if (!enrollmentData) {
-         showAccessDenied('❌ Access Denied\n\nYou must purchase the course first to access the dashboard.\n\nRedirecting to home page...');
+       if (!courseAccessData.hasAccess) {
+         showAccessDenied(courseAccessData.message);
          setTimeout(() => {
-           window.location.href = 'index.html';
+           window.location.href = courseAccessData.redirectTo;
          }, 3000);
          return false;
        }
        
-       try {
-         const userData = JSON.parse(enrollmentData);
-         
-         // ✅ SECURITY CHECK 5: Verify course purchase
-         if (!userData.hasPurchasedCourse) {
-           showAccessDenied('❌ Course Purchase Required\n\nYou must purchase the course first to access the dashboard.\n\nRedirecting to home page...');
-           setTimeout(() => {
-             window.location.href = 'index.html';
-           }, 3000);
-           return false;
-         }
-         
-         // ✅ SECURITY CHECK 6: Check enrollment status
-         if (userData.status !== 'enrolled' || userData.courseAccess !== 'full') {
-           showAccessDenied('❌ Payment Required\n\nYour course enrollment is incomplete.\n\nStatus: ' + (userData.status || 'Not enrolled') + '\n\nRedirecting to home page...');
-           setTimeout(() => {
-             window.location.href = 'index.html';
-           }, 3000);
-           return false;
-         }
-         
-         // ✅ SECURITY CHECK 7: Verify payment details exist
-         if (!userData.paymentId && !userData.manualAccessGranted) {
-           showAccessDenied('❌ Payment Verification Failed\n\nNo payment record found for your enrollment.\n\nRedirecting to home page...');
-           setTimeout(() => {
-             window.location.href = 'index.html';
-           }, 3000);
-           return false;
-         }
-         
-         // ✅ SECURITY CHECK 8: Update last activity
-         localStorage.setItem('lastActivity', currentTime.toString());
-         
-         // All security checks passed
-         return true;
-         
-       } catch (error) {
-         console.error('Dashboard access verification error:', error);
-         showAccessDenied('❌ System Error\n\nAn error occurred during access verification.\n\nRedirecting to home page...');
-         setTimeout(() => {
-           window.location.href = 'index.html';
-         }, 3000);
-         return false;
+       // ✅ STEP 5: Update last activity
+       localStorage.setItem('lastActivity', currentTime.toString());
+       
+       // All checks passed - user can access dashboard
+       return true;
+     }
+     
+     // ✅ SEPARATE FUNCTION: Check course access status
+     function checkCourseAccess(userEmail) {
+       // Get user data from our database
+       const userData = getUserDataFromDatabase(userEmail);
+       
+       if (!userData) {
+         return {
+           hasAccess: false,
+           message: '❌ User Not Found\n\nUser data not found in system.\n\nPlease contact support.',
+           redirectTo: 'login.html'
+         };
        }
+       
+       // Check if user has purchased course
+       if (!userData.hasPurchasedCourse) {
+         return {
+           hasAccess: false,
+           message: '❌ Course Purchase Required\n\nYou must purchase the course first to access the dashboard.\n\nPlease enroll from the home page.',
+           redirectTo: 'index.html'
+         };
+       }
+       
+       // Check enrollment status
+       if (userData.status !== 'enrolled' || userData.courseAccess !== 'full') {
+         return {
+           hasAccess: false,
+           message: '❌ Payment Required\n\nYour course enrollment is incomplete.\n\nStatus: ' + (userData.status || 'Not enrolled') + '\n\nPlease complete your payment.',
+           redirectTo: 'index.html'
+         };
+       }
+       
+       // Check payment verification
+       if (!userData.paymentId && !userData.manualAccessGranted) {
+         return {
+           hasAccess: false,
+           message: '❌ Payment Verification Failed\n\nNo payment record found for your enrollment.\n\nPlease contact support or complete payment.',
+           redirectTo: 'index.html'
+         };
+       }
+       
+       // All course access checks passed
+       return {
+         hasAccess: true,
+         message: '✅ Course Access Granted',
+         redirectTo: null
+       };
+     }
+     
+     // ✅ Get user data from our hardcoded database
+     function getUserDataFromDatabase(userEmail) {
+       // This simulates our database - in production, this would be a real database call
+       const USER_DATABASE = {
+         'yuvapreneur@gmail.com': {
+           password: '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+           name: 'abhijjetwankhede',
+           phone: '9999999999',
+           status: 'enrolled',
+           courseAccess: 'full',
+           paymentId: 'PAY_VERIFIED_001',
+           enrolledAt: '2024-01-01T00:00:00.000Z',
+           manualAccessGranted: true,
+           accessGrantedAt: '2024-01-01T00:00:00.000Z',
+           note: 'Verified user with full course access',
+           hasPurchasedCourse: true,
+           purchaseDate: '2024-01-01T00:00:00.000Z'
+         }
+       };
+       
+       return USER_DATABASE[userEmail] || null;
      }
      
      // Clear all session data for security
