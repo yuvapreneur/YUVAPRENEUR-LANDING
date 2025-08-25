@@ -6,20 +6,6 @@
   <title>Buy Course - Café Business Masterclass</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .glass {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .glow-border {
-      box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
-    }
-    .glow-text {
-      text-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
-    }
-    .purple-accent {
-      color: #9333ea;
-    }
     .fade-in-up {
       animation: fadeInUp 0.8s ease-out;
     }
@@ -35,40 +21,40 @@
     }
   </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 text-white p-4">
+<body class="min-h-screen bg-white text-gray-900 p-4">
   <!-- Navigation -->
-  <nav class="glass p-4 mb-8 glow-border rounded-xl">
+  <nav class="bg-white shadow-lg p-4 mb-8 rounded-xl border border-gray-200">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="text-2xl font-bold text-purple-accent">☕ Café Business Masterclass</div>
+      <div class="text-2xl font-bold text-purple-600">☕ Café Business Masterclass</div>
       <div class="space-x-4">
-        <a href="index.html" class="text-white/80 hover:text-white transition-colors">Home</a>
-        <a href="dashboard.html" class="text-white/80 hover:text-white transition-colors">Dashboard</a>
-        <a href="bonuses.html" class="text-white/80 hover:text-white transition-colors">Bonuses</a>
-        <a href="login.html" class="text-white/80 hover:text-white transition-colors">Login</a>
+        <a href="index.html" class="text-gray-600 hover:text-purple-600 transition-colors">Home</a>
+        <a href="dashboard.html" class="text-gray-600 hover:text-purple-600 transition-colors">Dashboard</a>
+        <a href="bonuses.html" class="text-gray-600 hover:text-purple-600 transition-colors">Bonuses</a>
+        <a href="login.html" class="text-gray-600 hover:text-purple-600 transition-colors">Login</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero Section -->
   <div class="text-center mb-12 fade-in-up">
-    <h1 class="text-4xl font-bold text-white mb-4 glow-text">🚀 Get Instant Access to the Complete Course</h1>
-    <p class="text-xl text-white/80 mb-8">Unlock all 12 modules + 4 exclusive bonuses worth ₹1,785</p>
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">🚀 Get Instant Access to the Complete Course</h1>
+    <p class="text-xl text-gray-600 mb-8">Unlock all 12 modules + 4 exclusive bonuses worth ₹1,785</p>
   </div>
 
   <!-- Course Details -->
   <div class="max-w-4xl mx-auto mb-12 fade-in-up">
-    <div class="glass p-8 glow-border">
+    <div class="bg-white shadow-lg p-8 border border-gray-200 rounded-xl">
       <div class="text-center mb-8">
-        <div class="text-6xl font-bold text-white mb-4">₹199</div>
-        <div class="text-white/60 line-through text-2xl mb-2">₹2,584</div>
-        <div class="text-purple-300 text-lg mb-4">Save ₹2,385 (92.3% OFF!)</div>
-        <div class="text-white/80">Limited Time Offer - Get Instant Access</div>
+        <div class="text-6xl font-bold text-purple-600 mb-4">₹199</div>
+        <div class="text-gray-400 line-through text-2xl mb-2">₹2,584</div>
+        <div class="text-purple-600 text-lg mb-4">Save ₹2,385 (92.3% OFF!)</div>
+        <div class="text-gray-600">Limited Time Offer - Get Instant Access</div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <div>
-          <h3 class="text-xl font-semibold text-white mb-4">📚 What You'll Get:</h3>
-          <ul class="text-white/80 space-y-2">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">📚 What You'll Get:</h3>
+          <ul class="text-gray-600 space-y-2">
             <li>✅ 12 Comprehensive Course Modules</li>
             <li>✅ 4 Exclusive Bonus PDFs</li>
             <li>✅ Lifetime Access</li>
@@ -77,8 +63,8 @@
           </ul>
         </div>
         <div>
-          <h3 class="text-xl font-semibold text-white mb-4">🎁 Bonuses Included:</h3>
-          <ul class="text-white/80 space-y-2">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">🎁 Bonuses Included:</h3>
+          <ul class="text-gray-600 space-y-2">
             <li>🎯 Menu Psychology Blueprint</li>
             <li>🎉 Festival Marketing Guide</li>
             <li>💎 Loyalty Program Template</li>
@@ -91,22 +77,91 @@
         <button id="payButton" class="bg-purple-600 hover:bg-purple-700 text-white py-4 px-8 rounded-xl font-semibold text-xl transition-colors transform hover:scale-105">
           💳 Get Instant Access - ₹199
         </button>
-        <p class="text-white/60 text-sm mt-4">Secure payment via Razorpay</p>
+        <p class="text-gray-500 text-sm mt-4">Secure payment via Razorpay</p>
       </div>
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="bg-purple-900 text-white py-8 px-4 mt-16">
+  <footer class="bg-gray-100 text-gray-700 py-8 px-4 mt-16">
     <div class="max-w-7xl mx-auto text-center">
-      <p class="text-purple-300 mb-2">
-        Need help? Contact <a href="mailto:yuvapreneur@gmail.com" class="text-purple-300 hover:text-purple-200 underline">yuvapreneur@gmail.com</a>
+      <p class="text-gray-600 mb-2">
+        Need help? Contact <a href="mailto:yuvapreneur@gmail.com" class="text-purple-600 hover:text-purple-700 underline">yuvapreneur@gmail.com</a>
       </p>
-      <p class="text-purple-400">© 2025 Youthpreneur. All rights reserved.</p>
+      <p class="text-gray-500">© 2025 Youthpreneur. All rights reserved.</p>
     </div>
   </footer>
 
   <script>
+    // Payment button functionality
+    document.getElementById('payButton').addEventListener('click', function() {
+      const button = this;
+      const originalText = button.textContent;
+      
+      // Show loading state
+      button.textContent = '🔄 Processing...';
+      button.disabled = true;
+      
+      // Simulate processing delay
+      setTimeout(() => {
+        // Initialize Razorpay payment
+        const options = {
+          key: 'rzp_live_R9QVhOlTJvswsH', // Updated to new live key
+          amount: 19900, // ₹199 in paise
+          currency: 'INR',
+          name: 'Café Business Masterclass',
+          description: 'Complete Course + 4 Bonuses',
+          image: 'https://your-logo-url.com/logo.png',
+          handler: function (response) {
+            alert('🎉 Payment successful! Welcome to the Café Business Masterclass!\n\nPayment ID: ' + response.razorpay_payment_id + '\n\nYou now have access to all 12 modules and 4 bonuses. Redirecting to your dashboard...');
+            
+            // Store enrollment data
+            const enrollmentData = {
+              name: 'Enrolled User',
+              email: 'user@example.com',
+              enrolledAt: new Date().toISOString(),
+              status: 'enrolled',
+              paymentId: response.razorpay_payment_id
+            };
+            localStorage.setItem('userEnrollment', JSON.stringify(enrollmentData));
+            
+            // Redirect to dashboard
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 2000);
+          },
+          prefill: {
+            email: 'user@example.com',
+            contact: '9999999999'
+          },
+          notes: {
+            course: 'Café Business Masterclass',
+            type: 'main_course'
+          },
+          theme: {
+            color: '#8B5CF6'
+          },
+          modal: {
+            ondismiss: function() {
+              // Reset button when modal is dismissed
+              button.textContent = originalText;
+              button.disabled = false;
+            }
+          }
+        };
+
+        try {
+          const rzp = new Razorpay(options);
+          rzp.open();
+        } catch (error) {
+          console.error('Razorpay error:', error);
+          alert('❌ Payment failed. Please try again.');
+          button.textContent = originalText;
+          button.disabled = false;
+        }
+      }, 1000);
+    });
+
     // Load Razorpay script
     function loadRazorpay() {
       const script = document.createElement('script');
@@ -119,49 +174,6 @@
       };
       document.head.appendChild(script);
     }
-
-    // Payment button click handler
-    document.getElementById('payButton').addEventListener('click', function() {
-      const payButton = this;
-      const originalText = payButton.textContent;
-      
-      // Show loading state
-      payButton.textContent = '🔄 Processing...';
-      payButton.disabled = true;
-
-      // Razorpay integration
-      const options = {
-        key: 'rzp_live_R9QVhOlTJvswsH', // Updated to new live key
-        amount: 19900,
-        currency: 'INR',
-        name: 'Café Business Masterclass',
-        description: 'Complete 12-module course with lifetime access',
-        image: 'https://your-logo-url.com/logo.png',
-        handler: function (response) {
-          alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
-          window.location.href = '/dashboard.html';
-        },
-        prefill: { name: 'Student Name', email: 'student@example.com', contact: '+91 98765 43210' },
-        notes: { address: 'Café Business Masterclass Course' },
-        theme: { color: '#8B5CF6' },
-        modal: {
-          ondismiss: function() {
-            payButton.textContent = originalText;
-            payButton.disabled = false;
-          }
-        }
-      };
-
-      try {
-        const rzp = new Razorpay(options);
-        rzp.open();
-      } catch (error) {
-        console.error('Payment error:', error);
-        alert('Payment processing failed. Please try again.');
-        payButton.textContent = originalText;
-        payButton.disabled = false;
-      }
-    });
 
     // Load Razorpay when page loads
     document.addEventListener('DOMContentLoaded', loadRazorpay);

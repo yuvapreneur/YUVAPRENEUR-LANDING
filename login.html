@@ -12,19 +12,19 @@
   <style>
     /* Ensure password field text is always visible */
     #password {
-      color: white !important;
-      -webkit-text-fill-color: white !important;
-      caret-color: white !important;
+      color: #374151 !important;
+      -webkit-text-fill-color: #374151 !important;
+      caret-color: #8B5CF6 !important;
     }
     
     #password::placeholder {
-      color: rgba(255, 255, 255, 0.5) !important;
+      color: #9CA3AF !important;
     }
     
     #password:focus {
-      color: white !important;
-      -webkit-text-fill-color: white !important;
-      background-color: rgba(255, 255, 255, 0.3) !important;
+      color: #374151 !important;
+      -webkit-text-fill-color: #374151 !important;
+      background-color: #F9FAFB !important;
     }
     
     /* Ensure toggle button is clickable */
@@ -35,7 +35,7 @@
     
     /* Mobile-specific styles */
     @media (max-width: 768px) {
-      .glass {
+      .login-container {
         margin: 1rem;
         padding: 1.5rem;
       }
@@ -57,261 +57,112 @@
     }
   </style>
 </head>
-<body class="min-h-screen p-4">
+<body class="min-h-screen bg-white p-4">
   <div class="max-w-md mx-auto mt-8">
-         <!-- Header -->
-     <div class="text-center mb-8 fade-in-up">
-       <h1 class="text-3xl font-bold text-white mb-2 glow-text">Welcome Back</h1>
-       <p class="text-white/70">Access your Café Business Masterclass</p>
-       <!-- Professional login page - no demo notices -->
-     </div>
+    <!-- Header -->
+    <div class="text-center mb-8 fade-in-up">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+      <p class="text-gray-600">Access your Café Business Masterclass</p>
+    </div>
 
     <!-- Login Form -->
-    <div class="glass p-8 glow-border fade-in-up">
+    <div class="bg-white shadow-lg p-8 border border-gray-200 rounded-xl fade-in-up">
       <form id="loginForm" class="space-y-6">
         <div>
-          <label class="block text-white text-sm font-medium mb-2">Email Address</label>
+          <label class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
           <input type="email" name="email" required 
-                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                 class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                  placeholder="Enter your email address">
         </div>
         
         <div>
-          <label class="block text-white text-sm font-medium mb-2">Password</label>
+          <label class="block text-gray-700 text-sm font-medium mb-2">Password</label>
           <div class="relative">
-                         <input type="password" name="password" id="password" required 
-                    class="w-full px-4 py-4 pr-12 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-accent focus:bg-white/30 transition-colors"
-                    placeholder="Enter your password"
-                    style="color: white !important; -webkit-text-fill-color: white !important; caret-color: white !important;">
+            <input type="password" name="password" id="password" required 
+                   class="w-full px-4 py-4 pr-12 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
+                   placeholder="Enter your password"
+                   style="color: #374151 !important; -webkit-text-fill-color: #374151 !important; caret-color: #8B5CF6 !important;">
             <button type="button" id="togglePassword" 
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white transition-colors cursor-pointer z-10">
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors cursor-pointer z-10">
               👁️
             </button>
           </div>
         </div>
         
-        <button type="submit" class="glossy w-full px-6 py-3 font-semibold text-lg">
+        <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold text-lg rounded-lg transition-colors">
           Login to Dashboard
         </button>
       </form>
       
       <!-- Navigation Links -->
       <div class="mt-6 text-center space-y-3">
-        <p class="text-white/60 text-sm">
-          <a href="/forgot-password.html" class="text-purple-accent hover:underline">🔑 Forgot Password?</a>
-        </p>
-        <p class="text-white/60 text-sm">
-          <a href="/reset-payment-password.html" class="text-purple-accent hover:underline">💳 Reset Payment Password</a>
-        </p>
-
-
-        <p class="text-white/60 text-sm">
-          <a href="/" class="text-purple-accent hover:underline">🏠 Go to Home Page</a>
-        </p>
-        <p class="text-white/60 text-sm">
+        <p class="text-gray-600 text-sm">
           Don't have an account? 
-          <a href="/signup.html" class="text-purple-accent hover:underline">Sign up here</a>
+          <a href="signup.html" class="text-purple-600 hover:text-purple-700 underline">Sign up here</a>
         </p>
-        <p class="text-white/60 text-sm">
-          <a href="/" class="text-purple-accent hover:underline">← Back to Home</a>
+        <p class="text-gray-600 text-sm">
+          <a href="forgot-password.html" class="text-purple-600 hover:text-purple-700 underline">Forgot your password?</a>
+        </p>
+        <p class="text-gray-600 text-sm">
+          <a href="index.html" class="text-purple-600 hover:text-purple-700 underline">← Back to Home</a>
         </p>
       </div>
-      
-      <!-- Course Purchase Help Box -->
-      <div class="bg-orange-900/20 border border-orange-400/30 rounded-lg p-4 mt-6">
-        <h3 class="text-orange-300 font-semibold mb-2">💳 Need Course Access?</h3>
-        <p class="text-orange-200/80 text-sm mb-3">
-          Getting "Please purchase the main course" error?
-        </p>
-        <div class="text-orange-200/70 text-sm space-y-2">
-          <p><strong>Step 1:</strong> <a href="/" class="text-orange-300 hover:underline">Go to Home Page</a></p>
-          <p><strong>Step 2:</strong> Fill out the form and create your password</p>
-          <p><strong>Step 3:</strong> Make payment (₹199) to get instant access</p>
-          <p><strong>Step 4:</strong> Come back here and login with your credentials</p>
-        </div>
-        <div class="mt-3 text-center">
-          <a href="/" class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-            🚀 Get Course Access Now
-          </a>
-        </div>
-      </div>
-      
-      <!-- Quick Action Box -->
-      <div class="bg-blue-900/20 border border-blue-400/30 rounded-lg p-4 mt-4">
-        <h3 class="text-blue-300 font-semibold mb-2">⚡ Quick Actions</h3>
-        <div class="grid grid-cols-1 gap-3">
-          <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
-            🏠 Go to Home Page & Enroll
-          </a>
-          <a href="/buy.html" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
-            💳 Buy Course Directly (₹199)
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Important Information -->
-    <div class="glass p-6 mt-6 glow-border">
-      <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-        <span class="text-blue-400 mr-2">ℹ️</span>
-        Important Information
-      </h3>
-      <ul class="text-white/80 text-sm space-y-2">
-        <li><strong>New users:</strong> Purchase the main course first to create your account</li>
-        <li><strong>Existing customers:</strong> Use the email and password from your checkout</li>
-        <li><strong>Just purchased?</strong> Use the credentials you entered during payment</li>
-        <li><strong>Forgot password?</strong> Use the "Forgot Password" link above</li>
-        <li><strong>Need help?</strong> Contact support@www.yuvapreneur.in</li>
-      </ul>
-      <p class="text-white/60 text-xs mt-4">
-        Only customers who have purchased the main course (₹199) can access the dashboard.
-      </p>
     </div>
   </div>
 
   <script>
     // Toggle password visibility
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-    
-    // Ensure elements exist
-    if (togglePassword && passwordInput) {
-      console.log('✅ Password toggle elements found');
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const passwordField = document.getElementById('password');
+      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
       
-      togglePassword.addEventListener('click', () => {
-        const currentType = passwordInput.getAttribute('type');
-        const newType = currentType === 'password' ? 'text' : 'password';
-        
-        passwordInput.setAttribute('type', newType);
-        togglePassword.textContent = newType === 'password' ? '👁️' : '🙈';
-        
-        console.log('🔄 Password type changed to:', newType);
-        
-        // Ensure text is visible
-        passwordInput.style.color = 'white';
-        passwordInput.style.webkitTextFillColor = 'white';
-      });
+      // Update button text
+      this.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
       
-             // Add input event listener to ensure text is always visible
-       passwordInput.addEventListener('input', () => {
-         passwordInput.style.color = 'white';
-         passwordInput.style.webkitTextFillColor = 'white';
-         passwordInput.style.caretColor = 'white';
-       });
-       
-       // Add focus event listener
-       passwordInput.addEventListener('focus', () => {
-         passwordInput.style.color = 'white';
-         passwordInput.style.webkitTextFillColor = 'white';
-         passwordInput.style.caretColor = 'white';
-         passwordInput.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-       });
-       
-       // Add blur event listener to maintain visibility
-       passwordInput.addEventListener('blur', () => {
-         passwordInput.style.color = 'white';
-         passwordInput.style.webkitTextFillColor = 'white';
-         passwordInput.style.caretColor = 'white';
-       });
+      const formData = new FormData(this);
+      const email = formData.get('email');
+      const password = formData.get('password');
       
-    } else {
-      console.error('❌ Password toggle elements not found');
-    }
-    
-    const form = document.getElementById('loginForm');
-    
-    form.addEventListener('submit', async (e) => {
-       e.preventDefault();
-       
-       const formData = new FormData(form);
-       const data = {
-         email: formData.get('email'),
-         password: formData.get('password')
-       };
-       
-       try {
-          // Show loading state
-          const submitBtn = form.querySelector('button[type="submit"]');
-          const originalText = submitBtn.textContent;
-          submitBtn.textContent = '🔄 Checking...';
-          submitBtn.disabled = true;
-          
-          // Simulate API call delay
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          
-          // Show success message and redirect to dashboard
-          if (window.innerWidth <= 768) {
-            showMobileAlert('✅ Login Successful! Redirecting to dashboard...');
-          } else {
-            alert('✅ Login Successful! Redirecting to dashboard...');
-          }
-          
-          // Redirect to dashboard after a short delay
-          console.log('🚀 Redirecting to dashboard in 1.5 seconds...');
-          setTimeout(() => {
-            console.log('🎯 Redirecting now to:', '/dashboard.html');
-            window.location.href = '/dashboard.html';
-          }, 1500);
-          
-          // Reset button
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = '🔄 Logging in...';
+      submitBtn.disabled = true;
+      
+      // Simulate login process
+      setTimeout(() => {
+        // Check if user is enrolled
+        const enrollmentData = localStorage.getItem('userEnrollment');
+        
+        if (enrollmentData) {
+          // User is enrolled, redirect to dashboard
+          alert('✅ Login successful! Welcome back to your dashboard.');
+          window.location.href = 'dashboard.html';
+        } else {
+          // User not enrolled, show message
+          alert('❌ Login failed. Please enroll in the course first to access the dashboard.');
           submitBtn.textContent = originalText;
           submitBtn.disabled = false;
-          
-        } catch (err) {
-          console.error('Login error:', err);
-          
-          // Professional error handling
-          let errorMessage = 'Login failed. Please check your credentials and try again.';
-          
-          if (err.name === 'TypeError' && err.message.includes('fetch')) {
-            errorMessage = 'Connection failed. Please check your internet connection and try again.';
-          } else if (err.name === 'AbortError') {
-            errorMessage = 'Request was cancelled. Please try again.';
-          }
-          
-          // Use a more mobile-friendly alert
-          if (window.innerWidth <= 768) {
-            // Mobile device - use a custom alert
-            showMobileAlert(errorMessage);
-          } else {
-            alert(errorMessage);
-          }
-          
-          // Reset button
-          const submitBtn = form.querySelector('button[type="submit"]');
-          submitBtn.textContent = 'Login to Dashboard';
-          submitBtn.disabled = false;
         }
-     });
-     
-     // Mobile-friendly alert function
-           function showMobileAlert(message) {
-        // Create mobile-friendly alert overlay
-        const alertOverlay = document.createElement('div');
-        alertOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-        alertOverlay.innerHTML = `
-          <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-2xl">
-            <div class="text-center">
-              <div class="text-green-500 text-4xl mb-4">✅</div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2">Login Status</h3>
-              <p class="text-gray-600 mb-6 text-sm">${message}</p>
-              <button onclick="this.parentElement.parentElement.parentElement.remove()" 
-                      class="w-full bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
-                OK
-              </button>
-            </div>
-          </div>
-        `;
-        
-        document.body.appendChild(alertOverlay);
-        
-        // Auto-remove after 8 seconds for mobile
+      }, 1500);
+    });
+
+    // Add fade-in animation
+    document.addEventListener('DOMContentLoaded', function() {
+      const elements = document.querySelectorAll('.fade-in-up');
+      elements.forEach((el, index) => {
         setTimeout(() => {
-          if (alertOverlay.parentElement) {
-            alertOverlay.remove();
-          }
-        }, 8000);
-      }
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+    });
   </script>
 </body>
 </html>
