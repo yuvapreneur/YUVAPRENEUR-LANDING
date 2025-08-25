@@ -122,11 +122,55 @@
 
     // Load user profile
     function loadUserProfile() {
-      // Hardcoded user data for GitHub Pages
+      // Check if user is enrolled
+      const enrollmentData = localStorage.getItem('userEnrollment');
+      
+      if (enrollmentData) {
+        try {
+          const userData = JSON.parse(enrollmentData);
+          
+          // Show enrolled user data
+          document.getElementById('username').textContent = userData.name || 'Enrolled User';
+          document.getElementById('email').textContent = userData.email || 'user@example.com';
+          document.getElementById('courseStatus').textContent = '✅ Enrolled';
+          document.getElementById('bonusCount').textContent = '4 (All Bonuses Included)';
+          
+          // Update course access to show enrolled status
+          updateCourseAccessForEnrolledUser();
+          
+        } catch (error) {
+          console.error('Error loading enrollment data:', error);
+          loadDefaultProfile();
+        }
+      } else {
+        loadDefaultProfile();
+      }
+    }
+    
+    // Load default profile for non-enrolled users
+    function loadDefaultProfile() {
       document.getElementById('username').textContent = 'abhijjetwa';
       document.getElementById('email').textContent = 'yuvapreneur@gmail.com';
-      document.getElementById('courseStatus').textContent = '❌ Not Purchased';
-      document.getElementById('bonusCount').textContent = '1';
+      document.getElementById('courseStatus').textContent = '❌ Not Enrolled';
+      document.getElementById('bonusCount').textContent = '0';
+    }
+    
+    // Update course access for enrolled users
+    function updateCourseAccessForEnrolledUser() {
+      const courseAccessDiv = document.getElementById('courseAccess');
+      courseAccessDiv.innerHTML = `
+        <div class="glass p-6 glow-border">
+          <div class="bg-green-100 border border-green-300 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-green-800 mb-2">🎉 Course Access Granted!</h3>
+            <p class="text-green-700 mb-4">Welcome to the Café Business Masterclass! You now have access to all 12 modules and 4 exclusive bonuses.</p>
+            <div class="text-center mt-6">
+              <a href="#modules" class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
+                📚 Start Learning
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     // Load course access status
@@ -150,19 +194,38 @@
     // Load course modules
     function loadCourseModules() {
       const modulesGrid = document.getElementById('modulesGrid');
+      const isEnrolled = localStorage.getItem('userEnrollment');
+      
       MODULES.forEach(module => {
         const moduleCard = document.createElement('div');
         moduleCard.className = 'glass p-4 glow-border';
-        moduleCard.innerHTML = `
-          <div class="text-2xl mb-3">${module.icon}</div>
-          <h3 class="text-lg font-semibold text-white mb-2">${module.title}</h3>
-          <p class="text-white/70 text-sm mb-4">${module.desc}</p>
-          <div class="text-center">
-            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm transition-colors w-full">
-              🔒 Purchase to Unlock
-            </button>
-          </div>
-        `;
+        
+        if (isEnrolled) {
+          // Show unlocked modules for enrolled users
+          moduleCard.innerHTML = `
+            <div class="text-2xl mb-3">${module.icon}</div>
+            <h3 class="text-lg font-semibold text-white mb-2">${module.title}</h3>
+            <p class="text-white/70 text-sm mb-4">${module.desc}</p>
+            <div class="text-center">
+              <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm transition-colors w-full">
+                ✅ Unlocked - Start Learning
+              </button>
+            </div>
+          `;
+        } else {
+          // Show locked modules for non-enrolled users
+          moduleCard.innerHTML = `
+            <div class="text-2xl mb-3">${module.icon}</div>
+            <h3 class="text-lg font-semibold text-white mb-2">${module.title}</h3>
+            <p class="text-white/70 text-sm mb-4">${module.desc}</p>
+            <div class="text-center">
+              <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm transition-colors w-full">
+                🔒 Enroll to Unlock
+              </button>
+            </div>
+          `;
+        }
+        
         modulesGrid.appendChild(moduleCard);
       });
     }
