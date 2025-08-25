@@ -125,9 +125,13 @@
             
             // Update course access to show enrolled status
             updateCourseAccessForEnrolledUser();
-          } else {
+          } else if (userData.status === 'pending_payment') {
             document.getElementById('courseStatus').textContent = '⏳ Payment Pending';
             document.getElementById('bonusCount').textContent = '0 (Complete Payment Required)';
+            loadCourseAccess();
+          } else {
+            document.getElementById('courseStatus').textContent = '❌ Payment Failed';
+            document.getElementById('bonusCount').textContent = '0 (Payment Required)';
             loadCourseAccess();
           }
           
@@ -190,6 +194,21 @@
                 </div>
               </div>
             `;
+          } else if (userData.status === 'payment_failed') {
+            // Show payment failed status
+            courseAccessDiv.innerHTML = `
+              <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <h3 class="text-lg font-semibold text-red-800 mb-2">❌ Payment Failed</h3>
+                  <p class="text-red-700 mb-4">Your payment was not successful. Please try again to get course access.</p>
+                  <div class="text-center mt-6">
+                    <a href="index.html" class="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
+                      🔄 Retry Payment
+                    </a>
+                  </div>
+                </div>
+              </div>
+            `;
           } else {
             // Show not enrolled status
             courseAccessDiv.innerHTML = `
@@ -244,13 +263,23 @@
     // Load course modules
     function loadCourseModules() {
       const modulesGrid = document.getElementById('modulesGrid');
-      const isEnrolled = localStorage.getItem('userEnrollment');
+      const enrollmentData = localStorage.getItem('userEnrollment');
+      
+      // Check if user is fully enrolled
+      const isFullyEnrolled = enrollmentData && (() => {
+        try {
+          const userData = JSON.parse(enrollmentData);
+          return userData.status === 'enrolled' && userData.courseAccess === 'full';
+        } catch (error) {
+          return false;
+        }
+      })();
       
       MODULES.forEach(module => {
         const moduleCard = document.createElement('div');
         moduleCard.className = 'bg-white shadow-lg p-4 border border-gray-200 rounded-xl';
         
-        if (isEnrolled) {
+        if (isFullyEnrolled) {
           // Show unlocked modules for enrolled users
           moduleCard.innerHTML = `
             <div class="text-3xl mb-3">${module.icon}</div>
@@ -283,9 +312,19 @@
     // Load user bonuses
     function loadUserBonuses() {
       const bonusesGrid = document.getElementById('bonusesGrid');
-      const isEnrolled = localStorage.getItem('userEnrollment');
+      const enrollmentData = localStorage.getItem('userEnrollment');
       
-      if (isEnrolled) {
+      // Check if user is fully enrolled
+      const isFullyEnrolled = enrollmentData && (() => {
+        try {
+          const userData = JSON.parse(enrollmentData);
+          return userData.status === 'enrolled' && userData.courseAccess === 'full';
+        } catch (error) {
+          return false;
+        }
+      })();
+      
+      if (isFullyEnrolled) {
         // Show all bonuses as accessible for enrolled users
         bonusesGrid.innerHTML = `
           <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">

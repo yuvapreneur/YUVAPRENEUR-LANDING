@@ -121,7 +121,8 @@
               email: 'user@example.com',
               enrolledAt: new Date().toISOString(),
               status: 'enrolled',
-              paymentId: response.razorpay_payment_id
+              paymentId: response.razorpay_payment_id,
+              courseAccess: 'full'
             };
             localStorage.setItem('userEnrollment', JSON.stringify(enrollmentData));
             
@@ -152,6 +153,17 @@
 
         try {
           const rzp = new Razorpay(options);
+          
+          // Add error handling for payment failures
+          rzp.on('payment.failed', function (response) {
+            console.error('Payment failed:', response.error);
+            alert('❌ Payment failed: ' + (response.error.description || 'Unknown error') + '\n\nPlease try again or contact support.');
+            
+            // Reset button
+            button.textContent = originalText;
+            button.disabled = false;
+          });
+          
           rzp.open();
         } catch (error) {
           console.error('Razorpay error:', error);

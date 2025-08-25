@@ -434,7 +434,7 @@
       }, 1000);
     });
     
-    // Razorpay payment function
+        // Razorpay payment function
     function openRazorpayPayment(userData) {
       const options = {
         key: 'rzp_live_R9QVhOlTJvswsH', // Your live key
@@ -483,16 +483,69 @@
             const submitBtn = document.querySelector('#enrollmentForm button[type="submit"]');
             submitBtn.textContent = '🚀 Enroll Now - Get Course Access';
             submitBtn.disabled = false;
+            
+            // Mark payment as failed if user dismisses
+            const tempData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
+            if (tempData.name) {
+              const failedEnrollment = {
+                ...tempData,
+                status: 'payment_failed',
+                failedAt: new Date().toISOString(),
+                courseAccess: 'none'
+              };
+              localStorage.setItem('userEnrollment', JSON.stringify(failedEnrollment));
+              localStorage.removeItem('tempUserData');
+            }
           }
         }
       };
 
       try {
         const rzp = new Razorpay(options);
+        
+        // Add error handling for payment failures
+        rzp.on('payment.failed', function (response) {
+          console.error('Payment failed:', response.error);
+          alert('❌ Payment failed: ' + (response.error.description || 'Unknown error') + '\n\nPlease try again or contact support.');
+          
+          // Mark payment as failed
+          const tempData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
+          if (tempData.name) {
+            const failedEnrollment = {
+              ...tempData,
+              status: 'payment_failed',
+              failedAt: new Date().toISOString(),
+              courseAccess: 'none',
+              failureReason: response.error.description || 'Payment failed'
+            };
+            localStorage.setItem('userEnrollment', JSON.stringify(failedEnrollment));
+            localStorage.removeItem('tempUserData');
+          }
+          
+          // Reset button
+          const submitBtn = document.querySelector('#enrollmentForm button[type="submit"]');
+          submitBtn.textContent = '🚀 Enroll Now - Get Course Access';
+          submitBtn.disabled = false;
+        });
+        
         rzp.open();
       } catch (error) {
         console.error('Razorpay error:', error);
         alert('❌ Payment failed to open. Please try again.');
+        
+        // Mark as failed
+        const tempData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
+        if (tempData.name) {
+          const failedEnrollment = {
+            ...tempData,
+            status: 'payment_failed',
+            failedAt: new Date().toISOString(),
+            courseAccess: 'none',
+            failureReason: 'Razorpay initialization failed'
+          };
+          localStorage.setItem('userEnrollment', JSON.stringify(failedEnrollment));
+          localStorage.removeItem('tempUserData');
+        }
         
         // Reset button
         const submitBtn = document.querySelector('#enrollmentForm button[type="submit"]');

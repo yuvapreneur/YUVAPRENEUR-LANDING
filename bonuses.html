@@ -134,8 +134,27 @@
         description: `Bonus: ${title}`,
         image: 'https://your-logo-url.com/logo.png',
         handler: function (response) {
-          alert(`Payment successful for ${title}! Payment ID: ${response.razorpay_payment_id}`);
-          window.location.href = '/dashboard.html';
+          alert(`🎉 Payment successful for ${title}!\n\nPayment ID: ${response.razorpay_payment_id}\n\nRedirecting to dashboard...`);
+          
+          // Store bonus purchase data
+          const bonusData = {
+            sku: sku,
+            title: title,
+            price: price,
+            paymentId: response.razorpay_payment_id,
+            purchasedAt: new Date().toISOString(),
+            status: 'purchased'
+          };
+          
+          // Store in localStorage
+          const existingBonuses = JSON.parse(localStorage.getItem('purchasedBonuses') || '[]');
+          existingBonuses.push(bonusData);
+          localStorage.setItem('purchasedBonuses', JSON.stringify(existingBonuses));
+          
+          // Redirect to dashboard
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 2000);
         },
         prefill: { email: userEmail },
         notes: { bonus_sku: sku, bonus_title: title },
@@ -147,8 +166,20 @@
         }
       };
 
-      const rzp = new Razorpay(options);
-      rzp.open();
+      try {
+        const rzp = new Razorpay(options);
+        
+        // Add error handling for payment failures
+        rzp.on('payment.failed', function (response) {
+          console.error('Payment failed:', response.error);
+          alert('❌ Payment failed: ' + (response.error.description || 'Unknown error') + '\n\nPlease try again or contact support.');
+        });
+        
+        rzp.open();
+      } catch (error) {
+        console.error('Razorpay error:', error);
+        alert('❌ Payment failed to open. Please try again.');
+      }
     }
 
     // Load Razorpay script
