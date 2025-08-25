@@ -26,12 +26,12 @@
   <nav class="bg-white shadow-lg p-4 mb-8 rounded-xl border border-gray-200">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <div class="text-2xl font-bold text-purple-600">☕ Café Business Masterclass</div>
-      <div class="space-x-4">
-        <a href="index.html" class="text-gray-600 hover:text-purple-600 transition-colors">Home</a>
-        <a href="bonuses.html" class="text-gray-600 hover:text-purple-600 transition-colors">Bonuses</a>
-        <a href="buy.html" class="text-gray-600 hover:text-purple-600 transition-colors">Buy Course</a>
-        <a href="login.html" class="text-gray-600 hover:text-purple-600 transition-colors">Login</a>
-      </div>
+             <div class="space-x-4" id="navigationLinks">
+         <a href="index.html" class="text-gray-600 hover:text-purple-600 transition-colors">Home</a>
+         <a href="bonuses.html" class="text-gray-600 hover:text-purple-600 transition-colors">Bonuses</a>
+         <a href="buy.html" class="text-gray-600 hover:text-purple-600 transition-colors">Buy Course</a>
+         <a href="login.html" class="text-gray-600 hover:text-purple-600 transition-colors hidden" id="loginLink">Login</a>
+       </div>
     </div>
   </nav>
 
@@ -435,7 +435,31 @@
       loadCourseAccess();
       loadCourseModules();
       loadUserBonuses();
+      checkEnrollmentStatus();
     });
+    
+    // Check enrollment status and show/hide login link
+    function checkEnrollmentStatus() {
+      const enrollmentData = localStorage.getItem('userEnrollment');
+      const loginLink = document.getElementById('loginLink');
+      
+      if (enrollmentData) {
+        try {
+          const userData = JSON.parse(enrollmentData);
+          // Show login link if user has any enrollment data (pending, enrolled, or failed)
+          if (userData.status) {
+            loginLink.classList.remove('hidden');
+            console.log('User has enrollment data, showing login link');
+          }
+        } catch (error) {
+          console.error('Error checking enrollment status:', error);
+        }
+      } else {
+        // Hide login link for new users
+        loginLink.classList.add('hidden');
+        console.log('New user, hiding login link');
+      }
+    }
   </script>
 </body>
 </html>
