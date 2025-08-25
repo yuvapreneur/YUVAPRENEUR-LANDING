@@ -1,278 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Café Business Masterclass</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="styles.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .glow-border {
+      box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+    }
+    .glow-text {
+      text-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+    }
+    .purple-accent {
+      color: #9333ea;
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease-out;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
-<body class="min-h-screen p-4">
+<body class="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 text-white p-4">
   <!-- Navigation -->
-  <nav class="glass p-4 mb-8 glow-border">
+  <nav class="glass p-4 mb-8 glow-border rounded-xl">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="flex items-center space-x-4">
-        <h1 class="text-2xl font-bold text-white glow-text">☕ Café Business Masterclass</h1>
-      </div>
-      <div class="flex items-center space-x-6">
-        <a href="/" class="text-white/80 hover:text-white transition-colors">🏠 Home</a>
-        <a href="/buy.html" class="text-white/80 hover:text-white transition-colors">💳 Payment</a>
-        <a href="/bonuses.html" class="text-white/80 hover:text-white transition-colors">🎁 Bonuses</a>
-        <button id="logoutBtn" class="text-red-400 hover:text-red-300 transition-colors">🚪 Logout</button>
+      <div class="text-2xl font-bold text-purple-accent">☕ Café Business Masterclass</div>
+      <div class="space-x-4">
+        <a href="index.html" class="text-white/80 hover:text-white transition-colors">Home</a>
+        <a href="bonuses.html" class="text-white/80 hover:text-white transition-colors">Bonuses</a>
+        <a href="buy.html" class="text-white/80 hover:text-white transition-colors">Buy Course</a>
+        <a href="login.html" class="text-white/80 hover:text-white transition-colors">Login</a>
       </div>
     </div>
   </nav>
 
-  <div class="max-w-7xl mx-auto">
-    <!-- Welcome Section -->
-    <div class="text-center mb-12 fade-in-up">
-      <h1 class="text-4xl font-bold text-white mb-4 glow-text">Welcome to Your Dashboard</h1>
-      <p class="text-xl text-white/80" id="welcomeMessage">Loading your profile...</p>
+  <!-- User Profile Section -->
+  <div class="max-w-4xl mx-auto mb-8 fade-in-up">
+    <div class="glass p-6 glow-border">
+      <h2 class="text-2xl font-bold text-white mb-4 glow-text">👤 User Profile</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-white text-sm font-medium mb-2">Username</label>
+          <div class="text-white/80" id="username">abhijjetwa</div>
+        </div>
+        <div>
+          <label class="block text-white text-sm font-medium mb-2">Email</label>
+          <div class="text-white/80" id="email">yuvapreneur@gmail.com</div>
+        </div>
+        <div>
+          <label class="block text-white text-sm font-medium mb-2">Course Status</label>
+          <div class="text-purple-300" id="courseStatus">❌ Not Purchased</div>
+        </div>
+        <div>
+          <label class="block text-white text-sm font-medium mb-2">Bonuses Purchased</label>
+          <div class="text-purple-300" id="bonusCount">1</div>
+        </div>
+      </div>
     </div>
+  </div>
 
+  <!-- Course Access Section -->
+  <div class="max-w-4xl mx-auto mb-8 fade-in-up" id="courseAccess">
+    <!-- Course access status will be populated by JavaScript -->
+  </div>
 
-    
-    <!-- Dashboard Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      
-      <!-- Profile Section -->
-      <div class="lg:col-span-1">
-        <div class="glass p-6 glow-border fade-in-up">
-          <h2 class="text-2xl font-bold text-white mb-4 glow-text">👤 Your Profile</h2>
-          <div id="profileInfo" class="space-y-3 text-white/80">
-            <p><strong>Name:</strong> <span id="userName">Loading...</span></p>
-            <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
-            <p><strong>Phone:</strong> <span id="userPhone">Loading...</span></p>
-            <p><strong>Profession:</strong> <span id="userProfession">Loading...</span></p>
-            <p><strong>Location:</strong> <span id="userLocation">Loading...</span></p>
-            <p><strong>Member Since:</strong> <span id="userSince">Loading...</span></p>
-          </div>
-          
-          <div class="mt-6 pt-6 border-t border-white/20">
-            <h3 class="text-lg font-semibold text-white mb-3">📊 Account Status</h3>
-            <div class="space-y-2">
-              <div class="flex justify-between">
-                <span class="text-white/70">Main Course:</span>
-                <span id="courseStatus" class="text-yellow-400">Checking...</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-white/70">Bonuses Purchased:</span>
-                <span id="bonusCount" class="text-purple-accent">0</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- Course Modules Section -->
+  <div class="max-w-6xl mx-auto mb-8 fade-in-up">
+    <h2 class="text-2xl font-bold text-white text-center mb-6 glow-text">📚 Course Modules</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="modulesGrid">
+      <!-- Modules will be populated by JavaScript -->
+    </div>
+  </div>
 
-      <!-- Course Access Section -->
-      <div class="lg:col-span-2">
-        <div class="glass p-6 glow-border fade-in-up">
-          <h2 class="text-2xl font-bold text-white mb-4 glow-text">📚 Course Access</h2>
-          <div id="courseAccess" class="space-y-4">
-            <p class="text-white/80">Checking your course access...</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bonuses Section -->
-      <div class="lg:col-span-3">
-        <div class="glass p-6 glow-border fade-in-up">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold text-white glow-text">🎁 Your Bonuses</h2>
-            <a href="/bonus-access-instructions.html" class="text-purple-accent hover:text-purple-300 text-sm underline">
-              💡 Need help accessing bonuses?
-            </a>
-          </div>
-          <div id="bonusesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <p class="text-white/80">Loading your bonuses...</p>
-          </div>
-        </div>
-      </div>
-
+  <!-- Bonuses Section -->
+  <div class="max-w-6xl mx-auto mb-8 fade-in-up">
+    <h2 class="text-2xl font-bold text-white text-center mb-6 glow-text">🎁 Your Bonuses</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="bonusesGrid">
+      <!-- Bonuses will be populated by JavaScript -->
     </div>
   </div>
 
   <script>
-    // Global variables
-    let userEmail = '';
+    // Course modules data
+    const MODULES = [
+      { title: "Market Research & Location Analysis", desc: "Learn to identify profitable locations and understand your target market", icon: "🔍" },
+      { title: "Business Plan & Financial Planning", desc: "Create a solid business plan and financial projections", icon: "📊" },
+      { title: "Legal Requirements & Licenses", desc: "Navigate legal requirements and obtain necessary licenses", icon: "⚖️" },
+      { title: "Kitchen Design & Equipment", desc: "Design efficient kitchen layouts and choose right equipment", icon: "🍳" },
+      { title: "Menu Planning & Pricing Strategy", desc: "Create profitable menus and implement smart pricing", icon: "📋" },
+      { title: "Staff Hiring & Management", desc: "Build and manage a high-performing team", icon: "👥" },
+      { title: "Marketing & Branding", desc: "Develop strong brand identity and marketing strategies", icon: "🎯" },
+      { title: "Customer Service Excellence", desc: "Deliver exceptional customer experiences", icon: "⭐" },
+      { title: "Operations & Quality Control", desc: "Streamline operations and maintain quality standards", icon: "⚙️" },
+      { title: "Financial Management & Accounting", desc: "Manage finances, track expenses, and maximize profits", icon: "💰" },
+      { title: "Growth & Expansion Strategies", desc: "Scale your business and explore new opportunities", icon: "🚀" },
+      { title: "Technology & Digital Tools", desc: "Leverage technology to improve efficiency and customer experience", icon: "💻" }
+    ];
 
-    // Check authentication on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 Dashboard loading...');
-      checkAuthStatus();
-    });
+    // Bonus data
+    const BONUSES = [
+      { sku: "bonus-menu-psych", title: "Café Menu Psychology Blueprint", desc: "Design menus that increase average order value and customer satisfaction." },
+      { sku: "bonus-festival", title: "Festival & Seasonal Marketing Guide", desc: "Ready-to-use ideas & creatives to boost festive sales." },
+      { sku: "bonus-loyalty", title: "How to Create a Café Loyalty Program", desc: "Step-by-step template for a loyalty program that brings repeat customers." },
+      { sku: "bonus-photo", title: "Photography Cheat Sheet", desc: "Quick setups for mouth-watering food & café photos (phone ready)." }
+    ];
 
-    // Check authentication status - Demo Mode
-    async function checkAuthStatus() {
-      try {
-                 console.log('✅ Authentication successful');
-        
-                 // Load user data
-        loadUserProfile();
-        loadCourseAccess();
-        loadUserBonuses();
-        
-        console.log('✅ Dashboard loaded successfully');
-      } catch (error) {
-        console.error('❌ Auth check failed:', error);
-        alert('❌ Demo mode: Authentication simulation failed.');
-      }
+    // Load user profile
+    function loadUserProfile() {
+      // Hardcoded user data for GitHub Pages
+      document.getElementById('username').textContent = 'abhijjetwa';
+      document.getElementById('email').textContent = 'yuvapreneur@gmail.com';
+      document.getElementById('courseStatus').textContent = '❌ Not Purchased';
+      document.getElementById('bonusCount').textContent = '1';
     }
 
-         // Load user profile from enrollment data
-     async function loadUserProfile() {
-       try {
-         // Set real user data from enrollment form
-         userEmail = 'yuvapreneur@gmail.com';
-         document.getElementById('userName').textContent = 'abhijjetwa';
-         document.getElementById('userEmail').textContent = userEmail;
-         document.getElementById('userPhone').textContent = '9022005019';
-         document.getElementById('userProfession').textContent = 'Not specified';
-         document.getElementById('userLocation').textContent = 'Not specified';
-         document.getElementById('userSince').textContent = 'August 23, 2025';
-         
-         // Update welcome message
-         document.getElementById('welcomeMessage').textContent = 'Welcome back, abhijjetwa!';
-         
-                   // Update account status - only bonus purchased, not main course
-          document.getElementById('courseStatus').textContent = '❌ Not Purchased';
-          document.getElementById('bonusCount').textContent = '1';
-        
-                 // Account status is now updated in loadUserProfile function
-        
-        console.log('✅ Profile loaded successfully');
-      } catch (error) {
-        console.error('❌ Profile load error:', error);
-        document.getElementById('profileInfo').innerHTML = '<p class="text-red-400">❌ Failed to load profile</p>';
-      }
-    }
-
-    // Load course access
-    async function loadCourseAccess() {
-      try {
-        const courseAccessDiv = document.getElementById('courseAccess');
-        
-        // Show course access status - only bonus purchased, not main course
-        courseAccessDiv.innerHTML = `
-          <div class="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
-            <h3 class="text-lg font-semibold text-yellow-400 mb-2">⚠️ Main Course Not Purchased</h3>
+    // Load course access status
+    function loadCourseAccess() {
+      const courseAccessDiv = document.getElementById('courseAccess');
+      courseAccessDiv.innerHTML = `
+        <div class="glass p-6 glow-border">
+          <div class="bg-purple-800/20 border border-purple-400/30 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-purple-300 mb-2">⚠️ Main Course Not Purchased</h3>
             <p class="text-white/80 mb-4">You currently only have access to your purchased bonus. To access all 12 course modules, please purchase the main course.</p>
-                        <div class="text-center">
-              <a href="/buy.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            <div class="text-center mt-6">
+              <a href="buy.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
                 💳 Purchase Main Course - ₹199
               </a>
             </div>
           </div>
+        </div>
+      `;
+    }
+
+    // Load course modules
+    function loadCourseModules() {
+      const modulesGrid = document.getElementById('modulesGrid');
+      MODULES.forEach(module => {
+        const moduleCard = document.createElement('div');
+        moduleCard.className = 'glass p-4 glow-border';
+        moduleCard.innerHTML = `
+          <div class="text-2xl mb-3">${module.icon}</div>
+          <h3 class="text-lg font-semibold text-white mb-2">${module.title}</h3>
+          <p class="text-white/70 text-sm mb-4">${module.desc}</p>
+          <div class="text-center">
+            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm transition-colors w-full">
+              🔒 Purchase to Unlock
+            </button>
+          </div>
         `;
+        modulesGrid.appendChild(moduleCard);
+      });
+    }
+
+    // Load user bonuses
+    function loadUserBonuses() {
+      const bonusesGrid = document.getElementById('bonusesGrid');
+      
+      // Hardcoded bonus status for GitHub Pages
+      bonusesGrid.innerHTML = `
+        <div class="bonus-card glass p-6 interactive-element">
+          <div class="text-2xl mb-4">🎁</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Café Menu Psychology Blueprint</h3>
+          <p class="text-white/70 text-sm mb-4">Design menus that increase average order value and customer satisfaction.</p>
+          <div class="space-y-2">
+            <div class="text-xs text-purple-300">✅ Purchased on August 24, 2025</div>
+            <a href="download.html?file=bonus-menu-psych.pdf&title=Café Menu Psychology Blueprint" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+              📥 Download Bonus
+            </a>
+          </div>
+        </div>
         
-        console.log('✅ Course access loaded successfully');
-      } catch (err) {
-        console.error('❌ Course access load error:', err);
-        document.getElementById('courseAccess').innerHTML = '<p class="text-red-400">❌ Failed to load course access</p>';
-      }
+        <div class="bonus-card glass p-6 interactive-element">
+          <div class="text-2xl mb-4">🎁</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Festival & Seasonal Marketing Guide</h3>
+          <p class="text-white/70 text-sm mb-4">Ready-to-use ideas & creatives to boost festive sales.</p>
+          <div class="space-y-2">
+            <div class="text-xs text-purple-300">❌ Not Purchased</div>
+            <a href="bonuses.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+              💳 Purchase Bonus
+            </a>
+          </div>
+        </div>
+        
+        <div class="bonus-card glass p-6 interactive-element">
+          <div class="text-2xl mb-4">🎁</div>
+          <h3 class="text-lg font-semibold text-white mb-2">How to Create a Café Loyalty Program</h3>
+          <p class="text-white/70 text-sm mb-4">Step-by-step template for a loyalty program that brings repeat customers.</p>
+          <div class="space-y-2">
+            <div class="text-xs text-purple-300">❌ Not Purchased</div>
+            <a href="bonuses.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+              💳 Purchase Bonus
+            </a>
+          </div>
+        </div>
+        
+        <div class="bonus-card glass p-6 interactive-element">
+          <div class="text-2xl mb-4">🎁</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Photography Cheat Sheet</h3>
+          <p class="text-white/70 text-sm mb-4">Quick setups for mouth-watering food & café photos (phone ready).</p>
+          <div class="space-y-2">
+            <div class="text-xs text-purple-300">❌ Not Purchased</div>
+            <a href="bonuses.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
+              💳 Purchase Bonus
+            </a>
+          </div>
+        </div>
+      `;
     }
 
-         // Load user bonuses - hardcoded for GitHub Pages
-     async function loadUserBonuses() {
-       try {
-         const bonusesGrid = document.getElementById('bonusesGrid');
-         
-         // Hardcode bonus status based on actual purchase data
-         // User only purchased: Café Menu Psychology Blueprint
-         bonusesGrid.innerHTML = `
-           <div class="bonus-card glass p-6 interactive-element">
-             <div class="flex items-start justify-between mb-4">
-               <div class="text-2xl font-bold text-purple-accent">🎁</div>
-               <div class="text-sm text-white/60">₹149</div>
-             </div>
-             <h3 class="text-lg font-semibold text-white mb-2">Café Menu Psychology Blueprint</h3>
-             <p class="text-white/70 text-sm mb-4">Design menus that increase average order value</p>
-             
-             <div class="space-y-2">
-               <div class="text-xs text-green-400">✅ Purchased on August 24, 2025</div>
-               <a href="download.html?file=bonus-menu-psych.pdf&title=Café Menu Psychology Blueprint" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                  📥 Download Bonus
-                </a>
-             </div>
-           </div>
-           
-           <div class="bonus-card glass p-6 interactive-element">
-             <div class="flex items-start justify-between mb-4">
-               <div class="text-2xl font-bold text-purple-accent">🎁</div>
-               <div class="text-sm text-white/60">₹199</div>
-             </div>
-             <h3 class="text-lg font-semibold text-white mb-2">Photo Marketing Mastery</h3>
-             <p class="text-white/70 text-sm mb-4">Create stunning visuals that attract customers</p>
-           
-             <div class="space-y-2">
-               <div class="text-xs text-red-400">❌ Not Purchased</div>
-               <button onclick="buyBonus('PHOTO', 199, 'Photo Marketing Mastery')" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                 💳 Purchase Bonus
-               </button>
-             </div>
-           </div>
-           
-           <div class="bonus-card glass p-6 interactive-element">
-             <div class="flex items-start justify-between mb-4">
-               <div class="text-2xl font-bold text-purple-accent">🎁</div>
-               <div class="text-sm text-white/60">₹299</div>
-             </div>
-             <h3 class="text-lg font-semibold text-white mb-2">Loyalty Program Blueprint</h3>
-             <p class="text-white/70 text-sm mb-4">Build customer retention strategies</p>
-             
-             <div class="space-y-2">
-               <div class="text-xs text-red-400">❌ Not Purchased</div>
-               <button onclick="buyBonus('LOYALTY', 299, 'Loyalty Program Blueprint')" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                 💳 Purchase Bonus
-               </button>
-             </div>
-           </div>
-           
-           <div class="bonus-card glass p-6 interactive-element">
-             <div class="flex items-start justify-between mb-4">
-               <div class="text-2xl font-bold text-purple-accent">🎁</div>
-               <div class="text-sm text-white/60">₹249</div>
-             </div>
-             <h3 class="text-lg font-semibold text-white mb-2">Festival Marketing Guide</h3>
-             <p class="text-white/70 text-sm mb-4">Ready-to-use ideas for festive sales</p>
-             
-             <div class="space-y-2">
-               <div class="text-xs text-red-400">❌ Not Purchased</div>
-               <button onclick="buyBonus('FESTIVAL', 249, 'Festival Marketing Guide')" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                 💳 Purchase Bonus
-               </button>
-             </div>
-           </div>
-         `;
-         
-         console.log('✅ Bonuses loaded successfully');
-       } catch (err) {
-         console.error('❌ Bonuses load error:', err);
-         document.getElementById('bonusesGrid').innerHTML = '<p class="text-red-400">❌ Failed to load bonuses</p>';
-       }
-     }
-
-    // Buy bonus function
-    function buyBonus(sku, price, title) {
-      if (confirm(`Purchase "${title}" for ₹${price}?`)) {
-        alert(`Purchase "${title}" for ₹${price}?\n\nThis will redirect you to payment processing.`);
-      }
-    }
-    
-    // Show demo message function
-    function showDemoMessage() {
-      alert('Downloading your purchased bonus content...');
-    }
-
-    // Logout function
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-      if (confirm('Are you sure you want to logout?')) {
-        console.log('🚪 Logging out...');
-        window.location.href = '/login.html';
-      }
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserProfile();
+      loadCourseAccess();
+      loadCourseModules();
+      loadUserBonuses();
     });
   </script>
 </body>

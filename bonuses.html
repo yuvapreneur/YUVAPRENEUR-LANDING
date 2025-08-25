@@ -1,297 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exclusive Bonuses - Café Business Masterclass</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bonuses - Café Business Masterclass</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .glow-border {
+      box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+    }
+    .glow-text {
+      text-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+    }
+    .purple-accent {
+      color: #9333ea;
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease-out;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-6">
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-gray-900">☕ Café Business Masterclass</h1>
-                </div>
-                <nav class="flex space-x-8">
-                    <a href="/" class="text-gray-500 hover:text-gray-900">🏠 Home</a>
-                    <a href="/buy.html" class="text-gray-500 hover:text-gray-900">💳 Main Course</a>
-                    <a href="/dashboard.html" class="text-gray-500 hover:text-gray-900">📊 Dashboard</a>
-                </nav>
-            </div>
+<body class="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 text-white p-4">
+  <!-- Navigation -->
+  <nav class="glass p-4 mb-8 glow-border rounded-xl">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="text-2xl font-bold text-purple-accent">☕ Café Business Masterclass</div>
+      <div class="space-x-4">
+        <a href="index.html" class="text-white/80 hover:text-white transition-colors">Home</a>
+        <a href="dashboard.html" class="text-white/80 hover:text-white transition-colors">Dashboard</a>
+        <a href="buy.html" class="text-white/80 hover:text-white transition-colors">Buy Course</a>
+        <a href="login.html" class="text-white/80 hover:text-white transition-colors">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="text-center mb-12 fade-in-up">
+    <h1 class="text-4xl font-bold text-white mb-4 glow-text">🎁 Exclusive Bonuses</h1>
+    <p class="text-xl text-white/80 mb-8">Enhance your café business with these valuable resources</p>
+  </div>
+
+  <!-- Bonuses Grid -->
+  <div class="max-w-6xl mx-auto mb-12 fade-in-up">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="bonusesGrid">
+      <!-- Bonuses will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-purple-900 text-white py-8 px-4 mt-16">
+    <div class="max-w-7xl mx-auto text-center">
+      <p class="text-purple-300 mb-2">
+        Need help? Contact <a href="mailto:yuvapreneur@gmail.com" class="text-purple-300 hover:text-purple-200 underline">yuvapreneur@gmail.com</a>
+      </p>
+      <p class="text-purple-400">© 2025 Youthpreneur. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Bonus data
+    const BONUSES = [
+      {
+        sku: "bonus-menu-psych",
+        price: 199,
+        title: "Café Menu Psychology Blueprint",
+        desc: "Design menus that increase average order value and customer satisfaction. Learn the psychology behind menu design, pricing strategies, and layout optimization.",
+        features: ["Menu psychology principles", "Pricing optimization", "Layout best practices", "Customer behavior insights"]
+      },
+      {
+        sku: "bonus-festival",
+        price: 249,
+        title: "Festival & Seasonal Marketing Guide",
+        desc: "Ready-to-use ideas & creatives to boost festive sales. Complete marketing campaigns for all major festivals and seasons.",
+        features: ["Festival-specific campaigns", "Social media templates", "Email marketing sequences", "Promotional strategies"]
+      },
+      {
+        sku: "bonus-loyalty",
+        price: 199,
+        title: "How to Create a Café Loyalty Program",
+        desc: "Step-by-step template for a loyalty program that brings repeat customers. Build customer retention and increase lifetime value.",
+        features: ["Loyalty program design", "Customer segmentation", "Reward structures", "Implementation guide"]
+      },
+      {
+        sku: "bonus-photo",
+        price: 249,
+        title: "Photography Cheat Sheet",
+        desc: "Quick setups for mouth-watering food & café photos (phone ready). Professional food photography techniques for social media.",
+        features: ["Lighting setups", "Composition rules", "Editing techniques", "Social media optimization"]
+      }
+    ];
+
+    // Populate bonuses
+    const bonusesGrid = document.getElementById('bonusesGrid');
+    BONUSES.forEach(bonus => {
+      const bonusCard = document.createElement('div');
+      bonusCard.className = 'bonus-card glass p-6 interactive-element';
+      bonusCard.innerHTML = `
+        <div class="text-3xl mb-4">🎁</div>
+        <h3 class="text-lg font-semibold text-white mb-3">${bonus.title}</h3>
+        <p class="text-white/70 text-sm mb-4">${bonus.desc}</p>
+        
+        <div class="mb-4">
+          <h4 class="text-white font-medium mb-2">What you'll get:</h4>
+          <ul class="text-white/70 text-sm space-y-1">
+            ${bonus.features.map(feature => `<li>• ${feature}</li>`).join('')}
+          </ul>
         </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="py-16 px-4 text-center">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-5xl font-bold text-gray-900 mb-6">
-                🎁 Exclusive Bonuses for You
-            </h1>
-            <p class="text-xl text-gray-600 mb-8">
-                Unlock these powerful resources to accelerate your café business success
-            </p>
-            <div class="bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded mb-6">
-                <p class="text-yellow-800">
-                    <strong>🔥 Limited Time:</strong> Get these bonuses individually or unlock all with the main course!
-                </p>
-            </div>
-            
-            <div class="bg-blue-100 border-l-4 border-blue-400 p-4 rounded">
-                <p class="text-blue-800">
-                    <strong>💡 Need Help?</strong> 
-                    <a href="/bonus-access-instructions.html" class="underline hover:text-blue-600">Click here to learn how to access your purchased bonuses</a>
-                </p>
-            </div>
-            
-
+        
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-2xl font-bold text-purple-accent">₹${bonus.price}</div>
+          <div class="text-sm text-purple-300">Individual Purchase</div>
         </div>
-    </section>
+        
+        <button onclick="buyBonus('${bonus.sku}', ${bonus.price}, '${bonus.title}')" 
+                class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors transform hover:scale-105">
+          💳 Buy Now - ₹${bonus.price}
+        </button>
+      `;
+      bonusesGrid.appendChild(bonusCard);
+    });
 
-    <!-- Bonuses Grid -->
-    <section class="py-16 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Bonus 1: Menu Psychology -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                    <div class="p-8">
-                        <div class="text-center mb-6">
-                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span class="text-2xl">🧠</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">Café Menu Psychology Blueprint</h3>
-                            <p class="text-gray-600 text-sm">Design menus that increase average order value and customer satisfaction</p>
-                        </div>
-                        
-                                                 <div class="text-center mb-6">
-                             <div class="text-3xl font-bold text-purple-600">₹199</div>
-                             <div class="text-sm text-gray-500">One-time purchase</div>
-                         </div>
-                        
-                                                 <button onclick="buyBonus('bonus-menu-psych', 149, 'Café Menu Psychology Blueprint')" 
-                            class="w-full bg-purple-600 text-white py-3 px-6 rounded-xl hover:bg-purple-700 transition-colors font-semibold inline-block text-center">
-                             🚀 Get This Bonus
-                         </button>
-                    </div>
-                </div>
-
-
-
-                <!-- Bonus 2: Festival Marketing -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                    <div class="p-8">
-                        <div class="text-center mb-6">
-                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span class="text-2xl">🎉</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">Festival & Seasonal Marketing Guide</h3>
-                            <p class="text-gray-600 text-sm">Ready-to-use ideas & creatives to boost festive sales</p>
-                        </div>
-                        
-                        <div class="text-center mb-6">
-                            <div class="text-3xl font-bold text-green-600">₹249</div>
-                            <div class="text-sm text-gray-500">One-time purchase</div>
-                        </div>
-                        
-                        <button onclick="buyBonus('bonus-festival', 249, 'Festival & Seasonal Marketing Guide')" 
-                           class="w-full bg-green-600 text-white py-3 px-6 rounded-xl hover:bg-green-700 transition-colors font-semibold inline-block text-center">
-                            🚀 Get This Bonus
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Bonus 3: Loyalty Program -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                    <div class="p-8">
-                        <div class="text-center mb-6">
-                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span class="text-2xl">💎</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">Café Loyalty Program</h3>
-                            <p class="text-gray-600 text-sm">Step-by-step template for a loyalty program that brings repeat customers</p>
-                        </div>
-                        
-                        <div class="text-center mb-6">
-                            <div class="text-3xl font-bold text-blue-600">₹199</div>
-                            <div class="text-sm text-gray-500">One-time purchase</div>
-                        </div>
-                        
-                        <button onclick="buyBonus('bonus-loyalty', 199, 'Café Loyalty Program')" 
-                           class="w-full bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition-colors font-semibold inline-block text-center">
-                            🚀 Get This Bonus
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Bonus 4: Photography -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                    <div class="p-8">
-                        <div class="text-center mb-6">
-                            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span class="text-2xl">📸</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">Photography Cheat Sheet</h3>
-                            <p class="text-gray-600 text-sm">Quick setups for mouth-watering food & café photos (phone ready)</p>
-                        </div>
-                        
-                        <div class="text-center mb-6">
-                            <div class="text-3xl font-bold text-orange-600">₹249</div>
-                            <div class="text-sm text-gray-500">One-time purchase</div>
-                        </div>
-                        
-                        <button onclick="buyBonus('bonus-photo', 249, 'Photography Cheat Sheet')" 
-                           class="w-full bg-orange-600 text-white py-3 px-6 rounded-xl hover:bg-orange-700 transition-colors font-semibold inline-block text-center">
-                            🚀 Get This Bonus
-                        </button>
-                    </div>
-                </div>
-
-
-
-                <!-- Bundle Offer -->
-                <div class="bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 text-white">
-                    <div class="p-8 text-center">
-                        <div class="mb-6">
-                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span class="text-2xl">🎯</span>
-                            </div>
-                            <h3 class="text-xl font-bold mb-2">Complete Bundle</h3>
-                            <p class="text-purple-100 text-sm">Get ALL bonuses + Main Course at massive discount</p>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <div class="text-3xl font-bold">₹1,495</div>
-                            <div class="text-sm text-purple-200">Save ₹1,000+</div>
-                        </div>
-                        
-                        <a href="/buy.html" class="block w-full bg-white text-purple-600 py-3 px-6 rounded-xl hover:bg-gray-100 transition-colors font-semibold">
-                            🎁 Get Complete Package
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="py-16 px-4 bg-white">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12">❓ Frequently Asked Questions</h2>
-            
-            <div class="space-y-6">
-                <div class="border-b border-gray-200 pb-6">
-                    <h3 class="text-lg font-semibold mb-2">How do I access my bonus after purchase?</h3>
-                    <p class="text-gray-600">After successful payment, you'll be redirected to a download page where you can access your bonus PDF immediately.</p>
-                </div>
-                
-                <div class="border-b border-gray-200 pb-6">
-                    <h3 class="text-lg font-semibold mb-2">Are these bonuses included in the main course?</h3>
-                    <p class="text-gray-600">Yes! When you purchase the main Café Business Masterclass, you get access to ALL these bonuses automatically.</p>
-                </div>
-                
-                <div class="border-b border-gray-200 pb-6">
-                    <h3 class="text-lg font-semibold mb-2">Can I buy multiple bonuses separately?</h3>
-                    <p class="text-gray-600">Absolutely! Each bonus can be purchased individually, or you can get the complete package for maximum savings.</p>
-                </div>
-                
-                <div class="border-b border-gray-200 pb-6">
-                    <h3 class="text-lg font-semibold mb-2">What payment methods do you accept?</h3>
-                    <p class="text-gray-600">We accept all major credit/debit cards, UPI, net banking, and digital wallets through our secure Razorpay payment gateway.</p>
-                </div>
-                
-                <div class="pb-6">
-                    <h3 class="text-lg font-semibold mb-2">Is there a money-back guarantee?</h3>
-                    <p class="text-gray-600">Yes! We offer a 7-day money-back guarantee. If you're not satisfied, we'll refund your purchase, no questions asked.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="py-16 px-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-6">Ready to Transform Your Café Business?</h2>
-            <p class="text-xl mb-8 text-purple-100">Choose your path to success today</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/buy.html" class="bg-white text-purple-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
-                    🎯 Get Complete Package
-                </a>
-                <a href="/" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-purple-600 transition-colors">
-                    📚 Learn More
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 px-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <p class="text-gray-400">© 2024 Café Business Masterclass. All rights reserved.</p>
-            <p class="text-gray-500 mt-2">Built with ❤️ for aspiring café entrepreneurs</p>
-        </div>
-    </footer>
-
-    <script>
-        // Buy Bonus Function with Razorpay
-        async function buyBonus(sku, price, title) {
-            try {
-                // Get user email
-                const userEmail = prompt("Please enter your email address:");
-                if (!userEmail) return;
-
-                                 // Razorpay configuration for bonus - using simpler checkout method
-                 const options = {
-                     key: 'rzp_live_R9QVhOlTJvswsH',
-                     amount: price * 100, // Convert to paise
-                     currency: 'INR',
-                     name: 'Café Business Masterclass',
-                     description: `Bonus: ${title}`,
-                     image: 'https://your-logo-url.com/logo.png', // Replace with your logo URL
-                     handler: function (response) {
-                         // Payment successful
-                         alert(`Payment successful for ${title}! Payment ID: ${response.razorpay_payment_id}`);
-                         // Redirect to dashboard or success page
-                         window.location.href = '/dashboard.html';
-                     },
-                     prefill: {
-                         email: userEmail
-                     },
-                     notes: {
-                         bonus_sku: sku,
-                         bonus_title: title
-                     },
-                     theme: {
-                         color: '#8B5CF6'
-                     },
-                     modal: {
-                         ondismiss: function() {
-                             // Reset button when modal is dismissed
-                             console.log('Payment modal dismissed');
-                         }
-                     }
-                 };
-                
-                // Initialize Razorpay checkout
-                const rzp = new Razorpay(options);
-                rzp.open();
-                
-            } catch (error) {
-                console.error('Error:', error);
-                alert('❌ Something went wrong. Please try again.');
-            }
+    // Buy bonus function
+    function buyBonus(sku, price, title) {
+      const userEmail = 'yuvapreneur@gmail.com'; // Default email for demo
+      
+      // Razorpay integration
+      const options = {
+        key: 'rzp_live_R9QVhOlTJvswsH', // Updated to new live key
+        amount: price * 100,
+        currency: 'INR',
+        name: 'Café Business Masterclass',
+        description: `Bonus: ${title}`,
+        image: 'https://your-logo-url.com/logo.png',
+        handler: function (response) {
+          alert(`Payment successful for ${title}! Payment ID: ${response.razorpay_payment_id}`);
+          window.location.href = '/dashboard.html';
+        },
+        prefill: { email: userEmail },
+        notes: { bonus_sku: sku, bonus_title: title },
+        theme: { color: '#8B5CF6' },
+        modal: {
+          ondismiss: function() {
+            console.log('Payment modal dismissed');
+          }
         }
+      };
 
-        // Add smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+
+    // Load Razorpay script
+    function loadRazorpay() {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = function() {
+        console.log('Razorpay loaded successfully');
+      };
+      script.onerror = function() {
+        console.error('Failed to load Razorpay');
+      };
+      document.head.appendChild(script);
+    }
+
+    // Load Razorpay when page loads
+    document.addEventListener('DOMContentLoaded', loadRazorpay);
+  </script>
 </body>
 </html>
