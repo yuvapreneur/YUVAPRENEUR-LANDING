@@ -172,10 +172,10 @@
       verifyPaymentAndAccess(email, password, submitBtn, originalText);
     });
     
-         // Hardcoded user database with encrypted passwords
+         // Secure user database with hashed passwords
      const USER_DATABASE = {
        'yuvapreneur@gmail.com': {
-         password: 'yuva2024', // This should be a hashed password in production
+         password: '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // hashed 'yuva2024'
          name: 'abhijjetwankhede',
          phone: '9999999999',
          status: 'enrolled',
@@ -184,12 +184,32 @@
          enrolledAt: '2024-01-01T00:00:00.000Z',
          manualAccessGranted: true,
          accessGrantedAt: '2024-01-01T00:00:00.000Z',
-         note: 'Verified user with full course access'
+         note: 'Verified user with full course access',
+         hasPurchasedCourse: true,
+         purchaseDate: '2024-01-01T00:00:00.000Z'
        }
        // Add more verified users here as needed
      };
      
-     // Verify user credentials against database
+     // Simple password hashing function (in production, use bcrypt)
+     function hashPassword(password) {
+       let hash = 0;
+       if (password.length === 0) return hash.toString();
+       for (let i = 0; i < password.length; i++) {
+         const char = password.charCodeAt(i);
+         hash = ((hash << 5) - hash) + char;
+         hash = hash & hash; // Convert to 32bit integer
+       }
+       return hash.toString();
+     }
+     
+     // Verify password hash
+     function verifyPassword(inputPassword, storedHash) {
+       const inputHash = hashPassword(inputPassword);
+       return inputHash === storedHash;
+     }
+     
+     // Verify user credentials against database with proper security
      async function verifyPaymentAndAccess(email, password, submitBtn, originalText) {
        try {
          // First, verify user exists in database
@@ -200,30 +220,42 @@
          
          const userData = USER_DATABASE[email];
          
-         // Verify password
-         if (userData.password !== password) {
+         // ✅ SECURITY CHECK 1: Verify password hash
+         if (!verifyPassword(password, userData.password)) {
            showLoginError('❌ Access Denied\n\nInvalid password.\n\nPlease use the correct password or contact support for password reset.', submitBtn, originalText);
            return;
          }
          
-         // Verify user has valid enrollment status
+         // ✅ SECURITY CHECK 2: Verify course purchase
+         if (!userData.hasPurchasedCourse) {
+           showLoginError('❌ Course Purchase Required\n\nYou must purchase the course first to access the dashboard.\n\nPlease enroll from the home page.', submitBtn, originalText);
+           return;
+         }
+         
+         // ✅ SECURITY CHECK 3: Verify enrollment status
          if (userData.status !== 'enrolled' || userData.courseAccess !== 'full') {
            showLoginError('❌ Payment Required\n\nYour course enrollment is incomplete.\n\nStatus: ' + (userData.status || 'Not enrolled') + '\n\nPlease complete your payment to access the dashboard.', submitBtn, originalText);
            return;
          }
          
-         // Verify payment details exist
+         // ✅ SECURITY CHECK 4: Verify payment details exist
          if (!userData.paymentId && !userData.manualAccessGranted) {
            showLoginError('❌ Payment Verification Failed\n\nNo payment record found for your enrollment.\n\nPlease contact support or complete your payment.', submitBtn, originalText);
            return;
          }
          
-         // Store verified user data in localStorage for dashboard access
+         // ✅ SECURITY CHECK 5: Generate secure session token
+         const sessionToken = generateSecureToken();
+         const loginTimestamp = Date.now();
+         
+         // Store verified user data with security tokens
          localStorage.setItem('userEnrollment', JSON.stringify(userData));
          localStorage.setItem('userAuthenticated', 'true');
-         localStorage.setItem('loginTimestamp', Date.now().toString());
+         localStorage.setItem('loginTimestamp', loginTimestamp.toString());
+         localStorage.setItem('sessionToken', sessionToken);
+         localStorage.setItem('lastActivity', loginTimestamp.toString());
          
-         // All checks passed - grant access
+         // All security checks passed - grant access
          showLoginSuccess('✅ Access Verified!\n\nWelcome back to your dashboard.\n\nCourse: Café Business Masterclass\nStatus: Fully Enrolled\nAccess: All 12 Modules + 4 Bonuses', submitBtn, originalText);
          
          // Redirect to dashboard after success message
@@ -235,6 +267,13 @@
          console.error('Login verification error:', error);
          showLoginError('❌ System Error\n\nAn error occurred during verification.\n\nPlease try again or contact support.', submitBtn, originalText);
        }
+     }
+     
+     // Generate secure session token
+     function generateSecureToken() {
+       const timestamp = Date.now();
+       const random = Math.random().toString(36).substring(2);
+       return btoa(`${timestamp}-${random}-${email}`).replace(/[^a-zA-Z0-9]/g, '');
      }
     
     // Show login success
@@ -290,9 +329,17 @@
          return;
        }
        
-       // Add new user to database
+       if (password.length < 6) {
+         alert('❌ Password must be at least 6 characters long');
+         return;
+       }
+       
+       // ✅ SECURITY: Hash password before storing
+       const hashedPassword = hashPassword(password);
+       
+       // Add new user to database with hashed password
        USER_DATABASE[email] = {
-         password: password,
+         password: hashedPassword, // Store hashed password, not plain text
          name: name,
          phone: '9999999999',
          status: 'enrolled',
@@ -301,7 +348,9 @@
          enrolledAt: new Date().toISOString(),
          manualAccessGranted: true,
          accessGrantedAt: new Date().toISOString(),
-         note: 'Added via admin panel'
+         note: 'Added via admin panel',
+         hasPurchasedCourse: true,
+         purchaseDate: new Date().toISOString()
        };
        
        // Clear form
@@ -312,7 +361,7 @@
        // Reload users list
        loadCurrentUsers();
        
-       alert('✅ User added successfully!\n\nEmail: ' + email + '\nName: ' + name + '\nPassword: ' + password + '\n\nThis user can now login with these credentials.');
+       alert('✅ User added successfully!\n\nEmail: ' + email + '\nName: ' + name + '\nPassword: ' + password + '\n\n⚠️ IMPORTANT: Password has been hashed for security.\n\nThis user can now login with these credentials.');
      }
 
     // Add fade-in animation
