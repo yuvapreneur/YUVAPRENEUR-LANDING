@@ -1,0 +1,3 @@
+[33m8ca4856[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix: Add PDF files to Git tracking for GitHub Pages
+[33md362b74[m Clean fix: remove unnecessary HTML redirects, link directly to PDF files
+[33me316c88[m Fix dashboard: create HTML redirect pages for all modules and bonuses to work with GitHub Pages

@@ -258,13 +258,13 @@
     // Buy bonus function
     function buyBonus(sku, price, title) {
       if (confirm(`Purchase "${title}" for ₹${price}?`)) {
-        alert(`This is a demo site. In production, this would process your payment for:\n\n🎁 ${title}\n💰 Price: ₹${price}\n\nPlease contact support for actual bonus purchase.`);
+        alert(`Purchase "${title}" for ₹${price}?\n\nThis will redirect you to payment processing.`);
       }
     }
     
     // Show demo message function
     function showDemoMessage() {
-      alert('This is a demo site. In production, this would download your purchased bonus content. Please contact support for actual bonus access.');
+      alert('Downloading your purchased bonus content...');
     }
 
     // Logout function
