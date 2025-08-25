@@ -216,13 +216,13 @@
       }
     }
     
-    // Load default profile for non-enrolled users
-    function loadDefaultProfile() {
-      document.getElementById('username').textContent = 'abhijjetwa';
-      document.getElementById('email').textContent = 'yuvapreneur@gmail.com';
-      document.getElementById('courseStatus').textContent = '❌ Not Enrolled';
-      document.getElementById('bonusCount').textContent = '0';
-    }
+         // Load default profile for non-enrolled users
+     function loadDefaultProfile() {
+       document.getElementById('username').textContent = 'abhijjetwankhede';
+       document.getElementById('email').textContent = 'yuvapreneur@gmail.com';
+       document.getElementById('courseStatus').textContent = '❌ Not Enrolled';
+       document.getElementById('bonusCount').textContent = '0';
+     }
     
     // Update course access for enrolled users
     function updateCourseAccessForEnrolledUser() {
@@ -267,15 +267,19 @@
               </div>
             `;
           } else if (userData.status === 'payment_failed') {
-            // Show payment failed status
+            // Show payment failed status with direct retry option
             courseAccessDiv.innerHTML = `
               <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
                 <div class="bg-red-50 border border-red-200 rounded-lg p-4">
                   <h3 class="text-lg font-semibold text-red-800 mb-2">❌ Payment Failed</h3>
                   <p class="text-red-700 mb-4">Your payment was not successful. Please try again to get course access.</p>
-                  <div class="text-center mt-6">
-                    <a href="index.html" class="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
-                      🔄 Retry Payment
+                  <div class="text-center mt-6 space-y-3">
+                    <button onclick="retryPayment()" class="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
+                      🔄 Retry Payment Now
+                    </button>
+                    <div class="text-sm text-red-600">or</div>
+                    <a href="index.html" class="inline-block bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
+                      📝 Re-enroll with New Details
                     </a>
                   </div>
                 </div>
@@ -518,28 +522,167 @@
       checkEnrollmentStatus();
     });
     
-    // Check enrollment status and show/hide login link
-    function checkEnrollmentStatus() {
-      const enrollmentData = localStorage.getItem('userEnrollment');
-      const loginLink = document.getElementById('loginLink');
-      
-      if (enrollmentData) {
-        try {
-          const userData = JSON.parse(enrollmentData);
-          // Show login link if user has any enrollment data (pending, enrolled, or failed)
-          if (userData.status) {
-            loginLink.classList.remove('hidden');
-            console.log('User has enrollment data, showing login link');
-          }
-        } catch (error) {
-          console.error('Error checking enrollment status:', error);
-        }
-      } else {
-        // Hide login link for new users
-        loginLink.classList.add('hidden');
-        console.log('New user, hiding login link');
-      }
-    }
+         // Retry payment function
+     function retryPayment() {
+       // Get existing enrollment data
+       const enrollmentData = localStorage.getItem('userEnrollment');
+       if (!enrollmentData) {
+         alert('❌ No enrollment data found. Please enroll again.');
+         window.location.href = 'index.html';
+         return;
+       }
+       
+       try {
+         const userData = JSON.parse(enrollmentData);
+         
+         // Show loading state
+         const retryBtn = document.querySelector('button[onclick="retryPayment()"]');
+         const originalText = retryBtn.textContent;
+         retryBtn.textContent = '🔄 Processing...';
+         retryBtn.disabled = true;
+         
+         // Initialize Razorpay payment
+         const options = {
+           key: 'rzp_live_R9QVhOlTJvswsH',
+           amount: 100, // ₹1 in paise
+           currency: 'INR',
+           name: 'Café Business Masterclass',
+           description: 'Complete Course + 4 Bonuses - Payment Retry',
+           image: 'https://your-logo-url.com/logo.png',
+           handler: function (response) {
+             alert('🎉 Payment Successful! Welcome to the Café Business Masterclass!\n\nPayment ID: ' + response.razorpay_payment_id + '\n\nYou now have full access to all 12 modules and 4 bonuses!\n\nRefreshing dashboard...');
+             
+             // Update enrollment status
+             const updatedEnrollment = {
+               ...userData,
+               status: 'enrolled',
+               paymentId: response.razorpay_payment_id,
+               paymentDate: new Date().toISOString(),
+               courseAccess: 'full',
+               retryCount: (userData.retryCount || 0) + 1
+             };
+             
+             localStorage.setItem('userEnrollment', JSON.stringify(updatedEnrollment));
+             
+             // Refresh dashboard
+             setTimeout(() => {
+               window.location.reload();
+             }, 2000);
+           },
+           prefill: {
+             email: userData.email || 'user@example.com',
+             contact: userData.phone || '9999999999'
+           },
+           notes: {
+             course: 'Café Business Masterclass',
+             type: 'main_course',
+             retry: 'true'
+           },
+           theme: {
+             color: '#8B5CF6'
+           },
+           modal: {
+             ondismiss: function() {
+               // Reset button when modal is dismissed
+               retryBtn.textContent = originalText;
+               retryBtn.disabled = false;
+             }
+           }
+         };
+         
+         // Load Razorpay if not already loaded
+         if (typeof Razorpay === 'undefined') {
+           const script = document.createElement('script');
+           script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+           script.onload = function() {
+             openRazorpayPayment(options);
+           };
+           script.onerror = function() {
+             alert('❌ Failed to load payment gateway. Please try again.');
+             retryBtn.textContent = originalText;
+             retryBtn.disabled = false;
+           };
+           document.head.appendChild(script);
+         } else {
+           openRazorpayPayment(options);
+         }
+         
+       } catch (error) {
+         console.error('Retry payment error:', error);
+         alert('❌ Error processing payment retry. Please try again.');
+         const retryBtn = document.querySelector('button[onclick="retryPayment()"]');
+         retryBtn.textContent = '🔄 Retry Payment Now';
+         retryBtn.disabled = false;
+       }
+     }
+     
+     // Open Razorpay payment
+     function openRazorpayPayment(options) {
+       try {
+         const rzp = new Razorpay(options);
+         
+         // Add error handling for payment failures
+         rzp.on('payment.failed', function (response) {
+           console.error('Payment failed:', response.error);
+           alert('❌ Payment failed: ' + (response.error.description || 'Unknown error') + '\n\nPlease try again or contact support.');
+           
+           // Mark payment as failed
+           const enrollmentData = localStorage.getItem('userEnrollment');
+           if (enrollmentData) {
+             try {
+               const userData = JSON.parse(enrollmentData);
+               const failedEnrollment = {
+                 ...userData,
+                 status: 'payment_failed',
+                 failedAt: new Date().toISOString(),
+                 failureReason: response.error.description || 'Payment failed'
+               };
+               localStorage.setItem('userEnrollment', JSON.stringify(failedEnrollment));
+             } catch (error) {
+               console.error('Error updating failed payment:', error);
+             }
+           }
+           
+           // Reset button
+           const retryBtn = document.querySelector('button[onclick="retryPayment()"]');
+           retryBtn.textContent = '🔄 Retry Payment Now';
+           retryBtn.disabled = false;
+         });
+         
+         rzp.open();
+       } catch (error) {
+         console.error('Razorpay error:', error);
+         alert('❌ Payment failed to open. Please try again.');
+         
+         // Reset button
+         const retryBtn = document.querySelector('button[onclick="retryPayment()"]');
+         retryBtn.textContent = '🔄 Retry Payment Now';
+         retryBtn.disabled = false;
+       }
+     }
+     
+     // Check enrollment status and show/hide login link
+     function checkEnrollmentStatus() {
+       const enrollmentData = localStorage.getItem('userEnrollment');
+       const loginLink = document.getElementById('loginLink');
+       
+       if (enrollmentData) {
+         try {
+           const userData = JSON.parse(enrollmentData);
+           // Show login link if user has any enrollment data (pending, enrolled, or failed)
+           if (userData.status) {
+             loginLink.classList.remove('hidden');
+             console.log('User has enrollment data, showing login link');
+           }
+         } catch (error) {
+           console.error('Error checking enrollment status:', error);
+         }
+       } else {
+         // Hide login link for new users
+         loginLink.classList.add('hidden');
+         console.log('New user, hiding login link');
+       }
+     }
   </script>
 </body>
 </html>
