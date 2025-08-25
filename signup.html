@@ -5,83 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up - Café Business Masterclass</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="styles.css" rel="stylesheet">
+  <style>
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease-out;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
-<body class="min-h-screen p-4">
+<body class="min-h-screen bg-white p-4">
   <div class="max-w-md mx-auto mt-8">
     <!-- Header -->
     <div class="text-center mb-8 fade-in-up">
-      <h1 class="text-3xl font-bold text-white mb-2 glow-text">Create Account</h1>
-      <p class="text-white/70">Join the Café Business Masterclass</p>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+      <p class="text-gray-600">Join the Café Business Masterclass</p>
     </div>
 
     <!-- Signup Form -->
-    <div class="glass p-8 glow-border fade-in-up">
+    <div class="bg-white shadow-lg p-8 border border-gray-200 rounded-xl fade-in-up">
       <form id="signupForm" class="space-y-6">
         <div>
-          <label class="block text-white text-sm font-medium mb-2">Full Name</label>
+          <label class="block text-gray-700 text-sm font-medium mb-2">Full Name</label>
           <input type="text" name="name" required 
-                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                 class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                  placeholder="Enter your full name">
         </div>
         
         <div>
-          <label class="block text-white text-sm font-medium mb-2">Email Address</label>
+          <label class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
           <input type="email" name="email" required 
-                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                 class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                  placeholder="Enter your email address">
         </div>
         
         <div>
-          <label class="block text-white text-sm font-medium mb-2">Phone Number</label>
+          <label class="block text-gray-700 text-sm font-medium mb-2">Phone Number</label>
           <input type="tel" name="phone" required 
-                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                 class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                  placeholder="Enter your phone number">
         </div>
         
         <div>
-          <label class="block text-white text-sm font-medium mb-2">Profession</label>
+          <label class="block text-gray-700 text-sm font-medium mb-2">Profession</label>
           <input type="text" name="profession" 
-                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                 class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                  placeholder="What do you do? (optional)">
         </div>
         
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-white text-sm font-medium mb-2">City</label>
+            <label class="block text-gray-700 text-sm font-medium mb-2">City</label>
             <input type="text" name="city" 
-                   class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                    placeholder="City (optional)">
           </div>
           
           <div>
-            <label class="block text-white text-sm font-medium mb-2">State</label>
+            <label class="block text-gray-700 text-sm font-medium mb-2">State</label>
             <input type="text" name="state" 
-                   class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                    placeholder="State (optional)">
           </div>
         </div>
         
         <div>
-          <label class="block text-white text-sm font-medium mb-2">Password</label>
+          <label class="block text-gray-700 text-sm font-medium mb-2">Password</label>
           <input type="password" name="password" required 
-                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-purple-accent transition-colors"
+                 class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                  placeholder="Create a strong password">
         </div>
         
-        <button type="submit" class="glossy w-full px-6 py-3 font-semibold text-lg">
+        <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold text-lg rounded-lg transition-colors">
           Create Account
         </button>
       </form>
       
       <!-- Navigation Links -->
       <div class="mt-6 text-center">
-        <p class="text-white/60 text-sm">
+        <p class="text-gray-600 text-sm">
           Already have an account? 
-          <a href="/login.html" class="text-purple-accent hover:underline">Login here</a>
+          <a href="login.html" class="text-purple-600 hover:text-purple-700 underline">Login here</a>
         </p>
-        <p class="text-white/60 text-sm mt-2">
-          <a href="/" class="text-purple-accent hover:underline">← Back to Home</a>
+        <p class="text-gray-600 text-sm mt-2">
+          <a href="index.html" class="text-purple-600 hover:text-purple-700 underline">← Back to Home</a>
         </p>
       </div>
     </div>
@@ -105,24 +119,44 @@
       };
       
       try {
-        const response = await fetch('/api/auth/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = '🔄 Creating Account...';
+        submitBtn.disabled = true;
         
-        const result = await response.json();
+        // Simulate account creation
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
-        if (result.success) {
-          alert('✅ Account created successfully! Please login.');
-          window.location.href = '/login.html';
-        } else {
-          alert('❌ Error: ' + (result.error || 'Something went wrong'));
-        }
-      } catch (err) {
-        console.error('Signup error:', err);
-        alert('❌ Network error. Please try again.');
+        // Store user data
+        localStorage.setItem('userAccount', JSON.stringify(data));
+        
+        // Show success message
+        alert('✅ Account created successfully! You can now login.');
+        
+        // Redirect to login page
+        window.location.href = 'login.html';
+        
+      } catch (error) {
+        console.error('Signup error:', error);
+        alert('❌ Account creation failed. Please try again.');
+        
+        // Reset button
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Create Account';
+        submitBtn.disabled = false;
       }
+    });
+
+    // Add fade-in animation
+    document.addEventListener('DOMContentLoaded', function() {
+      const elements = document.querySelectorAll('.fade-in-up');
+      elements.forEach((el, index) => {
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
     });
   </script>
 </body>
