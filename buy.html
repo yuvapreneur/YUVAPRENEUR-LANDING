@@ -41,37 +41,45 @@
          <p class="text-xl text-gray-600 mb-8">Unlock all 12 modules + 4 exclusive bonuses worth ₹1,000</p>
   </div>
 
-  <!-- Course Details -->
-  <div class="max-w-4xl mx-auto mb-12 fade-in-up">
-    <div class="bg-white shadow-lg p-8 border border-gray-200 rounded-xl">
-      <div class="text-center mb-8">
-                 <div class="text-6xl font-bold text-purple-600 mb-4">₹1</div>
-        <div class="text-gray-400 line-through text-2xl mb-2">₹2,584</div>
-                 <div class="text-purple-600 text-lg mb-4">Save ₹2,583 (99.6% OFF!)</div>
-        <div class="text-gray-600">Limited Time Offer - Get Instant Access</div>
-      </div>
+     <!-- Course Details -->
+   <div class="max-w-4xl mx-auto mb-12 fade-in-up">
+     <div class="bg-white shadow-lg p-8 border border-gray-200 rounded-xl">
+       <div class="text-center mb-8">
+                  <div class="text-6xl font-bold text-purple-600 mb-4">₹1</div>
+         <div class="text-gray-400 line-through text-2xl mb-2">₹2,584</div>
+                  <div class="text-purple-600 text-lg mb-4">Save ₹2,583 (99.6% OFF!)</div>
+         <div class="text-gray-600">Limited Time Offer - Get Instant Access</div>
+       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">📚 What You'll Get:</h3>
-          <ul class="text-gray-600 space-y-2">
-            <li>✅ 12 Comprehensive Course Modules</li>
-            <li>✅ 4 Exclusive Bonus PDFs</li>
-            <li>✅ Lifetime Access</li>
-            <li>✅ Mobile-Friendly Design</li>
-            <li>✅ 30-Day Money-Back Guarantee</li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">🎁 Bonuses Included:</h3>
-          <ul class="text-gray-600 space-y-2">
-            <li>🎯 Menu Psychology Blueprint</li>
-            <li>🎉 Festival Marketing Guide</li>
-            <li>💎 Loyalty Program Template</li>
-            <li>📸 Photography Cheat Sheet</li>
-          </ul>
-        </div>
-      </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+         <div>
+           <h3 class="text-xl font-semibold text-gray-900 mb-4">📚 What You'll Get:</h3>
+           <ul class="text-gray-600 space-y-2">
+             <li>✅ 12 Comprehensive Course Modules</li>
+             <li>✅ 4 Exclusive Bonus PDFs</li>
+             <li>✅ Lifetime Access</li>
+             <li>✅ Mobile-Friendly Design</li>
+             <li>✅ 30-Day Money-Back Guarantee</li>
+           </ul>
+         </div>
+         <div>
+           <h3 class="text-xl font-semibold text-gray-900 mb-4">🎁 Bonuses Included:</h3>
+           <ul class="text-gray-600 space-y-2">
+             <li>🎯 Menu Psychology Blueprint</li>
+             <li>🎉 Festival Marketing Guide</li>
+             <li>💎 Loyalty Program Template</li>
+             <li>📸 Photography Cheat Sheet</li>
+           </ul>
+         </div>
+       </div>
+
+       <!-- Course Modules Preview -->
+       <div class="mb-8">
+         <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">📚 Course Modules You'll Access:</h3>
+         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="modulesPreviewGrid">
+           <!-- Modules preview will be populated by JavaScript -->
+         </div>
+       </div>
 
       <div class="text-center">
         <button id="payButton" class="bg-purple-600 hover:bg-purple-700 text-white py-4 px-8 rounded-xl font-semibold text-xl transition-colors transform hover:scale-105">
@@ -92,9 +100,101 @@
     </div>
   </footer>
 
-  <script>
-    // Payment button functionality
-    document.getElementById('payButton').addEventListener('click', function() {
+     <script>
+     // Course modules data
+     const MODULES = [
+       {
+         number: 1,
+         title: "Introduction to Café Business",
+         desc: "Complete foundation and overview of starting a café business",
+         icon: "☕"
+       },
+       {
+         number: 2,
+         title: "Market Research & Location Analysis",
+         desc: "Learn to identify profitable locations and understand your target market",
+         icon: "🔍"
+       },
+       {
+         number: 3,
+         title: "Business Plan & Financial Planning",
+         desc: "Create a solid business plan and financial projections",
+         icon: "📊"
+       },
+       {
+         number: 4,
+         title: "Legal Requirements & Licenses",
+         desc: "Navigate legal requirements and obtain necessary licenses",
+         icon: "⚖️"
+       },
+       {
+         number: 5,
+         title: "Kitchen Design & Equipment",
+         desc: "Design efficient kitchen layouts and choose right equipment",
+         icon: "🍳"
+       },
+       {
+         number: 6,
+         title: "Menu Planning & Pricing Strategy",
+         desc: "Create profitable menus and implement smart pricing",
+         icon: "📋"
+       },
+       {
+         number: 7,
+         title: "Staff Hiring & Management",
+         desc: "Build and manage a high-performing team",
+         icon: "👥"
+       },
+       {
+         number: 8,
+         title: "Marketing & Branding",
+         desc: "Develop strong brand identity and marketing strategies",
+         icon: "🎯"
+       },
+       {
+         number: 9,
+         title: "Customer Service Excellence",
+         desc: "Deliver exceptional customer experiences",
+         icon: "⭐"
+       },
+       {
+         number: 10,
+         title: "Operations & Quality Control",
+         desc: "Streamline operations and maintain quality standards",
+         icon: "⚙️"
+       },
+       {
+         number: 11,
+         title: "Financial Management & Accounting",
+         desc: "Manage finances, track expenses, and maximize profits",
+         icon: "💰"
+       },
+       {
+         number: 12,
+         title: "Growth & Expansion Strategies",
+         desc: "Scale your business and explore new opportunities",
+         icon: "🚀"
+       }
+     ];
+
+     // Populate modules preview
+     const modulesPreviewGrid = document.getElementById('modulesPreviewGrid');
+     MODULES.forEach(module => {
+       const moduleCard = document.createElement('div');
+       moduleCard.className = 'module-card bg-white shadow-lg p-4 border border-gray-200 rounded-xl';
+       moduleCard.innerHTML = `
+         <div class="flex items-center justify-between mb-3">
+           <div class="text-2xl">${module.icon}</div>
+           <div class="bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full">Module ${module.number}</div>
+         </div>
+         <h4 class="text-sm font-semibold text-gray-900 mb-1">${module.title}</h4>
+         <p class="text-gray-600 text-xs">${module.desc}</p>
+       `;
+       modulesPreviewGrid.appendChild(moduleCard);
+     });
+
+     // Payment button functionality
+     document.getElementById('payButton').addEventListener('click', function() {
       const button = this;
       const originalText = button.textContent;
       

@@ -35,11 +35,19 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <div class="text-center mb-12 fade-in-up">
-    <h1 class="text-4xl font-bold text-gray-900 mb-4">🎁 Exclusive Bonuses</h1>
-    <p class="text-xl text-gray-600 mb-8">Enhance your café business with these valuable resources</p>
-  </div>
+     <!-- Hero Section -->
+   <div class="text-center mb-12 fade-in-up">
+     <h1 class="text-4xl font-bold text-gray-900 mb-4">🎁 Exclusive Bonuses</h1>
+     <p class="text-xl text-gray-600 mb-8">Enhance your café business with these valuable resources</p>
+   </div>
+
+   <!-- Course Modules Preview -->
+   <div class="max-w-6xl mx-auto mb-12 fade-in-up">
+     <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">📚 Course Modules Overview</h2>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="modulesPreviewGrid">
+       <!-- Modules preview will be populated by JavaScript -->
+     </div>
+   </div>
 
   <!-- Bonuses Grid -->
   <div class="max-w-6xl mx-auto mb-12 fade-in-up">
@@ -58,9 +66,85 @@
     </div>
   </footer>
 
-  <script>
-    // Bonus data
-    const BONUSES = [
+     <script>
+     // Course modules data
+     const MODULES = [
+       {
+         number: 1,
+         title: "Introduction to Café Business",
+         desc: "Complete foundation and overview of starting a café business",
+         icon: "☕"
+       },
+       {
+         number: 2,
+         title: "Market Research & Location Analysis",
+         desc: "Learn to identify profitable locations and understand your target market",
+         icon: "🔍"
+       },
+       {
+         number: 3,
+         title: "Business Plan & Financial Planning",
+         desc: "Create a solid business plan and financial projections",
+         icon: "📊"
+       },
+       {
+         number: 4,
+         title: "Legal Requirements & Licenses",
+         desc: "Navigate legal requirements and obtain necessary licenses",
+         icon: "⚖️"
+       },
+       {
+         number: 5,
+         title: "Kitchen Design & Equipment",
+         desc: "Design efficient kitchen layouts and choose right equipment",
+         icon: "🍳"
+       },
+       {
+         number: 6,
+         title: "Menu Planning & Pricing Strategy",
+         desc: "Create profitable menus and implement smart pricing",
+         icon: "📋"
+       },
+       {
+         number: 7,
+         title: "Staff Hiring & Management",
+         desc: "Build and manage a high-performing team",
+         icon: "👥"
+       },
+       {
+         number: 8,
+         title: "Marketing & Branding",
+         desc: "Develop strong brand identity and marketing strategies",
+         icon: "🎯"
+       },
+       {
+         number: 9,
+         title: "Customer Service Excellence",
+         desc: "Deliver exceptional customer experiences",
+         icon: "⭐"
+       },
+       {
+         number: 10,
+         title: "Operations & Quality Control",
+         desc: "Streamline operations and maintain quality standards",
+         icon: "⚙️"
+       },
+       {
+         number: 11,
+         title: "Financial Management & Accounting",
+         desc: "Manage finances, track expenses, and maximize profits",
+         icon: "💰"
+       },
+       {
+         number: 12,
+         title: "Growth & Expansion Strategies",
+         desc: "Scale your business and explore new opportunities",
+         icon: "🚀"
+       }
+     ];
+
+     // Bonus data
+     const BONUSES = [
              {
          sku: "bonus-menu-psych",
          price: 1,
@@ -195,11 +279,27 @@
       document.head.appendChild(script);
     }
 
-    // Load Razorpay when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      loadRazorpay();
-      checkEnrollmentStatus();
-    });
+         // Populate modules preview
+     const modulesPreviewGrid = document.getElementById('modulesPreviewGrid');
+     MODULES.forEach(module => {
+       const moduleCard = document.createElement('div');
+       moduleCard.className = 'module-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl';
+       moduleCard.innerHTML = `
+         <div class="flex items-center justify-between mb-4">
+           <div class="text-3xl">${module.icon}</div>
+           <div class="bg-purple-600 text-white text-sm font-bold px-3 py-1 rounded-full">Module ${module.number}</div>
+         </div>
+         <h3 class="text-lg font-semibold text-gray-900 mb-2">${module.title}</h3>
+         <p class="text-gray-600 text-sm">${module.desc}</p>
+       `;
+       modulesPreviewGrid.appendChild(moduleCard);
+     });
+
+     // Load Razorpay when page loads
+     document.addEventListener('DOMContentLoaded', function() {
+       loadRazorpay();
+       checkEnrollmentStatus();
+     });
     
     // Check enrollment status and show/hide login link
     function checkEnrollmentStatus() {

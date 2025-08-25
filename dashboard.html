@@ -82,21 +82,93 @@
   </div>
 
   <script>
-    // Course modules data
-    const MODULES = [
-      { title: "Market Research & Location Analysis", desc: "Learn to identify profitable locations and understand your target market", icon: "🔍" },
-      { title: "Business Plan & Financial Planning", desc: "Create a solid business plan and financial projections", icon: "📊" },
-      { title: "Legal Requirements & Licenses", desc: "Navigate legal requirements and obtain necessary licenses", icon: "⚖️" },
-      { title: "Kitchen Design & Equipment", desc: "Design efficient kitchen layouts and choose right equipment", icon: "🍳" },
-      { title: "Menu Planning & Pricing Strategy", desc: "Create profitable menus and implement smart pricing", icon: "📋" },
-      { title: "Staff Hiring & Management", desc: "Build and manage a high-performing team", icon: "👥" },
-      { title: "Marketing & Branding", desc: "Develop strong brand identity and marketing strategies", icon: "🎯" },
-      { title: "Customer Service Excellence", desc: "Deliver exceptional customer experiences", icon: "⭐" },
-      { title: "Operations & Quality Control", desc: "Streamline operations and maintain quality standards", icon: "⚙️" },
-      { title: "Financial Management & Accounting", desc: "Manage finances, track expenses, and maximize profits", icon: "💰" },
-      { title: "Growth & Expansion Strategies", desc: "Scale your business and explore new opportunities", icon: "🚀" },
-      { title: "Technology & Digital Tools", desc: "Leverage technology to improve efficiency and customer experience", icon: "💻" }
-    ];
+         // Course modules data
+     const MODULES = [
+       {
+         number: 1,
+         title: "Introduction to Café Business",
+         desc: "Complete foundation and overview of starting a café business",
+         icon: "☕",
+         filename: "Module1 (2).pdf"
+       },
+       {
+         number: 2,
+         title: "Market Research & Location Analysis",
+         desc: "Learn to identify profitable locations and understand your target market",
+         icon: "🔍",
+         filename: "Module 2  (1).pdf"
+       },
+       {
+         number: 3,
+         title: "Business Plan & Financial Planning",
+         desc: "Create a solid business plan and financial projections",
+         icon: "📊",
+         filename: "Module 3  (1).pdf"
+       },
+       {
+         number: 4,
+         title: "Legal Requirements & Licenses",
+         desc: "Navigate legal requirements and obtain necessary licenses",
+         icon: "⚖️",
+         filename: "Module 4  (2).pdf"
+       },
+       {
+         number: 5,
+         title: "Kitchen Design & Equipment",
+         desc: "Design efficient kitchen layouts and choose right equipment",
+         icon: "🍳",
+         filename: "Module 5  (3).pdf"
+       },
+       {
+         number: 6,
+         title: "Menu Planning & Pricing Strategy",
+         desc: "Create profitable menus and implement smart pricing",
+         icon: "📋",
+         filename: "Module 6  (1).pdf"
+       },
+       {
+         number: 7,
+         title: "Staff Hiring & Management",
+         desc: "Build and manage a high-performing team",
+         icon: "👥",
+         filename: "Module 7  (2).pdf"
+       },
+       {
+         number: 8,
+         title: "Marketing & Branding",
+         desc: "Develop strong brand identity and marketing strategies",
+         icon: "🎯",
+         filename: "Module 8  (1).pdf"
+       },
+       {
+         number: 9,
+         title: "Customer Service Excellence",
+         desc: "Deliver exceptional customer experiences",
+         icon: "⭐",
+         filename: "Module 9  (2).pdf"
+       },
+       {
+         number: 10,
+         title: "Operations & Quality Control",
+         desc: "Streamline operations and maintain quality standards",
+         icon: "⚙️",
+         filename: "Module 10  (3).pdf"
+       },
+       {
+         number: 11,
+         title: "Financial Management & Accounting",
+         desc: "Manage finances, track expenses, and maximize profits",
+         icon: "💰",
+         filename: "Module 11 (4).pdf"
+       },
+       {
+         number: 12,
+         title: "Growth & Expansion Strategies",
+         desc: "Scale your business and explore new opportunities",
+         icon: "🚀",
+         filename: "Module 12 (4).pdf"
+       }
+     ];
 
     // Bonus data
     const BONUSES = [
@@ -260,54 +332,62 @@
       }
     }
 
-    // Load course modules
-    function loadCourseModules() {
-      const modulesGrid = document.getElementById('modulesGrid');
-      const enrollmentData = localStorage.getItem('userEnrollment');
-      
-      // Check if user is fully enrolled
-      const isFullyEnrolled = enrollmentData && (() => {
-        try {
-          const userData = JSON.parse(enrollmentData);
-          return userData.status === 'enrolled' && userData.courseAccess === 'full';
-        } catch (error) {
-          return false;
-        }
-      })();
-      
-      MODULES.forEach(module => {
-        const moduleCard = document.createElement('div');
-        moduleCard.className = 'bg-white shadow-lg p-4 border border-gray-200 rounded-xl';
-        
-        if (isFullyEnrolled) {
-          // Show unlocked modules for enrolled users
-          moduleCard.innerHTML = `
-            <div class="text-3xl mb-3">${module.icon}</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">${module.title}</h3>
-            <p class="text-gray-600 text-sm mb-4">${module.desc}</p>
-            <div class="text-center">
-              <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm transition-colors w-full">
-                ✅ Unlocked - Start Learning
-              </button>
-            </div>
-          `;
-        } else {
-          // Show locked modules for non-enrolled users
-          moduleCard.innerHTML = `
-            <div class="text-3xl mb-3">${module.icon}</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">${module.title}</h3>
-            <p class="text-gray-600 text-sm mb-4">${module.desc}</p>
-            <div class="text-center">
-              <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm transition-colors w-full">
-                🔒 Enroll to Unlock
-              </button>
-            </div>
-          `;
-        }
-        
-        modulesGrid.appendChild(moduleCard);
-      });
-    }
+         // Load course modules
+     function loadCourseModules() {
+       const modulesGrid = document.getElementById('modulesGrid');
+       const enrollmentData = localStorage.getItem('userEnrollment');
+       
+       // Check if user is fully enrolled
+       const isFullyEnrolled = enrollmentData && (() => {
+         try {
+           const userData = JSON.parse(enrollmentData);
+           return userData.status === 'enrolled' && userData.courseAccess === 'full';
+         } catch (error) {
+           return false;
+         }
+       })();
+       
+       MODULES.forEach(module => {
+         const moduleCard = document.createElement('div');
+         moduleCard.className = 'bg-white shadow-lg p-4 border border-gray-200 rounded-xl';
+         
+         if (isFullyEnrolled) {
+           // Show unlocked modules with download option for enrolled users
+           moduleCard.innerHTML = `
+             <div class="flex items-center justify-between mb-3">
+               <div class="text-3xl">${module.icon}</div>
+               <div class="bg-green-600 text-white text-sm font-bold px-3 py-1 rounded-full">Module ${module.number}</div>
+             </div>
+             <h3 class="text-lg font-semibold text-gray-900 mb-2">${module.title}</h3>
+             <p class="text-gray-600 text-sm mb-4">${module.desc}</p>
+             <div class="text-center space-y-2">
+               <div class="text-xs text-green-600">✅ Unlocked - Full Access</div>
+               <a href="download.html?file=${encodeURIComponent(module.filename)}&title=${encodeURIComponent(module.title)}" 
+                  class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm transition-colors w-full text-center">
+                 📥 Download Module ${module.number}
+               </a>
+             </div>
+           `;
+         } else {
+           // Show locked modules for non-enrolled users
+           moduleCard.innerHTML = `
+             <div class="flex items-center justify-between mb-3">
+               <div class="text-3xl">${module.icon}</div>
+               <div class="bg-purple-600 text-white text-sm font-bold px-3 py-1 rounded-full">Module ${module.number}</div>
+             </div>
+             <h3 class="text-lg font-semibold text-gray-900 mb-2">${module.title}</h3>
+             <p class="text-gray-600 text-sm mb-4">${module.desc}</p>
+             <div class="text-center">
+               <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm transition-colors w-full">
+                 🔒 Enroll to Unlock
+               </button>
+             </div>
+           `;
+         }
+         
+         modulesGrid.appendChild(moduleCard);
+       });
+     }
 
     // Load user bonuses
     function loadUserBonuses() {
