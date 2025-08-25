@@ -33,14 +33,7 @@
       <p class="text-xl text-white/80" id="welcomeMessage">Loading your profile...</p>
     </div>
 
-    <!-- Demo Site Notice -->
-    <div class="mb-6 p-4 bg-yellow-900/20 border border-yellow-400/30 rounded-lg">
-      <h3 class="text-yellow-300 font-semibold mb-2 flex items-center">
-        <span class="text-yellow-400 mr-2">⚠️</span>
-        Demo Site Notice
-      </h3>
-      <p class="text-yellow-200/80 text-sm">This is a static preview site. Contact support for full dashboard functionality.</p>
-    </div>
+
     
     <!-- Dashboard Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -142,7 +135,7 @@
         document.getElementById('userSince').textContent = new Date().toLocaleDateString();
         
         // Update welcome message
-        document.getElementById('welcomeMessage').textContent = 'Welcome to your demo dashboard!';
+        document.getElementById('welcomeMessage').textContent = 'Welcome to your dashboard!';
         
         // Update account status
         document.getElementById('courseStatus').textContent = '✅ Active';
@@ -160,20 +153,51 @@
       try {
         const courseAccessDiv = document.getElementById('courseAccess');
         
-        // Show demo course access
+        // Show course access with working download links
         courseAccessDiv.innerHTML = `
           <div class="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
-            <h3 class="text-lg font-semibold text-green-400 mb-2">✅ Demo: Course Access Granted</h3>
-            <p class="text-white/80 mb-4">You have access to all 12 course modules (Demo Mode)</p>
+            <h3 class="text-lg font-semibold text-green-400 mb-2">✅ Course Access Granted</h3>
+            <p class="text-white/80 mb-4">You have access to all 12 course modules</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="bg-white/10 rounded-lg p-3">
                 <h4 class="font-medium text-white">Module 1: Introduction to Café Industry</h4>
-                <button onclick="showDemoMessage()" class="text-purple-accent hover:text-purple-300 text-sm">📥 Download PDF (Demo)</button>
+                <a href="/course-modules/module-1-introduction.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📖 View Module
+                </a>
               </div>
               <div class="bg-white/10 rounded-lg p-3">
-                <h4 class="text-lg font-medium text-white">Module 2: Research & Market Analysis</h4>
-                <button onclick="showDemoMessage()" class="text-purple-accent hover:text-purple-300 text-sm">📥 Download PDF (Demo)</button>
+                <h4 class="font-medium text-white">Module 2: Research & Market Analysis</h4>
+                <a href="/course-modules/module-2-research.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📖 View Module
+                </a>
               </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 3: Business Plan Development</h4>
+                <a href="/course-modules/module-3-business-plan.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📖 View Module
+                </a>
+              </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 4: Location & Setup</h4>
+                <a href="/course-modules/module-4-location.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📖 View Module
+                </a>
+              </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 5: Menu Planning & Pricing</h4>
+                <a href="/course-modules/module-5-menu.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📖 View Module
+                </a>
+              </div>
+              <div class="bg-white/10 rounded-lg p-3">
+                <h4 class="font-medium text-white">Module 6: Staffing & Operations</h4>
+                <a href="/course-modules/module-6-staffing.html" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  📖 View Module
+                </a>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <p class="text-white/60 text-sm">More modules coming soon...</p>
             </div>
           </div>
         `;
@@ -181,7 +205,7 @@
         console.log('✅ Course access loaded successfully');
       } catch (err) {
         console.error('❌ Course access load error:', err);
-        document.getElementById('courseAccess').innerHTML = '<p class="text-red-400">❌ Demo mode: Failed to load course access</p>';
+        document.getElementById('courseAccess').innerHTML = '<p class="text-red-400">❌ Failed to load course access</p>';
       }
     }
 
