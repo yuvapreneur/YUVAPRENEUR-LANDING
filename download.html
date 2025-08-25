@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        .download-btn {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            margin: 20px 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .download-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .back-btn {
+            background: #2196F3;
+        }
+        .back-btn:hover {
+            background: #1976D2;
+        }
+        .info {
+            margin: 20px 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📥 PDF Download</h1>
+        <div class="info">
+            <p>Click the download button below to get your PDF file.</p>
+            <p>If the download doesn't start automatically, right-click and select "Save As".</p>
+        </div>
+        
+        <div id="downloadSection">
+            <!-- Download content will be loaded here -->
+        </div>
+        
+        <a href="javascript:history.back()" class="download-btn back-btn">← Go Back</a>
+    </div>
+
+    <script>
+        // Get the file parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const file = urlParams.get('file');
+        const title = urlParams.get('title') || 'PDF Document';
+        
+        if (file) {
+            document.title = `Download ${title}`;
+            document.querySelector('h1').textContent = `📥 Download ${title}`;
+            
+            const downloadSection = document.getElementById('downloadSection');
+            downloadSection.innerHTML = `
+                <a href="${file}" download class="download-btn">
+                    💾 Download ${title}
+                </a>
+                <br>
+                <a href="${file}" target="_blank" class="download-btn" style="background: #FF9800;">
+                    👁️ View PDF
+                </a>
+            `;
+        } else {
+            document.getElementById('downloadSection').innerHTML = `
+                <p style="color: #ff6b6b;">❌ No file specified for download.</p>
+            `;
+        }
+    </script>
+</body>
+</html>
