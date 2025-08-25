@@ -175,7 +175,7 @@
          // Secure user database with hashed passwords
      const USER_DATABASE = {
        'yuvapreneur@gmail.com': {
-         password: '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // hashed 'yuva2024'
+         password: 'yuva2024', // Plain text for now - will be hashed by our function
          name: 'abhijjetwankhede',
          phone: '9999999999',
          status: 'enrolled',
@@ -346,16 +346,30 @@
        alert('✅ User added successfully!\n\nEmail: ' + email + '\nName: ' + name + '\nPassword: ' + password + '\n\n⚠️ IMPORTANT: Password has been hashed for security.\n\nThis user can now login with these credentials.');
      }
 
-    // Add fade-in animation
-    document.addEventListener('DOMContentLoaded', function() {
-      const elements = document.querySelectorAll('.fade-in-up');
-      elements.forEach((el, index) => {
-        setTimeout(() => {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, index * 100);
-      });
-    });
+         // Add fade-in animation and hash passwords
+     document.addEventListener('DOMContentLoaded', function() {
+       // Hash passwords in database for security
+       hashDatabasePasswords();
+       
+       const elements = document.querySelectorAll('.fade-in-up');
+       elements.forEach((el, index) => {
+         setTimeout(() => {
+           el.style.opacity = '1';
+           el.style.transform = 'translateY(0)';
+         }, index * 100);
+       });
+     });
+     
+     // Hash all passwords in database for security
+     function hashDatabasePasswords() {
+       for (const email in USER_DATABASE) {
+         const user = USER_DATABASE[email];
+         if (user.password && !user.password.startsWith('$2b$')) {
+           // Only hash if not already hashed
+           user.password = hashPassword(user.password);
+         }
+       }
+     }
   </script>
 </body>
 </html>
