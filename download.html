@@ -9,8 +9,8 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: white;
+            color: #374151;
             min-height: 100vh;
             margin: 0;
             display: flex;
@@ -18,19 +18,20 @@
             justify-content: center;
         }
         .container {
-            background: rgba(255, 255, 255, 0.1);
+            background: white;
             padding: 40px;
             border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E5E7EB;
         }
         h1 {
             margin-bottom: 20px;
             font-size: 2.5em;
+            color: #8B5CF6;
         }
         .download-btn {
             display: inline-block;
-            background: #4CAF50;
+            background: #8B5CF6;
             color: white;
             padding: 15px 30px;
             text-decoration: none;
@@ -38,23 +39,29 @@
             font-size: 1.2em;
             margin: 20px 10px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
         }
         .download-btn:hover {
-            background: #45a049;
+            background: #7C3AED;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
         }
         .back-btn {
-            background: #2196F3;
+            background: #6B7280;
         }
         .back-btn:hover {
-            background: #1976D2;
+            background: #4B5563;
         }
         .info {
             margin: 20px 0;
             font-size: 1.1em;
-            opacity: 0.9;
+            color: #6B7280;
+        }
+        .view-btn {
+            background: #F59E0B;
+        }
+        .view-btn:hover {
+            background: #D97706;
         }
     </style>
 </head>
@@ -89,13 +96,13 @@
                     💾 Download ${title}
                 </a>
                 <br>
-                <a href="${file}" target="_blank" class="download-btn" style="background: #FF9800;">
+                <a href="${file}" target="_blank" class="download-btn view-btn">
                     👁️ View PDF
                 </a>
             `;
         } else {
             document.getElementById('downloadSection').innerHTML = `
-                <p style="color: #ff6b6b;">❌ No file specified for download.</p>
+                <p style="color: #EF4444;">❌ No file specified for download.</p>
             `;
         }
     </script>
