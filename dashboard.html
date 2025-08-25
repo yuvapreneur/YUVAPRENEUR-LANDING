@@ -587,6 +587,36 @@
      
      // Verify dashboard access - security check
      function verifyDashboardAccess() {
+       // Check if user is properly authenticated
+       const isAuthenticated = localStorage.getItem('userAuthenticated');
+       const loginTimestamp = localStorage.getItem('loginTimestamp');
+       
+       if (!isAuthenticated || !loginTimestamp) {
+         showAccessDenied('❌ Access Denied\n\nYou must login first to access the dashboard.\n\nRedirecting to login page...');
+         setTimeout(() => {
+           window.location.href = 'login.html';
+         }, 3000);
+         return false;
+       }
+       
+       // Check if login session is expired (24 hours)
+       const loginTime = parseInt(loginTimestamp);
+       const currentTime = Date.now();
+       const sessionExpiry = 24 * 60 * 60 * 1000; // 24 hours
+       
+       if (currentTime - loginTime > sessionExpiry) {
+         // Session expired, clear data and redirect to login
+         localStorage.removeItem('userEnrollment');
+         localStorage.removeItem('userAuthenticated');
+         localStorage.removeItem('loginTimestamp');
+         
+         showAccessDenied('⏰ Session Expired\n\nYour login session has expired.\n\nPlease login again to continue.\n\nRedirecting to login page...');
+         setTimeout(() => {
+           window.location.href = 'login.html';
+         }, 3000);
+         return false;
+       }
+       
        const enrollmentData = localStorage.getItem('userEnrollment');
        
        if (!enrollmentData) {
@@ -660,10 +690,12 @@
        const confirmLogout = confirm('🚪 Logout\n\nAre you sure you want to logout?\n\nYou will need to login again to access the dashboard.');
        
        if (confirmLogout) {
-         // Clear session data
+         // Clear all session and authentication data
          localStorage.removeItem('userEnrollment');
          localStorage.removeItem('tempUserData');
          localStorage.removeItem('purchasedBonuses');
+         localStorage.removeItem('userAuthenticated');
+         localStorage.removeItem('loginTimestamp');
          
          // Show logout message
          alert('✅ Logged out successfully!\n\nRedirecting to home page...');
