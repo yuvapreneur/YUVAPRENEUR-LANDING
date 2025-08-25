@@ -405,10 +405,10 @@
       submitBtn.textContent = '🔄 Processing...';
       submitBtn.disabled = true;
       
-      // Process enrollment (like before GitHub connection)
+      // Process enrollment and open Razorpay payment
       setTimeout(() => {
         try {
-          // Store user data in localStorage (like a simple database)
+          // Store user data temporarily
           const userData = {
             name: data.name,
             phone: data.phone,
@@ -417,29 +417,105 @@
             city: data.city,
             state: data.state,
             enrolledAt: new Date().toISOString(),
-            status: 'enrolled'
+            status: 'pending_payment'
           };
           
-          localStorage.setItem('userEnrollment', JSON.stringify(userData));
+          localStorage.setItem('tempUserData', JSON.stringify(userData));
           
-          // Show success message
-          alert('🎉 Congratulations! You are now enrolled in the Café Business Masterclass!\n\nYou will receive course access details via email shortly.\n\nRedirecting to your dashboard...');
-          
-          // Redirect to dashboard after successful enrollment
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 2000);
+          // Open Razorpay payment
+          openRazorpayPayment(data);
           
         } catch (error) {
           console.error('Enrollment error:', error);
           alert('❌ Enrollment failed. Please try again.');
-        } finally {
-          // Reset button
           submitBtn.textContent = originalText;
           submitBtn.disabled = false;
         }
-      }, 2000);
+      }, 1000);
     });
+    
+    // Razorpay payment function
+    function openRazorpayPayment(userData) {
+      const options = {
+        key: 'rzp_live_R9QVhOlTJvswsH', // Your live key
+        amount: 19900, // ₹199 in paise
+        currency: 'INR',
+        name: 'Café Business Masterclass',
+        description: 'Complete Course + 4 Bonuses - Full Access',
+        image: 'https://your-logo-url.com/logo.png',
+        handler: function (response) {
+          // Payment successful
+          alert('🎉 Payment Successful! Welcome to the Café Business Masterclass!\n\nPayment ID: ' + response.razorpay_payment_id + '\n\nYou now have full access to all 12 modules and 4 bonuses!\n\nRedirecting to your dashboard...');
+          
+          // Complete enrollment with payment data
+          const tempData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
+          const enrollmentData = {
+            ...tempData,
+            status: 'enrolled',
+            paymentId: response.razorpay_payment_id,
+            paymentDate: new Date().toISOString(),
+            courseAccess: 'full'
+          };
+          
+          localStorage.setItem('userEnrollment', JSON.stringify(enrollmentData));
+          localStorage.removeItem('tempUserData'); // Clean up temp data
+          
+          // Redirect to dashboard after successful payment
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 2000);
+        },
+        prefill: {
+          name: userData.name,
+          email: userData.email,
+          contact: userData.phone
+        },
+        notes: {
+          course: 'Café Business Masterclass',
+          type: 'main_course_enrollment'
+        },
+        theme: {
+          color: '#8B5CF6'
+        },
+        modal: {
+          ondismiss: function() {
+            // Reset button when payment modal is dismissed
+            const submitBtn = document.querySelector('#enrollmentForm button[type="submit"]');
+            submitBtn.textContent = '🚀 Enroll Now - Get Course Access';
+            submitBtn.disabled = false;
+          }
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (error) {
+        console.error('Razorpay error:', error);
+        alert('❌ Payment failed to open. Please try again.');
+        
+        // Reset button
+        const submitBtn = document.querySelector('#enrollmentForm button[type="submit"]');
+        submitBtn.textContent = '🚀 Enroll Now - Get Course Access';
+        submitBtn.disabled = false;
+      }
+    }
+    
+    // Load Razorpay script
+    function loadRazorpay() {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = function() {
+        console.log('Razorpay loaded successfully');
+      };
+      script.onerror = function() {
+        console.error('Failed to load Razorpay');
+      };
+      document.head.appendChild(script);
+    }
+
+    // Load Razorpay when page loads
+    document.addEventListener('DOMContentLoaded', loadRazorpay);
   </script>
 </body>
 </html>

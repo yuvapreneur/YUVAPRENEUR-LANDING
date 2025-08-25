@@ -118,11 +118,18 @@
           // Show enrolled user data
           document.getElementById('username').textContent = userData.name || 'Enrolled User';
           document.getElementById('email').textContent = userData.email || 'user@example.com';
-          document.getElementById('courseStatus').textContent = '✅ Enrolled';
-          document.getElementById('bonusCount').textContent = '4 (All Bonuses Included)';
           
-          // Update course access to show enrolled status
-          updateCourseAccessForEnrolledUser();
+          if (userData.status === 'enrolled' && userData.courseAccess === 'full') {
+            document.getElementById('courseStatus').textContent = '✅ Fully Enrolled';
+            document.getElementById('bonusCount').textContent = '4 (All Bonuses Included)';
+            
+            // Update course access to show enrolled status
+            updateCourseAccessForEnrolledUser();
+          } else {
+            document.getElementById('courseStatus').textContent = '⏳ Payment Pending';
+            document.getElementById('bonusCount').textContent = '0 (Complete Payment Required)';
+            loadCourseAccess();
+          }
           
         } catch (error) {
           console.error('Error loading enrollment data:', error);
@@ -162,19 +169,76 @@
     // Load course access status
     function loadCourseAccess() {
       const courseAccessDiv = document.getElementById('courseAccess');
-      courseAccessDiv.innerHTML = `
-        <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-          <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <h3 class="text-lg font-semibold text-purple-800 mb-2">⚠️ Course Not Enrolled</h3>
-            <p class="text-purple-700 mb-4">You need to enroll to access all 12 course modules and 4 exclusive bonuses.</p>
-            <div class="text-center mt-6">
-              <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
-                🚀 Enroll Now
-              </a>
+      const enrollmentData = localStorage.getItem('userEnrollment');
+      
+      if (enrollmentData) {
+        try {
+          const userData = JSON.parse(enrollmentData);
+          
+          if (userData.status === 'pending_payment') {
+            // Show payment pending status
+            courseAccessDiv.innerHTML = `
+              <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h3 class="text-lg font-semibold text-yellow-800 mb-2">⏳ Payment Pending</h3>
+                  <p class="text-yellow-700 mb-4">Your enrollment is pending. Please complete the payment to get full course access.</p>
+                  <div class="text-center mt-6">
+                    <a href="index.html" class="inline-block bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
+                      💳 Complete Payment
+                    </a>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            // Show not enrolled status
+            courseAccessDiv.innerHTML = `
+              <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <h3 class="text-lg font-semibold text-purple-800 mb-2">⚠️ Course Not Enrolled</h3>
+                  <p class="text-purple-700 mb-4">You need to enroll to access all 12 course modules and 4 exclusive bonuses.</p>
+                  <div class="text-center mt-6">
+                    <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
+                      🚀 Enroll Now
+                    </a>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        } catch (error) {
+          console.error('Error loading course access:', error);
+          // Show default not enrolled status
+          courseAccessDiv.innerHTML = `
+            <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+              <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <h3 class="text-lg font-semibold text-purple-800 mb-2">⚠️ Course Not Enrolled</h3>
+                <p class="text-purple-700 mb-4">You need to enroll to access all 12 course modules and 4 exclusive bonuses.</p>
+                <div class="text-center mt-6">
+                  <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
+                    🚀 Enroll Now
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      } else {
+        // Show not enrolled status
+        courseAccessDiv.innerHTML = `
+          <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <h3 class="text-lg font-semibold text-purple-800 mb-2">⚠️ Course Not Enrolled</h3>
+              <p class="text-purple-700 mb-4">You need to enroll to access all 12 course modules and 4 exclusive bonuses.</p>
+              <div class="text-center mt-6">
+                <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
+                  🚀 Enroll Now
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      `;
+        `;
+      }
     }
 
     // Load course modules
