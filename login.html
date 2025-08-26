@@ -191,23 +191,7 @@
        // Add more verified users here as needed
      };
      
-     // Simple password hashing function (in production, use bcrypt)
-     function hashPassword(password) {
-       let hash = 0;
-       if (password.length === 0) return hash.toString();
-       for (let i = 0; i < password.length; i++) {
-         const char = password.charCodeAt(i);
-         hash = ((hash << 5) - hash) + char;
-         hash = hash & hash; // Convert to 32bit integer
-       }
-       return hash.toString();
-     }
      
-     // Verify password hash
-     function verifyPassword(inputPassword, storedHash) {
-       const inputHash = hashPassword(inputPassword);
-       return inputHash === storedHash;
-     }
      
      // Simple login verification (like before GitHub)
      async function verifyPaymentAndAccess(email, password, submitBtn, originalText) {
@@ -220,20 +204,11 @@
          
          const userData = USER_DATABASE[email];
          
-         // Check password (handle both plain text and hashed)
-         let passwordMatch = false;
-         if (userData.password === password) {
-           // Plain text password match
-           passwordMatch = true;
-         } else if (userData.password === hashPassword(password)) {
-           // Hashed password match
-           passwordMatch = true;
-         }
-         
-         if (!passwordMatch) {
-           showLoginError('❌ Wrong Password\n\nPlease use the correct password.', submitBtn, originalText);
-           return;
-         }
+                   // Simple password check - compare directly
+          if (userData.password !== password) {
+            showLoginError('❌ Wrong Password\n\nPlease use the correct password.', submitBtn, originalText);
+            return;
+          }
          
          // Store user data in localStorage (like before)
          localStorage.setItem('userEnrollment', JSON.stringify(userData));
@@ -318,12 +293,9 @@
          return;
        }
        
-       // ✅ SECURITY: Hash password before storing
-       const hashedPassword = hashPassword(password);
-       
-       // Add new user to database with hashed password
-       USER_DATABASE[email] = {
-         password: hashedPassword, // Store hashed password, not plain text
+               // Add new user to database
+        USER_DATABASE[email] = {
+          password: password, // Store password as entered
          name: name,
          phone: '9999999999',
          status: 'enrolled',
@@ -345,33 +317,19 @@
        // Reload users list
        loadCurrentUsers();
        
-       alert('✅ User added successfully!\n\nEmail: ' + email + '\nName: ' + name + '\nPassword: ' + password + '\n\n⚠️ IMPORTANT: Password has been hashed for security.\n\nThis user can now login with these credentials.');
+               alert('✅ User added successfully!\n\nEmail: ' + email + '\nName: ' + name + '\nPassword: ' + password + '\n\nThis user can now login with these credentials.');
      }
 
-         // Add fade-in animation and hash passwords
-     document.addEventListener('DOMContentLoaded', function() {
-       // Hash passwords in database for security
-       hashDatabasePasswords();
-       
-       const elements = document.querySelectorAll('.fade-in-up');
-       elements.forEach((el, index) => {
-         setTimeout(() => {
-           el.style.opacity = '1';
-           el.style.transform = 'translateY(0)';
-         }, index * 100);
-       });
-     });
-     
-     // Hash all passwords in database for security
-     function hashDatabasePasswords() {
-       for (const email in USER_DATABASE) {
-         const user = USER_DATABASE[email];
-         if (user.password && !user.password.startsWith('$2b$')) {
-           // Only hash if not already hashed
-           user.password = hashPassword(user.password);
-         }
-       }
-     }
+               // Add fade-in animation
+      document.addEventListener('DOMContentLoaded', function() {
+        const elements = document.querySelectorAll('.fade-in-up');
+        elements.forEach((el, index) => {
+          setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }, index * 100);
+        });
+      });
   </script>
 </body>
 </html>
