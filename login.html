@@ -42,14 +42,22 @@
           <a href="index.html" class="text-purple-600 hover:text-purple-700 underline">← Back to Home</a>
         </p>
       </div>
+      
+      <!-- Debug Info -->
+      <div class="mt-4 p-3 bg-gray-100 rounded text-xs">
+        <p><strong>Debug Info:</strong></p>
+        <p>Email: yuvapreneur@gmail.com</p>
+        <p>Password: <span id="debugPassword">123456</span></p>
+        <p>Try this password instead!</p>
+      </div>
     </div>
   </div>
 
   <script>
-    // Simple user database
+    // Simple user database with NEW password
     const USER_DATABASE = {
       'yuvapreneur@gmail.com': {
-        password: 'yuva2024',
+        password: '123456', // NEW SIMPLE PASSWORD
         name: 'abhijjetwankhede',
         phone: '9999999999',
         status: 'enrolled',
@@ -73,6 +81,10 @@
       
       console.log('🔍 Login attempt:', { email, password });
       console.log('📊 USER_DATABASE:', USER_DATABASE);
+      console.log('🔑 Stored password:', USER_DATABASE[email]?.password);
+      console.log('🔑 Entered password:', password);
+      console.log('🔑 Password length:', password.length);
+      console.log('🔑 Password type:', typeof password);
       
       // Check if user exists
       if (!USER_DATABASE[email]) {
@@ -83,16 +95,20 @@
       
       const userData = USER_DATABASE[email];
       console.log('👤 User data found:', userData);
+      
+      // Check password with detailed logging
+      const passwordMatch = userData.password === password;
       console.log('🔑 Password comparison:', { 
         stored: userData.password, 
         entered: password, 
-        match: userData.password === password 
+        match: passwordMatch,
+        storedLength: userData.password.length,
+        enteredLength: password.length
       });
       
-      // Check password
-      if (userData.password !== password) {
+      if (!passwordMatch) {
         console.log('❌ Password mismatch');
-        alert('❌ Wrong Password\n\nPlease use the correct password.');
+        alert('❌ Wrong Password\n\nPlease use the correct password: 123456');
         return;
       }
       
