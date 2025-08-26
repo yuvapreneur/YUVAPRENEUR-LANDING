@@ -194,29 +194,45 @@
     // Simple login verification (like before GitHub)
     async function verifyPaymentAndAccess(email, password, submitBtn, originalText) {
       try {
+        console.log('🔍 Login attempt:', { email, password });
+        console.log('📊 USER_DATABASE:', USER_DATABASE);
+        
         // Check if user exists
         if (!USER_DATABASE[email]) {
+          console.log('❌ User not found in database');
           showLoginError('❌ User Not Found\n\nThis email is not registered in our system.', submitBtn, originalText);
           return;
         }
         
         const userData = USER_DATABASE[email];
+        console.log('👤 User data found:', userData);
+        console.log('🔑 Password comparison:', { 
+          stored: userData.password, 
+          entered: password, 
+          match: userData.password === password 
+        });
         
         // Simple password check - compare directly
         if (userData.password !== password) {
+          console.log('❌ Password mismatch');
           showLoginError('❌ Wrong Password\n\nPlease use the correct password.', submitBtn, originalText);
           return;
         }
+        
+        console.log('✅ Password match! Proceeding with login...');
         
         // Store user data in localStorage (like before)
         localStorage.setItem('userEnrollment', JSON.stringify(userData));
         localStorage.setItem('userAuthenticated', 'true');
         localStorage.setItem('loginTimestamp', Date.now().toString());
         
+        console.log('💾 Data stored in localStorage, redirecting...');
+        
         // Show success and redirect (like before)
         showLoginSuccess('✅ Login Successful!\n\nWelcome back!\n\nRedirecting to dashboard...', submitBtn, originalText);
         
         setTimeout(() => {
+          console.log('🚀 Redirecting to dashboard...');
           window.location.href = 'dashboard.html';
         }, 2000);
         
