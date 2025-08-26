@@ -74,15 +74,28 @@
       
       console.log('🔍 Login attempt:', { email, password });
       
-      // Check if user exists
-      if (!USER_DATABASE[email]) {
+      // First check if user exists in USER_DATABASE (pre-verified users)
+      let userData = USER_DATABASE[email];
+      let userSource = 'database';
+      
+      // If not in database, check if they have enrollment data from course purchase
+      if (!userData) {
+        const enrollmentData = JSON.parse(localStorage.getItem('userEnrollment') || '{}');
+        if (enrollmentData.email === email && enrollmentData.hasPurchasedCourse) {
+          userData = enrollmentData;
+          userSource = 'enrollment';
+          console.log('👤 User found in enrollment data:', userData);
+        }
+      }
+      
+      // If still no user found, deny access
+      if (!userData) {
         console.log('❌ User not found for email:', email);
         alert('❌ Access Denied\n\nEmail: ' + email + '\n\nOnly users who have purchased the course can login.\n\nPlease purchase the course first to get login access.');
         return;
       }
       
-      const userData = USER_DATABASE[email];
-      console.log('👤 User data found:', userData);
+      console.log('👤 User data found from:', userSource, userData);
       
       // Check if user has actually purchased the course
       if (!userData.hasPurchasedCourse && userData.status !== 'enrolled') {
@@ -91,11 +104,20 @@
         return;
       }
       
-      // Check password
-      if (userData.password !== password) {
-        console.log('❌ Password mismatch');
-        alert('❌ Wrong Password\n\nEmail: ' + email + '\n\nPlease use the correct password for this account.');
-        return;
+      // Check password - for enrollment users, use the password they set during enrollment
+      if (userSource === 'database') {
+        if (userData.password !== password) {
+          console.log('❌ Password mismatch for database user');
+          alert('❌ Wrong Password\n\nEmail: ' + email + '\n\nPlease use the correct password for this account.');
+          return;
+        }
+      } else {
+        // For enrollment users, check if they have a password set
+        if (userData.password && userData.password !== password) {
+          console.log('❌ Password mismatch for enrollment user');
+          alert('❌ Wrong Password\n\nEmail: ' + email + '\n\nPlease use the correct password for this account.');
+          return;
+        }
       }
       
       console.log('✅ Password match and course purchased! Login successful!');
