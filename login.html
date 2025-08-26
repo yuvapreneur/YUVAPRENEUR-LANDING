@@ -43,21 +43,30 @@
         </p>
       </div>
       
-      <!-- Debug Info -->
-      <div class="mt-4 p-3 bg-gray-100 rounded text-xs">
-        <p><strong>Debug Info:</strong></p>
-        <p>Email: yuvapreneur@gmail.com</p>
-        <p>Password: <span id="debugPassword">123456</span></p>
-        <p>Try this password instead!</p>
+      <!-- Test Credentials -->
+      <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <h3 class="font-semibold text-blue-900 mb-2">🧪 Test Credentials:</h3>
+        <div class="space-y-2 text-sm">
+          <div class="bg-white p-2 rounded border">
+            <strong>User 1:</strong><br>
+            Email: yuvapreneur@gmail.com<br>
+            Password: 123456
+          </div>
+          <div class="bg-white p-2 rounded border">
+            <strong>User 2:</strong><br>
+            Email: test@example.com<br>
+            Password: test123
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Simple user database with NEW password
+    // Multiple test users database
     const USER_DATABASE = {
       'yuvapreneur@gmail.com': {
-        password: '123456', // NEW SIMPLE PASSWORD
+        password: '123456',
         name: 'abhijjetwankhede',
         phone: '9999999999',
         status: 'enrolled',
@@ -69,6 +78,20 @@
         note: 'Verified user with full course access',
         hasPurchasedCourse: true,
         purchaseDate: '2024-01-01T00:00:00.000Z'
+      },
+      'test@example.com': {
+        password: 'test123',
+        name: 'Test User',
+        phone: '8888888888',
+        status: 'enrolled',
+        courseAccess: 'full',
+        paymentId: 'PAY_VERIFIED_002',
+        enrolledAt: '2024-01-01T00:00:00.000Z',
+        manualAccessGranted: true,
+        accessGrantedAt: '2024-01-01T00:00:00.000Z',
+        note: 'Test user account',
+        hasPurchasedCourse: true,
+        purchaseDate: '2024-01-01T00:00:00.000Z'
       }
     };
 
@@ -76,39 +99,34 @@
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       
       console.log('🔍 Login attempt:', { email, password });
-      console.log('📊 USER_DATABASE:', USER_DATABASE);
-      console.log('🔑 Stored password:', USER_DATABASE[email]?.password);
-      console.log('🔑 Entered password:', password);
-      console.log('🔑 Password length:', password.length);
-      console.log('🔑 Password type:', typeof password);
+      console.log('📊 USER_DATABASE keys:', Object.keys(USER_DATABASE));
+      console.log('🔑 Looking for email:', email);
       
       // Check if user exists
       if (!USER_DATABASE[email]) {
-        console.log('❌ User not found');
-        alert('❌ User Not Found\n\nThis email is not registered in our system.');
+        console.log('❌ User not found for email:', email);
+        alert('❌ User Not Found\n\nEmail: ' + email + '\n\nThis email is not registered in our system.');
         return;
       }
       
       const userData = USER_DATABASE[email];
       console.log('👤 User data found:', userData);
-      
-      // Check password with detailed logging
-      const passwordMatch = userData.password === password;
-      console.log('🔑 Password comparison:', { 
-        stored: userData.password, 
-        entered: password, 
-        match: passwordMatch,
-        storedLength: userData.password.length,
-        enteredLength: password.length
+      console.log('🔑 Password check:', {
+        stored: userData.password,
+        entered: password,
+        match: userData.password === password,
+        storedType: typeof userData.password,
+        enteredType: typeof password
       });
       
-      if (!passwordMatch) {
+      // Check password
+      if (userData.password !== password) {
         console.log('❌ Password mismatch');
-        alert('❌ Wrong Password\n\nPlease use the correct password: 123456');
+        alert('❌ Wrong Password\n\nEmail: ' + email + '\n\nPlease use the correct password for this account.');
         return;
       }
       
@@ -120,11 +138,21 @@
       localStorage.setItem('loginTimestamp', Date.now().toString());
       
       // Show success and redirect
-      alert('✅ Login Successful!\n\nWelcome back!\n\nRedirecting to dashboard...');
+      alert('✅ Login Successful!\n\nWelcome back, ' + userData.name + '!\n\nRedirecting to dashboard...');
       
       setTimeout(() => {
         window.location.href = 'dashboard.html';
       }, 2000);
+    });
+
+    // Auto-fill test credentials for easy testing
+    document.addEventListener('DOMContentLoaded', function() {
+      // Auto-fill first test user
+      document.getElementById('email').value = 'yuvapreneur@gmail.com';
+      document.getElementById('password').value = '123456';
+      
+      console.log('🚀 Page loaded with test credentials');
+      console.log('📊 Available users:', Object.keys(USER_DATABASE));
     });
   </script>
 </body>
