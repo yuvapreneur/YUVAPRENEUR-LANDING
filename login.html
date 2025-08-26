@@ -220,8 +220,17 @@
          
          const userData = USER_DATABASE[email];
          
-         // Simple password check (like before)
-         if (password !== userData.password) {
+         // Check password (handle both plain text and hashed)
+         let passwordMatch = false;
+         if (userData.password === password) {
+           // Plain text password match
+           passwordMatch = true;
+         } else if (userData.password === hashPassword(password)) {
+           // Hashed password match
+           passwordMatch = true;
+         }
+         
+         if (!passwordMatch) {
            showLoginError('❌ Wrong Password\n\nPlease use the correct password.', submitBtn, originalText);
            return;
          }

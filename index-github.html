@@ -351,7 +351,7 @@
     const BONUSES = [
       {
         sku: "bonus-menu-psych",
-        price: 1,
+        price: 199,
         title: "Café Menu Psychology Blueprint",
         desc: "Design menus that increase average order value and customer satisfaction."
       },
@@ -363,13 +363,13 @@
       },
       {
         sku: "bonus-loyalty",
-        price: 1,
+        price: 179,
         title: "How to Create a Café Loyalty Program",
         desc: "Step-by-step template for a loyalty program that brings repeat customers."
       },
       {
         sku: "bonus-photo",
-        price: 249,
+        price: 299,
         title: "Photography Cheat Sheet",
         desc: "Quick setups for mouth-watering food & café photos (phone ready)."
       }
@@ -396,11 +396,11 @@
       bonusCard.innerHTML = `
         <div class="flex items-start justify-between mb-4">
           <div class="text-2xl font-bold text-purple-accent">🎁</div>
-          <div class="text-sm text-purple-300 font-semibold">FREE!</div>
+          <div class="text-sm text-purple-300 font-semibold">₹${bonus.price}</div>
         </div>
         <h3 class="text-lg font-semibold text-white mb-2">${bonus.title}</h3>
         <p class="text-white/70 text-sm">${bonus.desc}</p>
-        <div class="mt-3 text-xs text-purple-300 font-semibold">🎁 FREE with Enrollment!</div>
+        <div class="mt-3 text-xs text-purple-300 font-semibold">Individual Bonus Course</div>
       `;
       bonusesGrid.appendChild(bonusCard);
     });
