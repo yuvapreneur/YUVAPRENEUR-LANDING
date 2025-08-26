@@ -74,56 +74,32 @@
       
       console.log('🔍 Login attempt:', { email, password });
       
-      // First check if user exists in USER_DATABASE (pre-verified users)
+      // Check USER_DATABASE first (pre-verified users)
       let userData = USER_DATABASE[email];
-      let userSource = 'database';
       
-      // If not in database, check if they have enrollment data from course purchase
+      // If not in database, check enrollment data (course purchasers)
       if (!userData) {
         const enrollmentData = JSON.parse(localStorage.getItem('userEnrollment') || '{}');
-        console.log('🔍 Checking enrollment data:', enrollmentData);
-        console.log('🔍 Looking for email:', email);
-        console.log('🔍 Email match:', enrollmentData.email === email);
-        console.log('🔍 Has purchased course:', enrollmentData.hasPurchasedCourse);
-        console.log('🔍 Status:', enrollmentData.status);
         
-        if (enrollmentData.email === email && (enrollmentData.hasPurchasedCourse || enrollmentData.status === 'enrolled')) {
+        // If email matches and they have any enrollment data, allow login
+        if (enrollmentData.email === email) {
           userData = enrollmentData;
-          userSource = 'enrollment';
-          console.log('👤 User found in enrollment data:', userData);
+          console.log('✅ Course purchaser found:', userData);
         }
       }
       
-      // If still no user found, deny access
+      // If no user found at all, deny access
       if (!userData) {
-        console.log('❌ User not found for email:', email);
-        alert('❌ Access Denied\n\nEmail: ' + email + '\n\nOnly users who have purchased the course can login.\n\nPlease purchase the course first to get login access.');
+        alert('❌ User not found\n\nEmail: ' + email + '\n\nPlease purchase the course first.');
         return;
       }
       
-      console.log('👤 User data found from:', userSource, userData);
+      console.log('✅ User found:', userData);
       
-      // Check if user has actually purchased the course
-      if (!userData.hasPurchasedCourse && userData.status !== 'enrolled') {
-        console.log('❌ User has not purchased course');
-        alert('❌ Course Purchase Required\n\nYou must purchase the course first to login.\n\nPlease go to the home page and enroll in the course.');
+      // Check password
+      if (userData.password !== password) {
+        alert('❌ Wrong Password\n\nPlease use the correct password for this account.');
         return;
-      }
-      
-      // Check password - for enrollment users, use the password they set during enrollment
-      if (userSource === 'database') {
-        if (userData.password !== password) {
-          console.log('❌ Password mismatch for database user');
-          alert('❌ Wrong Password\n\nEmail: ' + email + '\n\nPlease use the correct password for this account.');
-          return;
-        }
-      } else {
-        // For enrollment users, check if they have a password set
-        if (userData.password && userData.password !== password) {
-          console.log('❌ Password mismatch for enrollment user');
-          alert('❌ Wrong Password\n\nEmail: ' + email + '\n\nPlease use the correct password for this account.');
-          return;
-        }
       }
       
       console.log('✅ Password match and course purchased! Login successful!');
