@@ -1,92 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Café Business Masterclass</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="styles.css" rel="stylesheet">
-  <style>
-    /* Ensure password field text is always visible */
-    #password {
-      color: #374151 !important;
-      -webkit-text-fill-color: #374151 !important;
-      caret-color: #8B5CF6 !important;
-    }
-    
-    #password::placeholder {
-      color: #9CA3AF !important;
-    }
-    
-    #password:focus {
-      color: #374151 !important;
-      -webkit-text-fill-color: #374151 !important;
-      background-color: #F9FAFB !important;
-    }
-    
-    /* Ensure toggle button is clickable */
-    #togglePassword {
-      cursor: pointer !important;
-      z-index: 10 !important;
-    }
-    
-    /* Mobile-specific styles */
-    @media (max-width: 768px) {
-      .login-container {
-        margin: 1rem;
-        padding: 1.5rem;
-      }
-      
-      input, button {
-        font-size: 16px !important; /* Prevents zoom on iOS */
-      }
-      
-      .min-h-screen {
-        min-height: 100vh;
-        padding: 1rem;
-      }
-    }
-    
-    /* Enhanced mobile touch targets */
-    button, a {
-      min-height: 44px;
-      min-width: 44px;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-white p-4">
   <div class="max-w-md mx-auto mt-8">
     <!-- Header -->
-    <div class="text-center mb-8 fade-in-up">
+    <div class="text-center mb-8">
       <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
       <p class="text-gray-600">Access your Café Business Masterclass</p>
     </div>
 
     <!-- Login Form -->
-    <div class="bg-white shadow-lg p-8 border border-gray-200 rounded-xl fade-in-up">
+    <div class="bg-white shadow-lg p-8 border border-gray-200 rounded-xl">
       <form id="loginForm" class="space-y-6">
         <div>
           <label class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
-          <input type="email" name="email" required 
+          <input type="email" name="email" id="email" required 
                  class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
                  placeholder="Enter your email address">
         </div>
         
         <div>
           <label class="block text-gray-700 text-sm font-medium mb-2">Password</label>
-          <div class="relative">
-            <input type="password" name="password" id="password" required 
-                   class="w-full px-4 py-4 pr-12 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
-                   placeholder="Enter your password"
-                   style="color: #374151 !important; -webkit-text-fill-color: #374151 !important; caret-color: #8B5CF6 !important;">
-            <button type="button" id="togglePassword" 
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors cursor-pointer z-10">
-              👁️
-            </button>
-          </div>
+          <input type="password" name="password" id="password" required 
+                 class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
+                 placeholder="Enter your password">
         </div>
         
         <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold text-lg rounded-lg transition-colors">
@@ -97,85 +39,17 @@
       <!-- Navigation Links -->
       <div class="mt-6 text-center space-y-3">
         <p class="text-gray-600 text-sm">
-          Don't have an account? 
-          <a href="signup.html" class="text-purple-600 hover:text-purple-700 underline">Sign up here</a>
-        </p>
-        <p class="text-gray-600 text-sm">
-          <a href="forgot-password.html" class="text-purple-600 hover:text-purple-700 underline">Forgot your password?</a>
-        </p>
-        <p class="text-gray-600 text-sm">
           <a href="index.html" class="text-purple-600 hover:text-purple-700 underline">← Back to Home</a>
         </p>
-        
-        <!-- Admin Section (Hidden by default) -->
-        <div class="mt-4 pt-4 border-t border-gray-200">
-          <button onclick="showAdminPanel()" class="text-xs text-gray-500 hover:text-gray-700 underline">
-            🔧 Admin Panel
-          </button>
-        </div>
-      </div>
-      
-      <!-- Admin Panel (Hidden by default) -->
-      <div id="adminPanel" class="mt-6 p-4 bg-gray-50 rounded-lg" style="display: none;">
-        <h3 class="text-lg font-semibold text-gray-900 mb-3">🔧 Admin Panel</h3>
-        <div class="space-y-3">
-          <div>
-            <label class="block text-gray-700 text-sm font-medium mb-1">Add New User</label>
-            <input type="email" id="newUserEmail" placeholder="Email" 
-                   class="w-full px-3 py-2 bg-white border border-gray-300 rounded text-sm">
-            <input type="text" id="newUserName" placeholder="Name" 
-                   class="w-full px-3 py-2 bg-white border border-gray-300 rounded text-sm mt-2">
-            <input type="password" id="newUserPassword" placeholder="Password" 
-                   class="w-full px-3 py-2 bg-white border border-gray-300 rounded text-sm mt-2">
-            <button onclick="addNewUser()" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm mt-2">
-              ➕ Add User
-            </button>
-          </div>
-          
-          <div>
-            <label class="block text-gray-700 text-sm font-medium mb-1">Current Users</label>
-            <div id="currentUsers" class="text-xs text-gray-600 bg-white p-2 rounded border">
-              Loading users...
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Toggle password visibility
-    document.getElementById('togglePassword').addEventListener('click', function() {
-      const passwordField = document.getElementById('password');
-      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordField.setAttribute('type', type);
-      
-      // Update button text
-      this.textContent = type === 'password' ? '👁️' : '🙈';
-    });
-
-    // Form submission
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const formData = new FormData(this);
-      const email = formData.get('email');
-      const password = formData.get('password');
-      
-      // Show loading state
-      const submitBtn = this.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = '🔄 Verifying Login...';
-      submitBtn.disabled = true;
-      
-      // Verify login credentials ONLY
-      verifyPaymentAndAccess(email, password, submitBtn, originalText);
-    });
-    
     // Simple user database
     const USER_DATABASE = {
       'yuvapreneur@gmail.com': {
-        password: 'yuva2024', // Plain text password
+        password: 'yuva2024',
         name: 'abhijjetwankhede',
         phone: '9999999999',
         status: 'enrolled',
@@ -188,154 +62,53 @@
         hasPurchasedCourse: true,
         purchaseDate: '2024-01-01T00:00:00.000Z'
       }
-      // Add more verified users here as needed
     };
-    
-    // Simple login verification (like before GitHub)
-    async function verifyPaymentAndAccess(email, password, submitBtn, originalText) {
-      try {
-        console.log('🔍 Login attempt:', { email, password });
-        console.log('📊 USER_DATABASE:', USER_DATABASE);
-        
-        // Check if user exists
-        if (!USER_DATABASE[email]) {
-          console.log('❌ User not found in database');
-          showLoginError('❌ User Not Found\n\nThis email is not registered in our system.', submitBtn, originalText);
-          return;
-        }
-        
-        const userData = USER_DATABASE[email];
-        console.log('👤 User data found:', userData);
-        console.log('🔑 Password comparison:', { 
-          stored: userData.password, 
-          entered: password, 
-          match: userData.password === password 
-        });
-        
-        // Simple password check - compare directly
-        if (userData.password !== password) {
-          console.log('❌ Password mismatch');
-          showLoginError('❌ Wrong Password\n\nPlease use the correct password.', submitBtn, originalText);
-          return;
-        }
-        
-        console.log('✅ Password match! Proceeding with login...');
-        
-        // Store user data in localStorage (like before)
-        localStorage.setItem('userEnrollment', JSON.stringify(userData));
-        localStorage.setItem('userAuthenticated', 'true');
-        localStorage.setItem('loginTimestamp', Date.now().toString());
-        
-        console.log('💾 Data stored in localStorage, redirecting...');
-        
-        // Show success and redirect (like before)
-        showLoginSuccess('✅ Login Successful!\n\nWelcome back!\n\nRedirecting to dashboard...', submitBtn, originalText);
-        
-        setTimeout(() => {
-          console.log('🚀 Redirecting to dashboard...');
-          window.location.href = 'dashboard.html';
-        }, 2000);
-        
-      } catch (error) {
-        console.error('Login error:', error);
-        showLoginError('❌ System Error\n\nPlease try again.', submitBtn, originalText);
-      }
-    }
-    
-    // Show login success
-    function showLoginSuccess(message, submitBtn, originalText) {
-      submitBtn.textContent = '✅ Access Granted';
-      submitBtn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
-      submitBtn.classList.add('bg-green-600');
-      alert(message);
-    }
-    
-    // Show login error
-    function showLoginError(message, submitBtn, originalText) {
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
-      alert(message);
-    }
-    
-    // Admin panel functions
-    function showAdminPanel() {
-      const adminPanel = document.getElementById('adminPanel');
-      if (adminPanel.style.display === 'none') {
-        adminPanel.style.display = 'block';
-        loadCurrentUsers();
-      } else {
-        adminPanel.style.display = 'none';
-      }
-    }
-    
-    function loadCurrentUsers() {
-      const currentUsersDiv = document.getElementById('currentUsers');
-      let usersList = '';
-      
-      for (const email in USER_DATABASE) {
-        const user = USER_DATABASE[email];
-        usersList += `📧 ${email}\n👤 ${user.name}\n🔑 ${user.password}\n📊 ${user.status}\n\n`;
-      }
-      
-      currentUsersDiv.textContent = usersList || 'No users found';
-    }
-    
-    function addNewUser() {
-      const email = document.getElementById('newUserEmail').value.trim();
-      const name = document.getElementById('newUserName').value.trim();
-      const password = document.getElementById('newUserPassword').value.trim();
-      
-      if (!email || !name || !password) {
-        alert('❌ Please fill in all fields');
-        return;
-      }
-      
-      if (!email.includes('@')) {
-        alert('❌ Please enter a valid email address');
-        return;
-      }
-      
-      if (password.length < 6) {
-        alert('❌ Password must be at least 6 characters long');
-        return;
-      }
-      
-      // Add new user to database
-      USER_DATABASE[email] = {
-        password: password, // Store password as entered
-        name: name,
-        phone: '9999999999',
-        status: 'enrolled',
-        courseAccess: 'full',
-        paymentId: 'PAY_VERIFIED_' + Date.now(),
-        enrolledAt: new Date().toISOString(),
-        manualAccessGranted: true,
-        accessGrantedAt: new Date().toISOString(),
-        note: 'Added via admin panel',
-        hasPurchasedCourse: true,
-        purchaseDate: new Date().toISOString()
-      };
-      
-      // Clear form
-      document.getElementById('newUserEmail').value = '';
-      document.getElementById('newUserName').value = '';
-      document.getElementById('newUserPassword').value = '';
-      
-      // Reload users list
-      loadCurrentUsers();
-      
-      alert('✅ User added successfully!\n\nEmail: ' + email + '\nName: ' + name + '\nPassword: ' + password + '\n\nThis user can now login with these credentials.');
-    }
 
-    // Add fade-in animation
-    document.addEventListener('DOMContentLoaded', function() {
-      const elements = document.querySelectorAll('.fade-in-up');
-      elements.forEach((el, index) => {
-        setTimeout(() => {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, index * 100);
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      console.log('🔍 Login attempt:', { email, password });
+      console.log('📊 USER_DATABASE:', USER_DATABASE);
+      
+      // Check if user exists
+      if (!USER_DATABASE[email]) {
+        console.log('❌ User not found');
+        alert('❌ User Not Found\n\nThis email is not registered in our system.');
+        return;
+      }
+      
+      const userData = USER_DATABASE[email];
+      console.log('👤 User data found:', userData);
+      console.log('🔑 Password comparison:', { 
+        stored: userData.password, 
+        entered: password, 
+        match: userData.password === password 
       });
+      
+      // Check password
+      if (userData.password !== password) {
+        console.log('❌ Password mismatch');
+        alert('❌ Wrong Password\n\nPlease use the correct password.');
+        return;
+      }
+      
+      console.log('✅ Password match! Login successful!');
+      
+      // Store user data
+      localStorage.setItem('userEnrollment', JSON.stringify(userData));
+      localStorage.setItem('userAuthenticated', 'true');
+      localStorage.setItem('loginTimestamp', Date.now().toString());
+      
+      // Show success and redirect
+      alert('✅ Login Successful!\n\nWelcome back!\n\nRedirecting to dashboard...');
+      
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 2000);
     });
   </script>
 </body>
