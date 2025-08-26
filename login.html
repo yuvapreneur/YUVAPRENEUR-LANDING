@@ -81,7 +81,13 @@
       // If not in database, check if they have enrollment data from course purchase
       if (!userData) {
         const enrollmentData = JSON.parse(localStorage.getItem('userEnrollment') || '{}');
-        if (enrollmentData.email === email && enrollmentData.hasPurchasedCourse) {
+        console.log('🔍 Checking enrollment data:', enrollmentData);
+        console.log('🔍 Looking for email:', email);
+        console.log('🔍 Email match:', enrollmentData.email === email);
+        console.log('🔍 Has purchased course:', enrollmentData.hasPurchasedCourse);
+        console.log('🔍 Status:', enrollmentData.status);
+        
+        if (enrollmentData.email === email && (enrollmentData.hasPurchasedCourse || enrollmentData.status === 'enrolled')) {
           userData = enrollmentData;
           userSource = 'enrollment';
           console.log('👤 User found in enrollment data:', userData);
@@ -135,14 +141,11 @@
       }, 2000);
     });
 
-    // Auto-fill for verified course purchaser
+    // Page loaded
     document.addEventListener('DOMContentLoaded', function() {
-      // Auto-fill for verified user
-      document.getElementById('email').value = 'yuvapreneur@gmail.com';
-      document.getElementById('password').value = '123456';
-      
       console.log('🚀 Page loaded - Only course purchasers can login');
       console.log('📊 Verified users:', Object.keys(USER_DATABASE));
+      console.log('📊 Current enrollment data:', localStorage.getItem('userEnrollment'));
     });
   </script>
 </body>
