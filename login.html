@@ -110,11 +110,9 @@
       localStorage.setItem('loginTimestamp', Date.now().toString());
       
       // Show success and redirect
-      alert('✅ Login Successful!\n\nWelcome back, ' + userData.name + '!\n\nRedirecting to dashboard...');
-      
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 2000);
+      // Fast redirect without blocking alert
+      console.log('Login successful. Redirecting to dashboard...');
+      window.location.href = 'dashboard.html';
     });
 
     // Page loaded
