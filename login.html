@@ -209,45 +209,38 @@
        return inputHash === storedHash;
      }
      
-     // ✅ LOGIN ONLY: Verify user credentials (separate from course access)
+     // Simple login verification (like before GitHub)
      async function verifyPaymentAndAccess(email, password, submitBtn, originalText) {
        try {
-         // ✅ STEP 1: Check if user exists in database
+         // Check if user exists
          if (!USER_DATABASE[email]) {
-           showLoginError('❌ User Not Found\n\nThis email is not registered in our system.\n\nPlease contact support to create an account.', submitBtn, originalText);
+           showLoginError('❌ User Not Found\n\nThis email is not registered in our system.', submitBtn, originalText);
            return;
          }
          
          const userData = USER_DATABASE[email];
          
-         // ✅ STEP 2: Verify password hash ONLY
-         if (!verifyPassword(password, userData.password)) {
-           showLoginError('❌ Wrong Password\n\nInvalid password entered.\n\nPlease use the correct password or contact support for password reset.', submitBtn, originalText);
+         // Simple password check (like before)
+         if (password !== userData.password) {
+           showLoginError('❌ Wrong Password\n\nPlease use the correct password.', submitBtn, originalText);
            return;
          }
          
-         // ✅ STEP 3: Generate secure session token (LOGIN SUCCESS)
-         const sessionToken = generateSecureToken(email);
-         const loginTimestamp = Date.now();
-         
-         // ✅ STEP 4: Store basic user data for authentication
+         // Store user data in localStorage (like before)
+         localStorage.setItem('userEnrollment', JSON.stringify(userData));
          localStorage.setItem('userAuthenticated', 'true');
-         localStorage.setItem('loginTimestamp', loginTimestamp.toString());
-         localStorage.setItem('sessionToken', sessionToken);
-         localStorage.setItem('lastActivity', loginTimestamp.toString());
-         localStorage.setItem('userEmail', email);
+         localStorage.setItem('loginTimestamp', Date.now().toString());
          
-         // ✅ STEP 5: Show LOGIN SUCCESS (not course access)
+         // Show success and redirect (like before)
          showLoginSuccess('✅ Login Successful!\n\nWelcome back!\n\nRedirecting to dashboard...', submitBtn, originalText);
          
-         // ✅ STEP 6: Redirect to dashboard (course access will be checked there)
          setTimeout(() => {
            window.location.href = 'dashboard.html';
          }, 2000);
          
        } catch (error) {
-         console.error('Login verification error:', error);
-         showLoginError('❌ System Error\n\nAn error occurred during login.\n\nPlease try again or contact support.', submitBtn, originalText);
+         console.error('Login error:', error);
+         showLoginError('❌ System Error\n\nPlease try again.', submitBtn, originalText);
        }
      }
      
