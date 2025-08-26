@@ -46,7 +46,7 @@
   </div>
 
   <script>
-    // Multiple test users database
+    // Only users who have purchased the course can login
     const USER_DATABASE = {
       'yuvapreneur@gmail.com': {
         password: '123456',
@@ -61,21 +61,8 @@
         note: 'Verified user with full course access',
         hasPurchasedCourse: true,
         purchaseDate: '2024-01-01T00:00:00.000Z'
-      },
-      'test@example.com': {
-        password: 'test123',
-        name: 'Test User',
-        phone: '8888888888',
-        status: 'enrolled',
-        courseAccess: 'full',
-        paymentId: 'PAY_VERIFIED_002',
-        enrolledAt: '2024-01-01T00:00:00.000Z',
-        manualAccessGranted: true,
-        accessGrantedAt: '2024-01-01T00:00:00.000Z',
-        note: 'Test user account',
-        hasPurchasedCourse: true,
-        purchaseDate: '2024-01-01T00:00:00.000Z'
       }
+      // Removed test@example.com - only real course purchasers can login
     };
 
     // Form submission
@@ -86,25 +73,23 @@
       const password = document.getElementById('password').value;
       
       console.log('🔍 Login attempt:', { email, password });
-      console.log('📊 USER_DATABASE keys:', Object.keys(USER_DATABASE));
-      console.log('🔑 Looking for email:', email);
       
       // Check if user exists
       if (!USER_DATABASE[email]) {
         console.log('❌ User not found for email:', email);
-        alert('❌ User Not Found\n\nEmail: ' + email + '\n\nThis email is not registered in our system.');
+        alert('❌ Access Denied\n\nEmail: ' + email + '\n\nOnly users who have purchased the course can login.\n\nPlease purchase the course first to get login access.');
         return;
       }
       
       const userData = USER_DATABASE[email];
       console.log('👤 User data found:', userData);
-      console.log('🔑 Password check:', {
-        stored: userData.password,
-        entered: password,
-        match: userData.password === password,
-        storedType: typeof userData.password,
-        enteredType: typeof password
-      });
+      
+      // Check if user has actually purchased the course
+      if (!userData.hasPurchasedCourse && userData.status !== 'enrolled') {
+        console.log('❌ User has not purchased course');
+        alert('❌ Course Purchase Required\n\nYou must purchase the course first to login.\n\nPlease go to the home page and enroll in the course.');
+        return;
+      }
       
       // Check password
       if (userData.password !== password) {
@@ -113,7 +98,7 @@
         return;
       }
       
-      console.log('✅ Password match! Login successful!');
+      console.log('✅ Password match and course purchased! Login successful!');
       
       // Store user data
       localStorage.setItem('userEnrollment', JSON.stringify(userData));
@@ -128,14 +113,14 @@
       }, 2000);
     });
 
-    // Auto-fill test credentials for easy testing
+    // Auto-fill for verified course purchaser
     document.addEventListener('DOMContentLoaded', function() {
-      // Auto-fill first test user
+      // Auto-fill for verified user
       document.getElementById('email').value = 'yuvapreneur@gmail.com';
       document.getElementById('password').value = '123456';
       
-      console.log('🚀 Page loaded with test credentials');
-      console.log('📊 Available users:', Object.keys(USER_DATABASE));
+      console.log('🚀 Page loaded - Only course purchasers can login');
+      console.log('📊 Verified users:', Object.keys(USER_DATABASE));
     });
   </script>
 </body>
