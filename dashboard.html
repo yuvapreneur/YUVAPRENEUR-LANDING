@@ -576,22 +576,51 @@
        }
      }
      
-     // Simple dashboard access check (like before GitHub)
+     // Dashboard access check - handles both login and new purchases
      function verifyDashboardAccess() {
-       // Check if user is logged in (simple check)
-       const isAuthenticated = localStorage.getItem('userAuthenticated');
        const userEnrollment = localStorage.getItem('userEnrollment');
        
-       if (!isAuthenticated || !userEnrollment) {
-         showAccessDenied('❌ Login Required\n\nYou must login first to access the dashboard.\n\nRedirecting to login page...');
+       // If no enrollment data at all, redirect to home
+       if (!userEnrollment) {
+         showAccessDenied('❌ No Course Access\n\nYou need to purchase the course first.\n\nRedirecting to home page...');
          setTimeout(() => {
-           window.location.href = 'login.html';
+           window.location.href = 'index.html';
          }, 3000);
          return false;
        }
        
-       // User is logged in and has enrollment data
-       return true;
+       try {
+         const userData = JSON.parse(userEnrollment);
+         
+         // Check if user has valid course access (enrolled, pending, or manual access)
+         if (userData.status === 'enrolled' || 
+             userData.status === 'pending_payment' || 
+             userData.manualAccessGranted === true ||
+             userData.hasPurchasedCourse === true) {
+           
+           // Set authentication if not already set (for new purchases)
+           if (!localStorage.getItem('userAuthenticated')) {
+             localStorage.setItem('userAuthenticated', 'true');
+             localStorage.setItem('loginTimestamp', Date.now().toString());
+           }
+           
+           return true;
+         } else {
+           // User has data but no valid access
+           showAccessDenied('❌ Course Access Required\n\nPlease complete your course purchase to access the dashboard.\n\nRedirecting to home page...');
+           setTimeout(() => {
+             window.location.href = 'index.html';
+           }, 3000);
+           return false;
+         }
+       } catch (error) {
+         console.error('Error parsing enrollment data:', error);
+         showAccessDenied('❌ Data Error\n\nThere was an issue with your account data.\n\nRedirecting to home page...');
+         setTimeout(() => {
+           window.location.href = 'index.html';
+         }, 3000);
+         return false;
+       }
      }
      
 
@@ -912,13 +941,18 @@
        if (enrollmentData) {
          try {
            const userData = JSON.parse(enrollmentData);
+           
            // Show login link if user has any enrollment data (pending, enrolled, or failed)
-           if (userData.status) {
+           if (userData.status || userData.hasPurchasedCourse || userData.manualAccessGranted) {
              loginLink.classList.remove('hidden');
              console.log('User has enrollment data, showing login link');
+           } else {
+             loginLink.classList.add('hidden');
+             console.log('User has data but no valid status, hiding login link');
            }
          } catch (error) {
            console.error('Error checking enrollment status:', error);
+           loginLink.classList.add('hidden');
          }
        } else {
          // Hide login link for new users
