@@ -463,13 +463,22 @@
           // Open Razorpay payment
           openRazorpayPayment(data);
         } else {
-          alert('❌ Registration failed: ' + result.message);
+          console.error('Registration failed:', result);
+          document.getElementById('enrollmentMessage').innerHTML = `
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              ❌ Registration failed: ${result.message}
+            </div>
+          `;
           submitBtn.textContent = originalText;
           submitBtn.disabled = false;
         }
       } catch (error) {
         console.error('Registration error:', error);
-        alert('❌ Registration failed. Please try again.');
+        document.getElementById('enrollmentMessage').innerHTML = `
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            ❌ Registration failed: ${error.message}
+          </div>
+        `;
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
       }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button { padding: 10px 20px; margin: 5px; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Registration Debug Tool</h1>
+    
+    <div class="test-section">
+        <h3>1. Test API Endpoint</h3>
+        <button onclick="testAPI()">Test /api/test</button>
+        <div id="api-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Test Fallback Registration</h3>
+        <button onclick="testRegistration()">Test Registration</button>
+        <div id="registration-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Test Original Registration</h3>
+        <button onclick="testOriginalRegistration()">Test Original API</button>
+        <div id="original-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Network Info</h3>
+        <div id="network-info"></div>
+    </div>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            element.innerHTML += `<div class="${className}">${new Date().toLocaleTimeString()}: ${message}</div>`;
+        }
+
+        async function testAPI() {
+            log('api-result', 'Testing /api/test endpoint...', 'info');
+            try {
+                const response = await fetch('/api/test');
+                const data = await response.json();
+                log('api-result', `✅ API Response: ${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log('api-result', `❌ API Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRegistration() {
+            log('registration-result', 'Testing fallback registration...', 'info');
+            const testData = {
+                name: 'Test User',
+                email: 'test@example.com',
+                phone: '1234567890',
+                profession: 'Developer',
+                city: 'Test City',
+                state: 'Test State',
+                password: 'test123'
+            };
+
+            try {
+                const response = await fetch('/api/auth/register-fallback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                const data = await response.json();
+                log('registration-result', `✅ Fallback Response (${response.status}): ${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log('registration-result', `❌ Fallback Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testOriginalRegistration() {
+            log('original-result', 'Testing original registration...', 'info');
+            const testData = {
+                name: 'Test User',
+                email: 'test2@example.com',
+                phone: '1234567890',
+                profession: 'Developer',
+                city: 'Test City',
+                state: 'Test State',
+                password: 'test123'
+            };
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                const data = await response.json();
+                log('original-result', `✅ Original Response (${response.status}): ${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log('original-result', `❌ Original Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Show network info
+        function showNetworkInfo() {
+            const info = {
+                userAgent: navigator.userAgent,
+                url: window.location.href,
+                protocol: window.location.protocol,
+                host: window.location.host,
+                online: navigator.onLine
+            };
+            document.getElementById('network-info').innerHTML = `<pre>${JSON.stringify(info, null, 2)}</pre>`;
+        }
+
+        // Initialize
+        showNetworkInfo();
+    </script>
+</body>
+</html>
