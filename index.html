@@ -426,6 +426,10 @@
       // Get form data
       const formData = new FormData(this);
       const data = Object.fromEntries(formData);
+      // normalize email early
+      if (data.email) {
+        data.email = String(data.email).trim().toLowerCase();
+      }
       
       // Show loading state
       const submitBtn = this.querySelector('button[type="submit"]');
@@ -490,6 +494,20 @@
           };
           
           localStorage.setItem('userEnrollment', JSON.stringify(enrollmentData));
+          // also store by email key so login works across sessions on same device
+          try {
+            const emailKey = (enrollmentData.email || '').toLowerCase();
+            if (emailKey) {
+              localStorage.setItem('user:' + emailKey, JSON.stringify(enrollmentData));
+              const listRaw = localStorage.getItem('purchasedUsers') || '[]';
+              let list = [];
+              try { list = JSON.parse(listRaw) || []; } catch (_) { list = []; }
+              if (!list.includes(emailKey)) {
+                list.push(emailKey);
+                localStorage.setItem('purchasedUsers', JSON.stringify(list));
+              }
+            }
+          } catch (_) {}
           localStorage.removeItem('tempUserData'); // Clean up temp data
           
           // Redirect to dashboard after successful payment

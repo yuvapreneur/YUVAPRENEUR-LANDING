@@ -69,35 +69,44 @@
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const email = document.getElementById('email').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
       
       console.log('🔍 Login attempt:', { email, password });
       
       // Check USER_DATABASE first (pre-verified users)
       let userData = USER_DATABASE[email];
-      
-      // If not in database, check enrollment data (course purchasers)
+
+      // Try per-user key stored at enrollment
+      if (!userData) {
+        try {
+          const stored = localStorage.getItem('user:' + email);
+          if (stored) {
+            userData = JSON.parse(stored);
+            console.log('✅ Found stored purchaser by key:', 'user:' + email, userData);
+          }
+        } catch (_) {}
+      }
+
+      // Fallback to last enrollment blob
       if (!userData) {
         const enrollmentData = JSON.parse(localStorage.getItem('userEnrollment') || '{}');
-        
-        // If email matches and they have any enrollment data, allow login
-        if (enrollmentData.email === email) {
+        if ((enrollmentData.email || '').toLowerCase() === email) {
           userData = enrollmentData;
-          console.log('✅ Course purchaser found:', userData);
+          console.log('✅ Course purchaser found (fallback userEnrollment):', userData);
         }
       }
       
       // If no user found at all, deny access
       if (!userData) {
-        alert('❌ User not found\n\nEmail: ' + email + '\n\nPlease purchase the course first.');
+        alert('❌ User not found\n\nEmail: ' + email + '\n\nIf you purchased, please use the same device/browser or enroll again.');
         return;
       }
       
       console.log('✅ User found:', userData);
       
-      // Check password
-      if (userData.password !== password) {
+      // Check password (if present). If password was not captured, allow login for enrolled users.
+      if (userData.password && userData.password !== password) {
         alert('❌ Wrong Password\n\nPlease use the correct password for this account.');
         return;
       }
