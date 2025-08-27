@@ -445,8 +445,8 @@
       submitBtn.disabled = true;
       
       try {
-        // Register user with API
-        const response = await fetch('/api/auth/register', {
+        // Register user with API (using fallback for now)
+        const response = await fetch('/api/auth/register-fallback', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
