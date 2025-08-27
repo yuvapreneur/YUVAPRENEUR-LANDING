@@ -2,22 +2,28 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/server.js"
+      "dest": "/$1"
     }
   ],
   "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "server.js": {
-      "maxDuration": 30
-    }
+    "MONGODB_URI": "mongodb+srv://admin:hGw0wSOgM7PJ8VUe@cluster0.pp4ab3i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    "JWT_SECRET": "your-super-secret-jwt-key-change-this-in-production",
+    "RAZORPAY_KEY_ID": "rzp_live_RAD4Q0Jypcn82a",
+    "RAZORPAY_KEY_SECRET": "zjOdjWDRhxv45thjpI8H0i73"
   }
 }

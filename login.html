@@ -66,7 +66,7 @@
     };
 
     // Form submission
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const email = document.getElementById('email').value.trim().toLowerCase();
@@ -74,54 +74,36 @@
       
       console.log('🔍 Login attempt:', { email, password });
       
-      // Check USER_DATABASE first (pre-verified users)
-      let userData = USER_DATABASE[email];
+      try {
+        // Login via API
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password })
+        });
 
-      // Try per-user key stored at enrollment
-      if (!userData) {
-        try {
-          const stored = localStorage.getItem('user:' + email);
-          if (stored) {
-            userData = JSON.parse(stored);
-            console.log('✅ Found stored purchaser by key:', 'user:' + email, userData);
-          }
-        } catch (_) {}
-      }
+        const result = await response.json();
 
-      // Fallback to last enrollment blob
-      if (!userData) {
-        const enrollmentData = JSON.parse(localStorage.getItem('userEnrollment') || '{}');
-        if ((enrollmentData.email || '').toLowerCase() === email) {
-          userData = enrollmentData;
-          console.log('✅ Course purchaser found (fallback userEnrollment):', userData);
+        if (result.success) {
+          // Store user data and token
+          localStorage.setItem('userEnrollment', JSON.stringify(result.user));
+          localStorage.setItem('userAuthenticated', 'true');
+          localStorage.setItem('loginTimestamp', Date.now().toString());
+          localStorage.setItem('authToken', result.token);
+          
+          console.log('✅ Login successful!');
+          
+          // Redirect to dashboard
+          window.location.href = 'dashboard.html';
+        } else {
+          alert('❌ Login failed: ' + result.message);
         }
+      } catch (error) {
+        console.error('Login error:', error);
+        alert('❌ Login failed. Please try again.');
       }
-      
-      // If no user found at all, deny access
-      if (!userData) {
-        alert('❌ User not found\n\nEmail: ' + email + '\n\nIf you purchased, please use the same device/browser or enroll again.');
-        return;
-      }
-      
-      console.log('✅ User found:', userData);
-      
-      // Check password (if present). If password was not captured, allow login for enrolled users.
-      if (userData.password && userData.password !== password) {
-        alert('❌ Wrong Password\n\nPlease use the correct password for this account.');
-        return;
-      }
-      
-      console.log('✅ Password match and course purchased! Login successful!');
-      
-      // Store user data
-      localStorage.setItem('userEnrollment', JSON.stringify(userData));
-      localStorage.setItem('userAuthenticated', 'true');
-      localStorage.setItem('loginTimestamp', Date.now().toString());
-      
-      // Show success and redirect
-      // Fast redirect without blocking alert
-      console.log('Login successful. Redirecting to dashboard...');
-      window.location.href = 'dashboard.html';
     });
 
     // Page loaded

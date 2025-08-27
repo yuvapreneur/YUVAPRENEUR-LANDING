@@ -420,7 +420,7 @@
     });
 
     // Form submission
-    document.getElementById('enrollmentForm').addEventListener('submit', function(e) {
+    document.getElementById('enrollmentForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       // Get form data
@@ -437,83 +437,86 @@
       submitBtn.textContent = '🔄 Processing...';
       submitBtn.disabled = true;
       
-      // Process enrollment and open Razorpay payment
-      setTimeout(() => {
-        try {
-          // Store user data temporarily
-          const userData = {
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            profession: data.profession,
-            city: data.city,
-            state: data.state,
-            password: data.password,
-            enrolledAt: new Date().toISOString(),
-            status: 'pending_payment'
-          };
-          
-          localStorage.setItem('tempUserData', JSON.stringify(userData));
+      try {
+        // Register user with API
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Store user data temporarily for payment
+          localStorage.setItem('tempUserData', JSON.stringify(result.user));
           
           // Open Razorpay payment
           openRazorpayPayment(data);
-          
-        } catch (error) {
-          console.error('Enrollment error:', error);
-          alert('❌ Enrollment failed. Please try again.');
+        } else {
+          alert('❌ Registration failed: ' + result.message);
           submitBtn.textContent = originalText;
           submitBtn.disabled = false;
         }
-      }, 1000);
+      } catch (error) {
+        console.error('Registration error:', error);
+        alert('❌ Registration failed. Please try again.');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
     });
     
         // Razorpay payment function
     function openRazorpayPayment(userData) {
       const options = {
-        key: 'rzp_live_R9QVhOlTJvswsH', // Your live key
+        key: 'rzp_live_RAD4Q0Jypcn82a', // Your live key
         amount: 100, // ₹1 in paise
         currency: 'INR',
         name: 'Café Business Masterclass',
         description: 'Complete Course + 4 Bonuses - Full Access',
         image: 'https://your-logo-url.com/logo.png',
-        handler: function (response) {
+        handler: async function (response) {
           // Payment successful
           console.log('Payment successful. ID:', response.razorpay_payment_id);
           
-          // Complete enrollment with payment data
-          const tempData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
-          const enrollmentData = {
-            ...tempData,
-            status: 'enrolled',
-            paymentId: response.razorpay_payment_id,
-            paymentDate: new Date().toISOString(),
-            courseAccess: 'full',
-            hasPurchasedCourse: true,
-            enrolledAt: new Date().toISOString(),
-            manualAccessGranted: false
-          };
-          
-          localStorage.setItem('userEnrollment', JSON.stringify(enrollmentData));
-          // also store by email key so login works across sessions on same device
           try {
-            const emailKey = (enrollmentData.email || '').toLowerCase();
-            if (emailKey) {
-              localStorage.setItem('user:' + emailKey, JSON.stringify(enrollmentData));
-              const listRaw = localStorage.getItem('purchasedUsers') || '[]';
-              let list = [];
-              try { list = JSON.parse(listRaw) || []; } catch (_) { list = []; }
-              if (!list.includes(emailKey)) {
-                list.push(emailKey);
-                localStorage.setItem('purchasedUsers', JSON.stringify(list));
-              }
+            const tempData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
+            
+            // Update user payment status via API
+            const paymentResponse = await fetch('/api/payment/success', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: tempData.email,
+                paymentId: response.razorpay_payment_id,
+                paymentDate: new Date().toISOString()
+              })
+            });
+
+            const paymentResult = await paymentResponse.json();
+
+            if (paymentResult.success) {
+              // Store user data for session
+              localStorage.setItem('userEnrollment', JSON.stringify(paymentResult.user));
+              localStorage.setItem('userAuthenticated', 'true');
+              localStorage.setItem('loginTimestamp', Date.now().toString());
+              localStorage.removeItem('tempUserData');
+              
+              // Redirect to dashboard
+              setTimeout(() => {
+                window.location.href = 'dashboard.html';
+              }, 300);
+            } else {
+              alert('❌ Payment processed but failed to update account: ' + paymentResult.message);
             }
-          } catch (_) {}
-          localStorage.removeItem('tempUserData'); // Clean up temp data
-          
-          // Redirect to dashboard after successful payment
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 300);
+          } catch (error) {
+            console.error('Payment success error:', error);
+            alert('❌ Payment successful but failed to update account. Please contact support.');
+          }
         },
         prefill: {
           name: userData.name,
