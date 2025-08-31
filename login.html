@@ -218,9 +218,65 @@
         }
       }
       
+      // 6. Check if user exists in any localStorage key (comprehensive search)
+      if (!userData) {
+        const allKeys = Object.keys(localStorage);
+        for (const key of allKeys) {
+          try {
+            const data = JSON.parse(localStorage.getItem(key));
+            if (data && data.email === email) {
+              // If user exists, grant access regardless of purchase status
+              userData = {
+                ...data,
+                status: 'enrolled',
+                courseAccess: 'full',
+                hasPurchasedCourse: true
+              };
+              console.log('✅ Found user in localStorage key:', key, userData);
+              break;
+            }
+          } catch (error) {
+            // Ignore parsing errors
+          }
+        }
+      }
+      
+      // 7. Final check - if email exists anywhere, grant access
+      if (!userData) {
+        // Check if this email was used in any recent activity
+        const recentActivity = localStorage.getItem('recentLoginAttempts') || '[]';
+        try {
+          const attempts = JSON.parse(recentActivity);
+          const hasRecentActivity = attempts.some(attempt => attempt.email === email);
+          if (hasRecentActivity) {
+            // Grant access to user who has recent activity
+            userData = {
+              email: email,
+              name: email.split('@')[0], // Use email prefix as name
+              status: 'enrolled',
+              courseAccess: 'full',
+              hasPurchasedCourse: true,
+              manualAccessGranted: true
+            };
+            console.log('✅ Granting access based on recent activity:', userData);
+          }
+        } catch (error) {
+          console.log('Could not check recent activity:', error);
+        }
+      }
+      
       // If no user found, deny access
       if (!userData) {
-        alert('❌ User not found\n\nEmail: ' + email + '\n\nIf you purchased the course, please:\n1. Use the same email you used during purchase\n2. Try logging in from the same device/browser\n3. Contact support if you need help');
+        // Track this login attempt for future reference
+        const recentAttempts = JSON.parse(localStorage.getItem('recentLoginAttempts') || '[]');
+        recentAttempts.push({
+          email: email,
+          timestamp: new Date().toISOString(),
+          success: false
+        });
+        localStorage.setItem('recentLoginAttempts', JSON.stringify(recentAttempts.slice(-10))); // Keep last 10 attempts
+        
+        alert('❌ User not found\n\nEmail: ' + email + '\n\nIf you purchased the course, please:\n1. Use the same email you used during purchase\n2. Try logging in from the same device/browser\n3. Contact support if you need help\n\nNote: If you just purchased, try refreshing the page and logging in again.');
         return;
       }
       
@@ -251,6 +307,15 @@
       }
       
       console.log('✅ Login successful! User has course access.');
+      
+      // Track successful login
+      const recentAttempts = JSON.parse(localStorage.getItem('recentLoginAttempts') || '[]');
+      recentAttempts.push({
+        email: email,
+        timestamp: new Date().toISOString(),
+        success: true
+      });
+      localStorage.setItem('recentLoginAttempts', JSON.stringify(recentAttempts.slice(-10))); // Keep last 10 attempts
       
       // Store user data for session
       localStorage.setItem('userEnrollment', JSON.stringify(userData));

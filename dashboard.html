@@ -53,12 +53,8 @@
   <nav class="bg-white shadow-lg p-4 mb-8 rounded-xl border border-gray-200">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <div class="text-2xl font-bold text-purple-600">Yuvapreneur</div>
-             <div class="space-x-4" id="navigationLinks">
-         <a href="index.html" class="text-gray-600 hover:text-purple-600 transition-colors">Home</a>
-         <a href="bonuses.html" class="text-gray-600 hover:text-purple-600 transition-colors">Bonuses</a>
-         <a href="buy.html" class="text-gray-600 hover:text-purple-600 transition-colors">Buy Course</a>
-         <a href="login.html" class="text-gray-600 hover:text-purple-600 transition-colors hidden" id="loginLink">Login</a>
-         <button onclick="logout()" class="text-red-600 hover:text-red-700 transition-colors font-medium">🚪 Logout</button>
+      <div class="space-x-4" id="navigationLinks">
+        <button onclick="logout()" class="text-red-600 hover:text-red-700 transition-colors font-medium">Logout</button>
       </div>
     </div>
   </nav>
@@ -643,7 +639,7 @@
      
      // Logout function with enhanced security
      function logout() {
-       const confirmLogout = confirm('🚪 Logout\n\nAre you sure you want to logout?\n\nYou will need to login again to access the dashboard.');
+       const confirmLogout = confirm('Logout\n\nAre you sure you want to logout?\n\nYou will need to login again to access the dashboard.');
        
        if (confirmLogout) {
          // ✅ SECURITY: Clear all session and authentication data
