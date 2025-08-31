@@ -176,25 +176,33 @@
         }
       }
       
-      // 4. Check if user has purchased course (even without password)
-      if (!userData) {
-        // Check if this email has any purchase record
-        const allKeys = Object.keys(localStorage);
-        for (const key of allKeys) {
-          if (key.includes('user') || key.includes('enrollment') || key.includes('temp')) {
-            try {
-              const data = JSON.parse(localStorage.getItem(key));
-              if (data && data.email === email && (data.hasPurchasedCourse || data.paymentId || data.status === 'enrolled')) {
-                userData = data;
-                console.log('✅ Found user with purchase record:', userData);
-                break;
-              }
-            } catch (error) {
-              // Ignore parsing errors
-            }
-          }
-        }
-      }
+             // 4. Check if user has purchased course (with password validation)
+       if (!userData) {
+         // Check if this email has any purchase record
+         const allKeys = Object.keys(localStorage);
+         for (const key of allKeys) {
+           if (key.includes('user') || key.includes('enrollment') || key.includes('temp')) {
+             try {
+               const data = JSON.parse(localStorage.getItem(key));
+               if (data && data.email === email && (data.hasPurchasedCourse || data.paymentId || data.status === 'enrolled')) {
+                 // Check password before granting access
+                 const storedPass = String(data.password || '').trim();
+                 const inputPass = String(password || '').trim();
+                 
+                 if (storedPass && inputPass && storedPass === inputPass) {
+                   userData = data;
+                   console.log('✅ Found user with purchase record and correct password:', userData);
+                   break;
+                 } else if (data) {
+                   console.log('⚠️ User found with purchase record but password mismatch:', key);
+                 }
+               }
+             } catch (error) {
+               // Ignore parsing errors
+             }
+           }
+         }
+       }
       
       // 5. Check enrollments.json file for users who purchased yesterday
       if (!userData) {
