@@ -477,6 +477,7 @@
             
             // Save to backend for cross-browser access
             try {
+              console.log('📝 Saving to users API...');
               const saveResponse = await fetch('/api/users', {
                 method: 'POST',
                 headers: {
@@ -485,17 +486,22 @@
                 body: JSON.stringify(userData)
               });
               
+              console.log('📡 Users API response status:', saveResponse.status);
+              
               if (saveResponse.ok) {
-                console.log('✅ User data saved to backend for cross-browser access');
+                const responseData = await saveResponse.json();
+                console.log('✅ User data saved to backend for cross-browser access:', responseData);
               } else {
-                console.warn('⚠️ Failed to save user data to backend, but local access is available');
+                const errorData = await saveResponse.text();
+                console.warn('⚠️ Failed to save user data to backend:', errorData);
               }
             } catch (error) {
-              console.warn('⚠️ Could not save to backend:', error);
+              console.error('❌ Could not save to backend:', error);
             }
             
             // Save to enrollments.json for admin tracking
             try {
+              console.log('📝 Saving to enrollments.json...');
               const enrollmentData = {
                 _id: Date.now().toString(),
                 name: userData.name,
@@ -513,6 +519,8 @@
                 updatedAt: new Date().toISOString()
               };
               
+              console.log('📊 Enrollment data to save:', enrollmentData);
+              
               const enrollResponse = await fetch('/api/enrollments', {
                 method: 'POST',
                 headers: {
@@ -521,13 +529,17 @@
                 body: JSON.stringify(enrollmentData)
               });
               
+              console.log('📡 Enrollment API response status:', enrollResponse.status);
+              
               if (enrollResponse.ok) {
-                console.log('✅ Enrollment saved to enrollments.json');
+                const responseData = await enrollResponse.json();
+                console.log('✅ Enrollment saved to enrollments.json:', responseData);
               } else {
-                console.warn('⚠️ Failed to save to enrollments.json');
+                const errorData = await enrollResponse.text();
+                console.warn('⚠️ Failed to save to enrollments.json:', errorData);
               }
             } catch (error) {
-              console.warn('⚠️ Could not save to enrollments.json:', error);
+              console.error('❌ Could not save to enrollments.json:', error);
             }
             
             // Redirect to dashboard immediately
