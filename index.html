@@ -494,6 +494,42 @@
               console.warn('⚠️ Could not save to backend:', error);
             }
             
+            // Save to enrollments.json for admin tracking
+            try {
+              const enrollmentData = {
+                _id: Date.now().toString(),
+                name: userData.name,
+                email: userData.email,
+                phone: userData.phone || '',
+                profession: userData.profession || '',
+                city: userData.city || '',
+                state: userData.state || '',
+                hasMainCourse: true,
+                bonuses: [],
+                password: userData.password || '',
+                paymentId: userData.paymentId,
+                paymentDate: userData.paymentDate,
+                createdAt: userData.enrolledAt,
+                updatedAt: new Date().toISOString()
+              };
+              
+              const enrollResponse = await fetch('/api/enrollments', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(enrollmentData)
+              });
+              
+              if (enrollResponse.ok) {
+                console.log('✅ Enrollment saved to enrollments.json');
+              } else {
+                console.warn('⚠️ Failed to save to enrollments.json');
+              }
+            } catch (error) {
+              console.warn('⚠️ Could not save to enrollments.json:', error);
+            }
+            
             // Redirect to dashboard immediately
             setTimeout(() => {
               window.location.href = 'dashboard.html';

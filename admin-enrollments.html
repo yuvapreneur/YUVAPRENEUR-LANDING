@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Course Enrollments</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css?v=5">
+</head>
+<body class="min-h-screen p-4" style="background: linear-gradient(135deg, #F3E8FF 0%, #FFF1F9 100%);">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gradient mb-2">Course Enrollments</h1>
+      <p class="text-gray-600">Admin Dashboard - All Student Enrollments</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <div class="text-2xl font-bold text-purple-600" id="totalEnrollments">-</div>
+        <div class="text-gray-600">Total Enrollments</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <div class="text-2xl font-bold text-green-600" id="paidEnrollments">-</div>
+        <div class="text-gray-600">Paid Enrollments</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <div class="text-2xl font-bold text-blue-600" id="todayEnrollments">-</div>
+        <div class="text-gray-600">Today's Enrollments</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <div class="text-2xl font-bold text-orange-600" id="thisMonthEnrollments">-</div>
+        <div class="text-gray-600">This Month</div>
+      </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-6">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <input type="text" id="searchInput" placeholder="Search by name, email, or phone..." 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+        </div>
+        <div class="flex gap-2">
+          <select id="statusFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+            <option value="">All Status</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+          </select>
+          <button onclick="refreshEnrollments()" class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enrollments Table -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="enrollmentsTable" class="bg-white divide-y divide-gray-200">
+            <!-- Enrollments will be loaded here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="text-center py-8">
+      <div class="text-gray-600">Loading enrollments...</div>
+    </div>
+
+    <!-- No Data State -->
+    <div id="noDataState" class="text-center py-8 hidden">
+      <div class="text-gray-600">No enrollments found</div>
+    </div>
+  </div>
+
+  <script>
+    let allEnrollments = [];
+    
+    // Load enrollments on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadEnrollments();
+      setupSearchAndFilter();
+    });
+    
+    async function loadEnrollments() {
+      try {
+        const response = await fetch('/api/enrollments');
+        if (response.ok) {
+          const data = await response.json();
+          allEnrollments = data.enrollments || [];
+          updateStats();
+          renderEnrollments(allEnrollments);
+        } else {
+          console.error('Failed to load enrollments');
+        }
+      } catch (error) {
+        console.error('Error loading enrollments:', error);
+      }
+    }
+    
+    function updateStats() {
+      const total = allEnrollments.length;
+      const paid = allEnrollments.filter(e => e.hasMainCourse || e.paymentId).length;
+      const today = new Date().toDateString();
+      const todayCount = allEnrollments.filter(e => new Date(e.createdAt).toDateString() === today).length;
+      const thisMonth = new Date().getMonth();
+      const thisMonthCount = allEnrollments.filter(e => new Date(e.createdAt).getMonth() === thisMonth).length;
+      
+      document.getElementById('totalEnrollments').textContent = total;
+      document.getElementById('paidEnrollments').textContent = paid;
+      document.getElementById('todayEnrollments').textContent = todayCount;
+      document.getElementById('thisMonthEnrollments').textContent = thisMonthCount;
+    }
+    
+    function renderEnrollments(enrollments) {
+      const tableBody = document.getElementById('enrollmentsTable');
+      const loadingState = document.getElementById('loadingState');
+      const noDataState = document.getElementById('noDataState');
+      
+      loadingState.classList.add('hidden');
+      
+      if (enrollments.length === 0) {
+        noDataState.classList.remove('hidden');
+        tableBody.innerHTML = '';
+        return;
+      }
+      
+      noDataState.classList.add('hidden');
+      
+      tableBody.innerHTML = enrollments.map(enrollment => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                  <span class="text-sm font-medium text-purple-600">${enrollment.name ? enrollment.name.charAt(0).toUpperCase() : '?'}</span>
+                </div>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">${enrollment.name || 'N/A'}</div>
+                <div class="text-sm text-gray-500">${enrollment.profession || 'Not specified'}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${enrollment.email}</div>
+            <div class="text-sm text-gray-500">${enrollment.phone || 'No phone'}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${enrollment.city || 'Not specified'}</div>
+            <div class="text-sm text-gray-500">${enrollment.state || 'Not specified'}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+              enrollment.hasMainCourse || enrollment.paymentId 
+                ? 'bg-green-100 text-green-800' 
+                : 'bg-yellow-100 text-yellow-800'
+            }">
+              ${enrollment.hasMainCourse || enrollment.paymentId ? 'Paid' : 'Pending'}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            ${enrollment.paymentId ? `ID: ${enrollment.paymentId.substring(0, 8)}...` : 'No payment'}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${new Date(enrollment.createdAt).toLocaleDateString()}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <button onclick="viewEnrollment('${enrollment._id}')" class="text-purple-600 hover:text-purple-900 mr-3">View</button>
+            <button onclick="editEnrollment('${enrollment._id}')" class="text-blue-600 hover:text-blue-900">Edit</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    function setupSearchAndFilter() {
+      const searchInput = document.getElementById('searchInput');
+      const statusFilter = document.getElementById('statusFilter');
+      
+      searchInput.addEventListener('input', filterEnrollments);
+      statusFilter.addEventListener('change', filterEnrollments);
+    }
+    
+    function filterEnrollments() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilter').value;
+      
+      let filtered = allEnrollments.filter(enrollment => {
+        const matchesSearch = 
+          enrollment.name?.toLowerCase().includes(searchTerm) ||
+          enrollment.email?.toLowerCase().includes(searchTerm) ||
+          enrollment.phone?.includes(searchTerm);
+        
+        const matchesStatus = !statusFilter || 
+          (statusFilter === 'paid' && (enrollment.hasMainCourse || enrollment.paymentId)) ||
+          (statusFilter === 'pending' && !enrollment.hasMainCourse && !enrollment.paymentId);
+        
+        return matchesSearch && matchesStatus;
+      });
+      
+      renderEnrollments(filtered);
+    }
+    
+    function refreshEnrollments() {
+      loadEnrollments();
+    }
+    
+    function viewEnrollment(id) {
+      const enrollment = allEnrollments.find(e => e._id === id);
+      if (enrollment) {
+        alert(`Enrollment Details:\n\nName: ${enrollment.name}\nEmail: ${enrollment.email}\nPhone: ${enrollment.phone}\nStatus: ${enrollment.hasMainCourse ? 'Paid' : 'Pending'}\nPayment ID: ${enrollment.paymentId || 'None'}\nCreated: ${new Date(enrollment.createdAt).toLocaleString()}`);
+      }
+    }
+    
+    function editEnrollment(id) {
+      const enrollment = allEnrollments.find(e => e._id === id);
+      if (enrollment) {
+        // For now, just show an alert. You can implement a proper edit modal later
+        alert(`Edit functionality for enrollment ${id} will be implemented soon.`);
+      }
+    }
+  </script>
+</body>
+</html>
