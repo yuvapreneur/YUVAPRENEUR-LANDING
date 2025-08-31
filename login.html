@@ -127,6 +127,47 @@
       
       console.log('🔍 Login attempt:', { email, password });
       
+      // SIMPLE TEST: Direct check of enrollments.json
+      try {
+        console.log('🧪 Testing enrollments API...');
+        const testResponse = await fetch('/api/enrollments');
+        console.log('📡 Test response status:', testResponse.status);
+        
+        if (testResponse.ok) {
+          const testData = await testResponse.json();
+          console.log('📊 Test data:', testData);
+          
+          const testUser = testData.enrollments?.find(e => e.email === email);
+          console.log('🔍 Test user found:', testUser);
+          
+          if (testUser && testUser.password === password) {
+            console.log('✅ Test login successful!');
+            // Grant access
+            const userData = {
+              ...testUser,
+              status: 'enrolled',
+              courseAccess: 'full',
+              hasPurchasedCourse: true
+            };
+            
+            // Store user data for session
+            localStorage.setItem('userEnrollment', JSON.stringify(userData));
+            localStorage.setItem('userAuthenticated', 'true');
+            localStorage.setItem('loginTimestamp', Date.now().toString());
+            
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+            return;
+          } else if (testUser) {
+            console.log('❌ Test password mismatch');
+            alert('❌ Wrong Password\n\nPlease use the correct password for this account.');
+            return;
+          }
+        }
+      } catch (error) {
+        console.log('❌ Test failed:', error);
+      }
+      
       // Check all possible data sources for user
       let userData = null;
       
