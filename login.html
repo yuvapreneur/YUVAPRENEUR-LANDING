@@ -211,14 +211,27 @@
             console.log('🔍 Found enrollment for email:', enrollment);
             
             if (enrollment) {
-              // Grant access to any user found in enrollments.json
-              userData = {
-                ...enrollment,
-                status: 'enrolled',
-                courseAccess: 'full',
-                hasPurchasedCourse: true
-              };
-              console.log('✅ Found user in enrollments.json:', userData);
+              // Check password before granting access
+              const storedPass = String(enrollment.password || '').trim();
+              const inputPass = String(password || '').trim();
+              
+              console.log('🔐 Enrollments password check:', { 
+                hasStoredPassword: !!storedPass, 
+                storedPassword: storedPass ? '***' : 'none',
+                inputPassword: inputPass ? '***' : 'none'
+              });
+              
+              if (storedPass && inputPass && storedPass === inputPass) {
+                userData = {
+                  ...enrollment,
+                  status: 'enrolled',
+                  courseAccess: 'full',
+                  hasPurchasedCourse: true
+                };
+                console.log('✅ Found user in enrollments.json with correct password:', userData);
+              } else if (enrollment) {
+                console.log('⚠️ User found in enrollments but password mismatch');
+              }
             }
           } else {
             console.log('❌ Enrollments API failed:', enrollmentsResponse.status);
@@ -235,15 +248,28 @@
           try {
             const data = JSON.parse(localStorage.getItem(key));
             if (data && data.email === email) {
-              // If user exists, grant access regardless of purchase status
-              userData = {
-                ...data,
-                status: 'enrolled',
-                courseAccess: 'full',
-                hasPurchasedCourse: true
-              };
-              console.log('✅ Found user in localStorage key:', key, userData);
-              break;
+              // Check password before granting access
+              const storedPass = String(data.password || '').trim();
+              const inputPass = String(password || '').trim();
+              
+              console.log('🔐 localStorage password check for key:', key, { 
+                hasStoredPassword: !!storedPass, 
+                storedPassword: storedPass ? '***' : 'none',
+                inputPassword: inputPass ? '***' : 'none'
+              });
+              
+              if (storedPass && inputPass && storedPass === inputPass) {
+                userData = {
+                  ...data,
+                  status: 'enrolled',
+                  courseAccess: 'full',
+                  hasPurchasedCourse: true
+                };
+                console.log('✅ Found user in localStorage key with correct password:', key, userData);
+                break;
+              } else if (data) {
+                console.log('⚠️ User found in localStorage but password mismatch:', key);
+              }
             }
           } catch (error) {
             // Ignore parsing errors
@@ -314,33 +340,8 @@
         return;
       }
       
-      // Check password if it exists (trim to avoid whitespace mismatch)
-      const storedPass = String(userData.password || '').trim();
-      const inputPass = String(password || '').trim();
-      
-      console.log('🔐 Password check:', { 
-        hasStoredPassword: !!storedPass, 
-        storedPassword: storedPass ? '***' : 'none',
-        inputPassword: inputPass ? '***' : 'none'
-      });
-      
-      // Require password for all users
-      if (!inputPass) {
-        alert('❌ Password Required\n\nPlease enter your password to login.');
-        return;
-      }
-      
-      // If user has no password set, deny access
-      if (!storedPass) {
-        alert('❌ Account Not Set Up\n\nThis account does not have a password set. Please contact support.');
-        return;
-      }
-      
-      // Check if password matches
-      if (storedPass !== inputPass) {
-        alert('❌ Wrong Password\n\nPlease use the correct password for this account.\n\nIf you forgot your password, use the "Forgot Password" link below.');
-        return;
-      }
+      // Password validation is now done during user detection above
+      console.log('🔐 Final password validation completed during user detection');
       
       // Check if user has course access (accept several valid signals)
       const hasAccess = (
