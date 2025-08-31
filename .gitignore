@@ -67,3 +67,4 @@ Thumbs.db
 # Large PDF files (exclude from Git for performance)
 # *.pdf  # Temporarily commented out to allow PDFs on GitHub Pages
 # uploads/  # Temporarily commented out to allow PDFs on GitHub Pages
+.vercel

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buy Course - Café Business Masterclass</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .fade-in-up {
       animation: fadeInUp 0.8s ease-out;
@@ -22,7 +22,7 @@
   </style>
 </head>
 <body class="min-h-screen bg-white text-gray-900 p-4">
-  <!-- Navigation -->
+    <!-- Navigation -->
   <nav class="bg-white shadow-lg p-4 mb-8 rounded-xl border border-gray-200">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <div class="text-2xl font-bold text-purple-600">☕ Café Business Masterclass</div>
@@ -31,17 +31,17 @@
          <a href="dashboard.html" class="text-gray-600 hover:text-purple-600 transition-colors">Dashboard</a>
          <a href="bonuses.html" class="text-gray-600 hover:text-purple-600 transition-colors">Bonuses</a>
          <a href="login.html" class="text-gray-600 hover:text-purple-600 transition-colors hidden" id="loginLink">Login</a>
-       </div>
-    </div>
-  </nav>
+            </div>
+        </div>
+    </nav>
 
   <!-- Hero Section -->
   <div class="text-center mb-12 fade-in-up">
     <h1 class="text-4xl font-bold text-gray-900 mb-4">🚀 Get Instant Access to the Complete Course</h1>
          <p class="text-xl text-gray-600 mb-8">Unlock all 12 modules + 4 exclusive bonuses worth ₹1,000</p>
-  </div>
+            </div>
 
-     <!-- Course Details -->
+            <!-- Course Details -->
    <div class="max-w-4xl mx-auto mb-12 fade-in-up">
      <div class="bg-white shadow-lg p-8 border border-gray-200 rounded-xl">
        <div class="text-center mb-8">
@@ -49,7 +49,7 @@
          <div class="text-gray-400 line-through text-2xl mb-2">₹2,584</div>
                   <div class="text-purple-600 text-lg mb-4">Save ₹2,583 (99.6% OFF!)</div>
          <div class="text-gray-600">Limited Time Offer - Get Instant Access</div>
-       </div>
+                    </div>
 
        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
          <div>
@@ -61,7 +61,7 @@
              <li>✅ Mobile-Friendly Design</li>
              <li>✅ 30-Day Money-Back Guarantee</li>
            </ul>
-         </div>
+                        </div>
          <div>
            <h3 class="text-xl font-semibold text-gray-900 mb-4">🎁 Bonuses Included:</h3>
            <ul class="text-gray-600 space-y-2">
@@ -70,25 +70,25 @@
              <li>💎 Loyalty Program Template</li>
              <li>📸 Photography Cheat Sheet</li>
            </ul>
-         </div>
-       </div>
+                    </div>
+                </div>
 
        <!-- Course Modules Preview -->
        <div class="mb-8">
          <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">📚 Course Modules You'll Access:</h3>
          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="modulesPreviewGrid">
            <!-- Modules preview will be populated by JavaScript -->
-         </div>
-       </div>
+                            </div>
+                        </div>
 
       <div class="text-center">
-        <button id="payButton" class="bg-purple-600 hover:bg-purple-700 text-white py-4 px-8 rounded-xl font-semibold text-xl transition-colors transform hover:scale-105">
+        <button id="payButton" class="text-white py-4 px-8 rounded-xl font-semibold text-xl transition-colors transform hover:scale-105 btn-gradient">
                      💳 Get Instant Access - ₹1
-        </button>
+                        </button>
         <p class="text-gray-500 text-sm mt-4">Secure payment via Razorpay</p>
-      </div>
-    </div>
-  </div>
+                            </div>
+                        </div>
+                    </div>
 
   <!-- Footer -->
   <footer class="bg-gray-100 text-gray-700 py-8 px-4 mt-16">
@@ -97,10 +97,10 @@
         Need help? Contact <a href="mailto:yuvapreneur@gmail.com" class="text-purple-600 hover:text-purple-700 underline">yuvapreneur@gmail.com</a>
       </p>
       <p class="text-gray-500">© 2025 Youthpreneur. All rights reserved.</p>
-    </div>
+                    </div>
   </footer>
 
-     <script>
+    <script>
      // Course modules data
      const MODULES = [
        {
@@ -205,11 +205,11 @@
       // Simulate processing delay
       setTimeout(() => {
         // Initialize Razorpay payment
-        const options = {
+                    const options = {
           key: 'rzp_live_RAD4Q0Jypcn82a', // Updated to new live key
           amount: 100, // ₹1 in paise
           currency: 'INR',
-          name: 'Café Business Masterclass',
+                        name: 'Café Business Masterclass',
           description: 'Complete Course + 4 Bonuses',
           image: 'https://your-logo-url.com/logo.png',
           handler: function (response) {
@@ -230,16 +230,16 @@
             setTimeout(() => {
               window.location.href = 'dashboard.html';
             }, 2000);
-          },
-          prefill: {
+                        },
+                        prefill: {
             email: 'user@example.com',
             contact: '9999999999'
           },
           notes: {
             course: 'Café Business Masterclass',
             type: 'main_course'
-          },
-          theme: {
+                        },
+                        theme: {
             color: '#8B5CF6'
           },
           modal: {
@@ -252,7 +252,7 @@
         };
 
         try {
-          const rzp = new Razorpay(options);
+                    const rzp = new Razorpay(options);
           
           // Add error handling for payment failures
           rzp.on('payment.failed', function (response) {
@@ -264,7 +264,7 @@
             button.disabled = false;
           });
           
-          rzp.open();
+                    rzp.open();
         } catch (error) {
           console.error('Razorpay error:', error);
           alert('❌ Payment failed. Please try again.');
@@ -315,7 +315,7 @@
         console.log('New user, hiding login link');
       }
     }
-  </script>
+    </script>
 </body>
 </html>
 

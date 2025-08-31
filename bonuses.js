@@ -32,6 +32,21 @@ const BONUSES = [
     desc: "Quick setups for mouth-watering food & café photos (phone ready).",
     filename: "bonus-photo.pdf"
   }
+  ,
+  {
+    sku: "bonus-calendar",
+    price: 249,
+    title: "100-Day Café Social Media Content Calendar",
+    desc: "Ready-to-post calendar tailored for cafés to boost engagement.",
+    filename: "100-day café social media content calendar.pdf.pdf"
+  },
+  {
+    sku: "bonus-marketing",
+    price: 199,
+    title: "Offline and Online Marketing Strategies",
+    desc: "Proven offline + online tactics to grow café footfall and sales.",
+    filename: "Offline and Online Marketing Strategies .pdf"
+  }
 ];
 
 console.log('📋 BONUSES loaded:', BONUSES.map(b => ({ sku: b.sku, filename: b.filename })));

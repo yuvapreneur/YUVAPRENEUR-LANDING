@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Login - Live Site</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-white p-4">
+  <div class="max-w-4xl mx-auto mt-8">
+    <h1 class="text-3xl font-bold text-center mb-8">🔍 Debug Login Issues - Live Site</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Debug Info -->
+      <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+        <h2 class="text-xl font-semibold mb-4">📊 Current Status</h2>
+        <div class="space-y-2 text-sm">
+          <div><strong>Domain:</strong> <span id="currentDomain">Loading...</span></div>
+          <div><strong>localStorage Available:</strong> <span id="localStorageStatus">Checking...</span></div>
+          <div><strong>User Enrollment:</strong> <span id="enrollmentStatus">Checking...</span></div>
+          <div><strong>Temp Data:</strong> <span id="tempDataStatus">Checking...</span></div>
+          <div><strong>Authentication:</strong> <span id="authStatus">Checking...</span></div>
+        </div>
+        
+        <div class="mt-4">
+          <button onclick="refreshDebugInfo()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            🔄 Refresh Status
+          </button>
+          <button onclick="clearAllData()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2">
+            🗑️ Clear Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Test Login -->
+      <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+        <h2 class="text-xl font-semibold mb-4">🔐 Test Login</h2>
+        <form id="debugLoginForm" class="space-y-4">
+          <input type="email" name="email" placeholder="test@example.com" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded">
+          <input type="password" name="password" placeholder="test123" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded">
+          <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+            Test Login
+          </button>
+        </form>
+        <div id="loginResult" class="mt-4 p-3 rounded text-sm"></div>
+      </div>
+    </div>
+
+    <!-- Console Output -->
+    <div class="mt-8 bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+      <h2 class="text-xl font-semibold mb-4">📝 Console Output</h2>
+      <div id="consoleOutput" class="bg-gray-100 p-4 rounded text-sm font-mono max-h-64 overflow-y-auto">
+        <div>🚀 Debug page loaded...</div>
+      </div>
+    </div>
+
+    <!-- Manual Test -->
+    <div class="mt-8 bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
+      <h2 class="text-xl font-semibold mb-4">🧪 Manual Tests</h2>
+      <div class="space-y-2">
+        <button onclick="testLocalStorage()" class="w-full bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+          Test localStorage
+        </button>
+        <button onclick="testDataStorage()" class="w-full bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
+          Test Data Storage
+        </button>
+        <button onclick="testLoginLogic()" class="w-full bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700">
+          Test Login Logic
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Debug logging
+    function log(message, type = 'info') {
+      const consoleDiv = document.getElementById('consoleOutput');
+      const logDiv = document.createElement('div');
+      logDiv.className = `p-1 ${type === 'error' ? 'text-red-600' : type === 'success' ? 'text-green-600' : 'text-blue-600'}`;
+      logDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      consoleDiv.appendChild(logDiv);
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+      
+      // Also log to browser console
+      console.log(`[DEBUG] ${message}`);
+    }
+
+    // Refresh debug information
+    function refreshDebugInfo() {
+      document.getElementById('currentDomain').textContent = window.location.hostname;
+      document.getElementById('localStorageStatus').textContent = typeof(Storage) !== "undefined" ? "✅ Available" : "❌ Not Available";
+      
+      const enrollment = localStorage.getItem('userEnrollment');
+      const tempData = localStorage.getItem('tempUserData');
+      const auth = localStorage.getItem('userAuthenticated');
+      
+      document.getElementById('enrollmentStatus').textContent = enrollment ? "✅ Found" : "❌ None";
+      document.getElementById('tempDataStatus').textContent = tempData ? "✅ Found" : "❌ None";
+      document.getElementById('authStatus').textContent = auth ? "✅ Authenticated" : "❌ Not authenticated";
+      
+      log('Debug info refreshed');
+    }
+
+    // Clear all data
+    function clearAllData() {
+      if (confirm('Clear all data?')) {
+        localStorage.removeItem('userEnrollment');
+        localStorage.removeItem('tempUserData');
+        localStorage.removeItem('userAuthenticated');
+        localStorage.removeItem('loginTimestamp');
+        refreshDebugInfo();
+        log('All data cleared', 'success');
+      }
+    }
+
+    // Test localStorage
+    function testLocalStorage() {
+      try {
+        localStorage.setItem('test', 'working');
+        const testValue = localStorage.getItem('test');
+        localStorage.removeItem('test');
+        
+        if (testValue === 'working') {
+          log('localStorage test: ✅ PASSED', 'success');
+        } else {
+          log('localStorage test: ❌ FAILED', 'error');
+        }
+      } catch (error) {
+        log(`localStorage test: ❌ ERROR - ${error.message}`, 'error');
+      }
+    }
+
+    // Test data storage
+    function testDataStorage() {
+      try {
+        const testData = {
+          email: 'test@example.com',
+          password: 'test123',
+          name: 'Test User'
+        };
+        
+        localStorage.setItem('testUserData', JSON.stringify(testData));
+        const retrieved = JSON.parse(localStorage.getItem('testUserData'));
+        localStorage.removeItem('testUserData');
+        
+        if (retrieved.email === testData.email) {
+          log('Data storage test: ✅ PASSED', 'success');
+        } else {
+          log('Data storage test: ❌ FAILED', 'error');
+        }
+      } catch (error) {
+        log(`Data storage test: ❌ ERROR - ${error.message}`, 'error');
+      }
+    }
+
+    // Test login logic
+    function testLoginLogic() {
+      try {
+        // Simulate stored user data
+        const testUser = {
+          email: 'test@example.com',
+          password: 'test123',
+          status: 'enrolled'
+        };
+        
+        localStorage.setItem('testUser', JSON.stringify(testUser));
+        
+        // Simulate login attempt
+        const storedUser = localStorage.getItem('testUser');
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          if (userData.email === 'test@example.com' && userData.password === 'test123') {
+            log('Login logic test: ✅ PASSED', 'success');
+          } else {
+            log('Login logic test: ❌ FAILED - Password mismatch', 'error');
+          }
+        } else {
+          log('Login logic test: ❌ FAILED - No user data', 'error');
+        }
+        
+        localStorage.removeItem('testUser');
+      } catch (error) {
+        log(`Login logic test: ❌ ERROR - ${error.message}`, 'error');
+      }
+    }
+
+    // Test login form
+    document.getElementById('debugLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = this.querySelector('[name="email"]').value.trim().toLowerCase();
+      const password = this.querySelector('[name="password"]').value;
+      
+      log(`Testing login with: ${email} / ${password}`);
+      
+      // Check if user has data
+      const enrollmentData = localStorage.getItem('userEnrollment');
+      const tempUserData = localStorage.getItem('tempUserData');
+      
+      let userData = null;
+      
+      if (enrollmentData) {
+        try {
+          const parsed = JSON.parse(enrollmentData);
+          if (parsed.email === email) {
+            userData = parsed;
+            log(`✅ Found user in enrollment data: ${parsed.email}`, 'success');
+          }
+        } catch (error) {
+          log(`❌ Error parsing enrollment data: ${error.message}`, 'error');
+        }
+      }
+      
+      if (!userData && tempUserData) {
+        try {
+          const parsed = JSON.parse(tempUserData);
+          if (parsed.email === email) {
+            userData = parsed;
+            log(`✅ Found user in temp data: ${parsed.email}`, 'success');
+          }
+        } catch (error) {
+          log(`❌ Error parsing temp data: ${error.message}`, 'error');
+        }
+      }
+      
+      if (!userData) {
+        log(`❌ User not found for email: ${email}`, 'error');
+        document.getElementById('loginResult').innerHTML = 
+          '<div class="bg-red-100 text-red-800 p-2 rounded">User not found</div>';
+        return;
+      }
+      
+      if (userData.password && userData.password !== password) {
+        log(`❌ Wrong password for user: ${email}`, 'error');
+        document.getElementById('loginResult').innerHTML = 
+          '<div class="bg-red-100 text-red-800 p-2 rounded">Wrong password</div>';
+        return;
+      }
+      
+      log(`✅ Login successful for user: ${email}`, 'success');
+      document.getElementById('loginResult').innerHTML = 
+        '<div class="bg-green-100 text-green-800 p-2 rounded">Login successful!</div>';
+      
+      // Set authentication
+      localStorage.setItem('userEnrollment', JSON.stringify(userData));
+      localStorage.setItem('userAuthenticated', 'true');
+      localStorage.setItem('loginTimestamp', Date.now().toString());
+      
+      refreshDebugInfo();
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      log('Debug page loaded successfully');
+      refreshDebugInfo();
+    });
+  </script>
+</body>
+</html>

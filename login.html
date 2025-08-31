@@ -4,14 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Café Business Masterclass</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css?v=5">
 </head>
-<body class="min-h-screen bg-white p-4">
+<body class="min-h-screen p-4" style="background: linear-gradient(135deg, #0F172A 0%, #312E81 50%, #7C3AED 100%);">
   <div class="max-w-md mx-auto mt-8">
     <!-- Header -->
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-      <p class="text-gray-600">Access your Café Business Masterclass</p>
+      <h1 class="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+      <p class="text-gray-200">Access your Café Business Masterclass</p>
     </div>
 
     <!-- Login Form -->
@@ -26,15 +27,73 @@
         
         <div>
           <label class="block text-gray-700 text-sm font-medium mb-2">Password</label>
-          <input type="password" name="password" id="password" required 
-                 class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
-                 placeholder="Enter your password">
+          <div class="relative">
+            <input type="password" name="password" id="password" required 
+                   class="w-full px-4 py-3 pr-12 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors"
+                   placeholder="Enter your password">
+            <button type="button" id="togglePassword" 
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
+          </div>
         </div>
         
-        <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold text-lg rounded-lg transition-colors">
+        <button type="submit" class="w-full px-6 py-3 text-white font-semibold text-lg rounded-lg transition-colors btn-gradient">
           Login to Dashboard
         </button>
       </form>
+      
+      <!-- Forgot Password Link -->
+      <div class="mt-4 text-center">
+        <a href="#" onclick="showForgotPassword()" class="text-purple-600 hover:text-purple-700 text-sm underline">Forgot Password?</a>
+      </div>
+      
+      <!-- Forgot Password Modal -->
+      <div id="forgotPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-xl max-w-md w-full mx-4">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">Reset Password</h3>
+            <button onclick="hideForgotPassword()" class="text-gray-500 hover:text-gray-700">✕</button>
+          </div>
+          
+          <!-- Step 1: Email Input -->
+          <div id="emailStep">
+            <p class="text-gray-600 mb-4">Enter your email address to receive a password reset code.</p>
+            <input type="email" id="resetEmail" placeholder="Enter your email" 
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors mb-4">
+            <button onclick="sendOTP()" class="w-full px-6 py-3 text-white font-semibold rounded-lg transition-colors btn-gradient">
+              Send Reset Code
+            </button>
+          </div>
+          
+          <!-- Step 2: OTP Input -->
+          <div id="otpStep" class="hidden">
+            <p class="text-gray-600 mb-4">Enter the 6-digit code sent to your email.</p>
+            <input type="text" id="otpInput" placeholder="Enter 6-digit code" maxlength="6"
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors mb-4">
+            <button onclick="verifyOTP()" class="w-full px-6 py-3 text-white font-semibold rounded-lg transition-colors btn-gradient">
+              Verify Code
+            </button>
+          </div>
+          
+          <!-- Step 3: New Password -->
+          <div id="newPasswordStep" class="hidden">
+            <p class="text-gray-600 mb-4">Create your new password.</p>
+            <input type="password" id="newPassword" placeholder="New password" 
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors mb-4">
+            <input type="password" id="confirmPassword" placeholder="Confirm new password" 
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors mb-4">
+            <button onclick="updatePassword()" class="w-full px-6 py-3 text-white font-semibold rounded-lg transition-colors btn-gradient">
+              Update Password
+            </button>
+          </div>
+          
+          <div id="forgotPasswordMessage" class="mt-4 text-center"></div>
+        </div>
+      </div>
       
       <!-- Navigation Links -->
       <div class="mt-6 text-center space-y-3">
@@ -43,28 +102,22 @@
         </p>
       </div>
     </div>
+
+    <!-- Important Information -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-6">
+      <h3 class="text-lg font-semibold text-blue-800 mb-3">ℹ️ Important Information</h3>
+      <div class="space-y-2 text-sm text-blue-700">
+        <p><strong>New users:</strong> Purchase the main course first to create your account</p>
+        <p><strong>Existing customers:</strong> Use the email and password from your checkout</p>
+        <p><strong>Just purchased?</strong> Use the credentials you entered during payment</p>
+        <p><strong>Forgot password?</strong> Use the "Forgot Password" link above</p>
+        <p><strong>Need help?</strong> Contact support@learnabhi.com</p>
+        <p class="font-semibold mt-3">Only customers who have purchased the main course (₹299) can access the dashboard</p>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Only users who have purchased the course can login
-    const USER_DATABASE = {
-      'yuvapreneur@gmail.com': {
-        password: '123456',
-        name: 'abhijjetwankhede',
-        phone: '9999999999',
-        status: 'enrolled',
-        courseAccess: 'full',
-        paymentId: 'PAY_VERIFIED_001',
-        enrolledAt: '2024-01-01T00:00:00.000Z',
-        manualAccessGranted: true,
-        accessGrantedAt: '2024-01-01T00:00:00.000Z',
-        note: 'Verified user with full course access',
-        hasPurchasedCourse: true,
-        purchaseDate: '2024-01-01T00:00:00.000Z'
-      }
-      // Removed test@example.com - only real course purchasers can login
-    };
-
     // Form submission
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -74,43 +127,407 @@
       
       console.log('🔍 Login attempt:', { email, password });
       
+      // Check all possible data sources for user
+      let userData = null;
+      
+      // 1. First, try to get user from backend
       try {
-        // Login via API
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          // Store user data and token
-          localStorage.setItem('userEnrollment', JSON.stringify(result.user));
-          localStorage.setItem('userAuthenticated', 'true');
-          localStorage.setItem('loginTimestamp', Date.now().toString());
-          localStorage.setItem('authToken', result.token);
-          
-          console.log('✅ Login successful!');
-          
-          // Redirect to dashboard
-          window.location.href = 'dashboard.html';
-        } else {
-          alert('❌ Login failed: ' + result.message);
+        const backendResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`);
+        if (backendResponse.ok) {
+          const backendData = await backendResponse.json();
+          if (backendData.success && backendData.user) {
+            userData = backendData.user;
+            console.log('✅ Found user in backend:', userData);
+          }
         }
       } catch (error) {
-        console.error('Login error:', error);
-        alert('❌ Login failed. Please try again.');
+        console.log('Backend not available, checking local storage');
       }
+      
+      // 2. Check enrollment data if backend failed
+      if (!userData) {
+        const enrollmentData = localStorage.getItem('userEnrollment');
+        if (enrollmentData) {
+          try {
+            const parsed = JSON.parse(enrollmentData);
+            if (parsed.email === email) {
+              userData = parsed;
+              console.log('✅ Found user in enrollment data:', userData);
+            }
+          } catch (error) {
+            console.error('Error parsing enrollment data:', error);
+          }
+        }
+      }
+      
+      // 3. Check temp user data if no enrollment data
+      if (!userData) {
+        const tempUserData = localStorage.getItem('tempUserData');
+        if (tempUserData) {
+          try {
+            const parsed = JSON.parse(tempUserData);
+            if (parsed.email === email) {
+              userData = parsed;
+              console.log('✅ Found user in temp data:', userData);
+            }
+          } catch (error) {
+            console.error('Error parsing temp data:', error);
+          }
+        }
+      }
+      
+      // 4. Check if user has purchased course (even without password)
+      if (!userData) {
+        // Check if this email has any purchase record
+        const allKeys = Object.keys(localStorage);
+        for (const key of allKeys) {
+          if (key.includes('user') || key.includes('enrollment') || key.includes('temp')) {
+            try {
+              const data = JSON.parse(localStorage.getItem(key));
+              if (data && data.email === email && (data.hasPurchasedCourse || data.paymentId || data.status === 'enrolled')) {
+                userData = data;
+                console.log('✅ Found user with purchase record:', userData);
+                break;
+              }
+            } catch (error) {
+              // Ignore parsing errors
+            }
+          }
+        }
+      }
+      
+      // If no user found, deny access
+      if (!userData) {
+        alert('❌ User not found\n\nEmail: ' + email + '\n\nIf you purchased the course, please:\n1. Use the same email you used during purchase\n2. Try logging in from the same device/browser\n3. Contact support if you need help');
+        return;
+      }
+      
+      // Check password if it exists (trim to avoid whitespace mismatch)
+      const storedPass = String(userData.password || '').trim();
+      const inputPass = String(password || '').trim();
+      
+      // If user has no password set, allow login with any password
+      if (!storedPass) {
+        console.log('⚠️ User has no password set, allowing login');
+      } else if (inputPass && storedPass !== inputPass) {
+        alert('❌ Wrong Password\n\nPlease use the correct password for this account.\n\nIf you forgot your password, use the "Forgot Password" link below.');
+        return;
+      }
+      
+      // Check if user has course access (accept several valid signals)
+      const hasAccess = (
+        userData.hasPurchasedCourse === true ||
+        userData.status === 'enrolled' ||
+        userData.courseAccess === 'full' ||
+        !!userData.paymentId ||
+        userData.manualAccessGranted === true
+      );
+
+      if (!hasAccess) {
+        alert('❌ Course Access Required\n\nPlease complete your course purchase to access the dashboard.');
+        return;
+      }
+      
+      console.log('✅ Login successful! User has course access.');
+      
+      // Store user data for session
+      localStorage.setItem('userEnrollment', JSON.stringify(userData));
+      localStorage.setItem('userAuthenticated', 'true');
+      localStorage.setItem('loginTimestamp', Date.now().toString());
+      
+      // Redirect to dashboard
+      window.location.href = 'dashboard.html';
     });
 
     // Page loaded
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 Page loaded - Only course purchasers can login');
-      console.log('📊 Verified users:', Object.keys(USER_DATABASE));
+      console.log('🚀 Login page loaded');
       console.log('📊 Current enrollment data:', localStorage.getItem('userEnrollment'));
+      console.log('📊 Temp user data:', localStorage.getItem('tempUserData'));
+      
+      // Show/Hide Password Toggle
+      const togglePassword = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle icon
+        if (type === 'text') {
+          togglePassword.innerHTML = `
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+            </svg>
+          `;
+        } else {
+          togglePassword.innerHTML = `
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+          `;
+        }
+      });
+    });
+  </script>
+  
+  <script>
+    // Forgot Password Functions
+    let currentOTP = '';
+    let resetEmail = '';
+    
+    function showForgotPassword() {
+      document.getElementById('forgotPasswordModal').classList.remove('hidden');
+      resetSteps();
+    }
+    
+    function hideForgotPassword() {
+      document.getElementById('forgotPasswordModal').classList.add('hidden');
+      resetSteps();
+    }
+    
+    function resetSteps() {
+      document.getElementById('emailStep').classList.remove('hidden');
+      document.getElementById('otpStep').classList.add('hidden');
+      document.getElementById('newPasswordStep').classList.add('hidden');
+      document.getElementById('resetEmail').value = '';
+      document.getElementById('otpInput').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      document.getElementById('forgotPasswordMessage').innerHTML = '';
+    }
+    
+    async function sendOTP() {
+      const email = document.getElementById('resetEmail').value.trim().toLowerCase();
+      
+      if (!email) {
+        showMessage('Please enter your email address.', 'error');
+        return;
+      }
+      
+                   // Check if email exists in our data and has purchased course
+      let userFound = false;
+      let hasPurchased = false;
+      
+      // 1. First, try to get user from backend
+      try {
+        const backendResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`);
+        if (backendResponse.ok) {
+          const backendData = await backendResponse.json();
+          if (backendData.success && backendData.user) {
+            userFound = true;
+            hasPurchased = backendData.user.status === 'enrolled' || backendData.user.hasPurchasedCourse === true || backendData.user.paymentId;
+          }
+        }
+      } catch (error) {
+        console.log('Backend not available, checking local storage');
+      }
+      
+      // 2. Check enrollment data if backend failed
+      if (!userFound) {
+        const enrollmentData = localStorage.getItem('userEnrollment');
+        if (enrollmentData) {
+          try {
+            const userData = JSON.parse(enrollmentData);
+            if (userData.email === email) {
+              userFound = true;
+              hasPurchased = userData.status === 'enrolled' || userData.hasPurchasedCourse === true || userData.paymentId;
+            }
+          } catch (error) {
+            console.error('Error parsing enrollment data:', error);
+          }
+        }
+      }
+      
+      // 3. Check temp user data
+      if (!userFound) {
+        const tempUserData = localStorage.getItem('tempUserData');
+        if (tempUserData) {
+          try {
+            const userData = JSON.parse(tempUserData);
+            if (userData.email === email) {
+              userFound = true;
+              hasPurchased = userData.status === 'enrolled' || userData.hasPurchasedCourse === true || userData.paymentId;
+            }
+          } catch (error) {
+            console.error('Error parsing temp data:', error);
+          }
+        }
+      }
+      
+      // 4. Check all localStorage keys for any purchase record
+      if (!userFound) {
+        const allKeys = Object.keys(localStorage);
+        for (const key of allKeys) {
+          if (key.includes('user') || key.includes('enrollment') || key.includes('temp')) {
+            try {
+              const data = JSON.parse(localStorage.getItem(key));
+              if (data && data.email === email && (data.hasPurchasedCourse || data.paymentId || data.status === 'enrolled')) {
+                userFound = true;
+                hasPurchased = true;
+                break;
+              }
+            } catch (error) {
+              // Ignore parsing errors
+            }
+          }
+        }
+      }
+      
+      if (!userFound) {
+        showMessage('Email not found. Please use the email you used to purchase the course.', 'error');
+        return;
+      }
+      
+      if (!hasPurchased) {
+        showMessage('This email has not purchased the course. Please purchase the course first.', 'error');
+        return;
+      }
+      
+      // Generate OTP (6 digits)
+      currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      resetEmail = email;
+      
+      // Show loading state
+      const sendButton = document.querySelector('#emailStep button');
+      const originalText = sendButton.textContent;
+      sendButton.textContent = 'Sending...';
+      sendButton.disabled = true;
+      
+      // Simulate email sending (2 second delay)
+      setTimeout(() => {
+        // Reset button state
+        sendButton.textContent = originalText;
+        sendButton.disabled = false;
+        
+        // Show OTP step
+        document.getElementById('emailStep').classList.add('hidden');
+        document.getElementById('otpStep').classList.remove('hidden');
+        showMessage('OTP sent to your email. Please check your inbox.', 'success');
+        
+        // For development/testing, show OTP in console and alert
+        console.log('OTP for', email, ':', currentOTP);
+        
+        // Show OTP in alert for testing purposes
+        alert(`📧 OTP sent to ${email}: ${currentOTP}\n\n📧 Email Details:\nTo: ${email}\nSubject: Your Password Reset Code - Yuvapreneur\n\n(In production, this would be sent via email service)`);
+        
+      }, 2000);
+    }
+    
+    function verifyOTP() {
+      const enteredOTP = document.getElementById('otpInput').value.trim();
+      
+      if (!enteredOTP) {
+        showMessage('Please enter the OTP.', 'error');
+        return;
+      }
+      
+      if (enteredOTP === currentOTP) {
+        // Show new password step
+        document.getElementById('otpStep').classList.add('hidden');
+        document.getElementById('newPasswordStep').classList.remove('hidden');
+        showMessage('OTP verified successfully. Please create your new password.', 'success');
+      } else {
+        showMessage('Invalid OTP. Please try again.', 'error');
+      }
+    }
+    
+    async function updatePassword() {
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (!newPassword || !confirmPassword) {
+        showMessage('Please fill in both password fields.', 'error');
+        return;
+      }
+      
+      if (newPassword.length < 6) {
+        showMessage('Password must be at least 6 characters long.', 'error');
+        return;
+      }
+      
+      if (newPassword !== confirmPassword) {
+        showMessage('Passwords do not match.', 'error');
+        return;
+      }
+      
+             // Update password in localStorage and backend
+       const enrollmentData = localStorage.getItem('userEnrollment');
+       const tempUserData = localStorage.getItem('tempUserData');
+       
+       let updated = false;
+       
+       // First, try to update in backend
+       try {
+         const updateResponse = await fetch('/api/users', {
+           method: 'PUT',
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({
+             email: resetEmail,
+             password: newPassword
+           })
+         });
+         
+         if (updateResponse.ok) {
+           updated = true;
+           console.log('✅ Password updated in backend');
+         }
+       } catch (error) {
+         console.warn('⚠️ Could not update password in backend:', error);
+       }
+       
+       // Update in enrollment data
+       if (enrollmentData) {
+         try {
+           const userData = JSON.parse(enrollmentData);
+           if (userData.email === resetEmail) {
+             userData.password = newPassword;
+             localStorage.setItem('userEnrollment', JSON.stringify(userData));
+             updated = true;
+           }
+         } catch (error) {
+           console.error('Error updating enrollment data:', error);
+         }
+       }
+       
+       // Update in temp user data
+       if (!updated && tempUserData) {
+         try {
+           const userData = JSON.parse(tempUserData);
+           if (userData.email === resetEmail) {
+             userData.password = newPassword;
+             localStorage.setItem('tempUserData', JSON.stringify(userData));
+             updated = true;
+           }
+         } catch (error) {
+           console.error('Error updating temp data:', error);
+         }
+       }
+      
+      if (updated) {
+        showMessage('Password updated successfully! You can now login with your new password.', 'success');
+        setTimeout(() => {
+          hideForgotPassword();
+        }, 2000);
+      } else {
+        showMessage('Error updating password. Please try again.', 'error');
+      }
+    }
+    
+    function showMessage(message, type) {
+      const messageDiv = document.getElementById('forgotPasswordMessage');
+      const colorClass = type === 'error' ? 'text-red-600' : 'text-green-600';
+      messageDiv.innerHTML = `<p class="${colorClass} text-sm">${message}</p>`;
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('forgotPasswordModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        hideForgotPassword();
+      }
     });
   </script>
 </body>

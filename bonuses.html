@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bonuses - Café Business Masterclass</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .fade-in-up {
       animation: fadeInUp 0.8s ease-out;
@@ -20,6 +20,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body class="min-h-screen bg-white text-gray-900 p-4">
   <!-- Navigation -->
@@ -31,42 +32,42 @@
          <a href="dashboard.html" class="text-gray-600 hover:text-purple-600 transition-colors">Dashboard</a>
          <a href="buy.html" class="text-gray-600 hover:text-purple-600 transition-colors">Buy Course</a>
          <a href="login.html" class="text-gray-600 hover:text-purple-600 transition-colors hidden" id="loginLink">Login</a>
-       </div>
-    </div>
+            </div>
+        </div>
   </nav>
 
-     <!-- Hero Section -->
+    <!-- Hero Section -->
    <div class="text-center mb-12 fade-in-up">
      <h1 class="text-4xl font-bold text-gray-900 mb-4">🎁 Exclusive Bonuses</h1>
      <p class="text-xl text-gray-600 mb-8">Enhance your café business with these valuable resources</p>
-   </div>
-
+                        </div>
+                        
    <!-- Course Modules Preview -->
    <div class="max-w-6xl mx-auto mb-12 fade-in-up">
      <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">📚 Course Modules Overview</h2>
      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="modulesPreviewGrid">
        <!-- Modules preview will be populated by JavaScript -->
-     </div>
-   </div>
+                    </div>
+                </div>
 
   <!-- Bonuses Grid -->
   <div class="max-w-6xl mx-auto mb-12 fade-in-up">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="bonusesGrid">
       <!-- Bonuses will be populated by JavaScript -->
-    </div>
-  </div>
+                    </div>
+                </div>
 
-  <!-- Footer -->
+    <!-- Footer -->
   <footer class="bg-gray-100 text-gray-700 py-8 px-4 mt-16">
-    <div class="max-w-7xl mx-auto text-center">
+        <div class="max-w-7xl mx-auto text-center">
       <p class="text-gray-600 mb-2">
         Need help? Contact <a href="mailto:yuvapreneur@gmail.com" class="text-purple-600 hover:text-purple-700 underline">yuvapreneur@gmail.com</a>
       </p>
       <p class="text-gray-500">© 2025 Youthpreneur. All rights reserved.</p>
-    </div>
-  </footer>
+        </div>
+    </footer>
 
-     <script>
+    <script>
      // Course modules data
      const MODULES = [
        {
@@ -172,6 +173,20 @@
         title: "Photography Cheat Sheet",
         desc: "Quick setups for mouth-watering food & café photos (phone ready). Professional food photography techniques for social media.",
         features: ["Lighting setups", "Composition rules", "Editing techniques", "Social media optimization"]
+      },
+      {
+        sku: "bonus-calendar",
+        price: 249,
+        title: "100-Day Café Social Media Content Calendar",
+        desc: "Ready-to-post 100-day social calendar tailored for cafés to boost engagement.",
+        features: ["100-day content plan", "Caption starters", "Hashtag ideas", "Posting schedule"]
+      },
+      {
+        sku: "bonus-marketing",
+        price: 199,
+        title: "Offline and Online Marketing Strategies",
+        desc: "Proven offline + online tactics to grow café footfall and sales.",
+        features: ["Local promotions", "Digital funnels", "Offer ideas", "Measurement checklist"]
       }
     ];
 
@@ -198,7 +213,7 @@
         </div>
         
         <button onclick="buyBonus('${bonus.sku}', ${bonus.price}, '${bonus.title}')" 
-                class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors transform hover:scale-105">
+                class="w-full text-white py-3 px-4 rounded-lg font-semibold transition-colors transform hover:scale-105 btn-gradient">
           💳 Buy Now - ₹${bonus.price}
         </button>
       `;
@@ -210,13 +225,13 @@
       const userEmail = 'yuvapreneur@gmail.com'; // Default email for demo
       
       // Razorpay integration
-      const options = {
+                const options = {
         key: 'rzp_live_RAD4Q0Jypcn82a', // Updated to new live key
         amount: price * 100,
-        currency: 'INR',
-        name: 'Café Business Masterclass',
+                    currency: 'INR',
+                    name: 'Café Business Masterclass',
         description: `Bonus: ${title}`,
-        image: 'https://your-logo-url.com/logo.png',
+        image: 'https://yuvapreneur.in/logo.png',
         handler: function (response) {
           alert(`🎉 Payment successful for ${title}!\n\nPayment ID: ${response.razorpay_payment_id}\n\nRedirecting to dashboard...`);
           
@@ -259,8 +274,8 @@
           alert('❌ Payment failed: ' + (response.error.description || 'Unknown error') + '\n\nPlease try again or contact support.');
         });
         
-        rzp.open();
-      } catch (error) {
+                rzp.open();
+            } catch (error) {
         console.error('Razorpay error:', error);
         alert('❌ Payment failed to open. Please try again.');
       }
@@ -323,6 +338,6 @@
         console.log('New user, hiding login link');
       }
     }
-  </script>
+    </script>
 </body>
 </html>

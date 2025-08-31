@@ -1,28 +1,28 @@
 {
   "name": "cafe-business-masterclass",
   "version": "1.0.0",
-  "description": "Café Business Masterclass - Full Stack Application",
-  "main": "index.js",
+  "description": "Café Business Masterclass - HTML/CSS/JS Application",
+  "main": "index.html",
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "vercel dev",
-    "build": "next build",
-    "start": "next start"
+    "build": "echo 'Static site - no build required'",
+    "start": "node server-local.js"
   },
   "dependencies": {
-    "next": "^14.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "mongodb": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
-    "cors": "^2.8.5"
+    "mongodb": "^6.8.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "express-session": "^1.17.3",
+    "mongoose": "^8.5.2",
+    "nodemailer": "^6.9.8",
+    "razorpay": "^2.8.6"
   },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.5",
-    "typescript": "^5.0.0"
-  }
+  "devDependencies": {}
 }

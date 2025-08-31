@@ -1412,26 +1412,6 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://admin:43fVXExJg8en4Y7e@
 .then(() => console.log('✅ MongoDB Connected'))
 .catch(err => console.log('❌ MongoDB Connection Error:', err));
 
-// Import all routes (commented out to prevent crashes)
-// const authRoutes = require('./routes/auth');
-// const dashboardRoutes = require('./routes/dashboard');
-// const purchaseRoutes = require('./routes/purchaseRoutes');
-// const paymentRoutes = require('./routes/paymentRoutes');
-// const courseRoutes = require('./routes/courseRoutes');
-// const bonusRoutes = require('./routes/bonusRoutes');
-// const uploadRoutes = require('./routes/uploadRoutes');
-// const userRoutes = require('./routes/userRoutes');
-
-// Mount all routes (commented out to prevent crashes)
-// app.use('/api/auth', authRoutes);
-// app.use('/api/dashboard', dashboardRoutes);
-// app.use('/api/purchases', purchaseRoutes);
-// app.use('/api/payment', paymentRoutes);
-// app.use('/api/courses', courseRoutes);
-// app.use('/api/bonuses', bonusRoutes);
-// app.use('/api/upload', uploadRoutes);
-// app.use('/api/user', userRoutes);
-
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

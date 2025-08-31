@@ -20,19 +20,46 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body class="min-h-screen bg-white text-gray-900 p-4">
+  <!-- Dashboard Summary Hero -->
+  <section class="max-w-7xl mx-auto mb-8 fade-in-up">
+    <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-gradient mb-1">Welcome to your Dashboard</h1>
+        <p class="text-gray-600">Access modules, bonuses, and your account details here.</p>
+      </div>
+      <div class="flex items-center justify-center gap-6">
+        <div class="text-center">
+          <div class="text-sm text-gray-500">Course Status</div>
+          <div class="font-semibold" id="summaryCourseStatus">—</div>
+        </div>
+        <div class="text-center">
+          <div class="text-sm text-gray-500">Bonuses</div>
+          <div class="font-semibold" id="summaryBonusCount">—</div>
+        </div>
+        <div class="text-center">
+          <div class="text-sm text-gray-500">Enrolled</div>
+          <div class="font-semibold" id="summaryEnrolledAt">—</div>
+        </div>
+      </div>
+      <div class="text-center md:text-right">
+        <a href="#modules" class="inline-block btn-gradient text-white px-5 py-3 rounded-lg font-semibold">📚 Continue Learning</a>
+      </div>
+    </div>
+  </section>
   <!-- Navigation -->
   <nav class="bg-white shadow-lg p-4 mb-8 rounded-xl border border-gray-200">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="text-2xl font-bold text-purple-600">☕ Café Business Masterclass</div>
+      <div class="text-2xl font-bold text-purple-600">Yuvapreneur</div>
              <div class="space-x-4" id="navigationLinks">
          <a href="index.html" class="text-gray-600 hover:text-purple-600 transition-colors">Home</a>
          <a href="bonuses.html" class="text-gray-600 hover:text-purple-600 transition-colors">Bonuses</a>
          <a href="buy.html" class="text-gray-600 hover:text-purple-600 transition-colors">Buy Course</a>
          <a href="login.html" class="text-gray-600 hover:text-purple-600 transition-colors hidden" id="loginLink">Login</a>
          <button onclick="logout()" class="text-red-600 hover:text-red-700 transition-colors font-medium">🚪 Logout</button>
-       </div>
+      </div>
     </div>
   </nav>
 
@@ -56,15 +83,15 @@
          <div>
            <label class="block text-gray-700 text-sm font-medium mb-2">Bonuses Access</label>
            <div class="text-purple-600" id="bonusCount">Loading...</div>
-         </div>
-       </div>
-       
+    </div>
+          </div>
+          
        <!-- Debug Section (only visible if there are issues) -->
        <div class="mt-6 pt-4 border-t border-gray-200" id="debugSection" style="display: none;">
          <h3 class="text-lg font-semibold text-gray-900 mb-3">🔧 Troubleshooting</h3>
          <div class="bg-gray-50 p-4 rounded-lg">
            <p class="text-sm text-gray-600 mb-3">If you're having access issues, try these solutions:</p>
-           <div class="space-y-2">
+            <div class="space-y-2">
              <button onclick="grantManualAccess()" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm transition-colors">
                ✅ I Have Already Paid - Grant Access
              </button>
@@ -74,26 +101,26 @@
              <button onclick="showEnrollmentData()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">
                📊 Show Current Enrollment Data
              </button>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Course Access Section -->
+      <!-- Course Access Section -->
   <div class="max-w-4xl mx-auto mb-8 fade-in-up" id="courseAccess">
     <!-- Course access status will be populated by JavaScript -->
-  </div>
+          </div>
 
   <!-- Course Modules Section -->
   <div class="max-w-6xl mx-auto mb-8 fade-in-up">
     <h2 class="text-2xl font-bold text-gray-900 text-center mb-6">📚 Course Modules</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="modulesGrid">
       <!-- Modules will be populated by JavaScript -->
-    </div>
-  </div>
+        </div>
+      </div>
 
-  <!-- Bonuses Section -->
+      <!-- Bonuses Section -->
   <div class="max-w-6xl mx-auto mb-8 fade-in-up">
     <h2 class="text-2xl font-bold text-gray-900 text-center mb-6">🎁 Your Bonuses</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="bonusesGrid">
@@ -106,96 +133,86 @@
      const MODULES = [
        {
          number: 1,
-         title: "Introduction to Café Business",
-         desc: "Complete foundation and overview of starting a café business",
-         icon: "☕",
+         title: "Types of cafes, industry growth, market size",
+         desc: "Understanding the café industry landscape and market opportunities",
          filename: "Module1 (2).pdf"
        },
        {
          number: 2,
          title: "Market Research & Location Analysis",
          desc: "Learn to identify profitable locations and understand your target market",
-         icon: "🔍",
          filename: "Module 2  (1).pdf"
        },
        {
          number: 3,
          title: "Business Plan & Financial Planning",
          desc: "Create a solid business plan and financial projections",
-         icon: "📊",
          filename: "Module 3  (1).pdf"
        },
        {
          number: 4,
          title: "Legal Requirements & Licenses",
          desc: "Navigate legal requirements and obtain necessary licenses",
-         icon: "⚖️",
          filename: "Module 4  (2).pdf"
        },
        {
          number: 5,
          title: "Kitchen Design & Equipment",
          desc: "Design efficient kitchen layouts and choose right equipment",
-         icon: "🍳",
          filename: "Module 5  (3).pdf"
        },
        {
          number: 6,
          title: "Menu Planning & Pricing Strategy",
          desc: "Create profitable menus and implement smart pricing",
-         icon: "📋",
          filename: "Module 6  (1).pdf"
        },
        {
          number: 7,
          title: "Staff Hiring & Management",
          desc: "Build and manage a high-performing team",
-         icon: "👥",
          filename: "Module 7  (2).pdf"
        },
        {
          number: 8,
          title: "Marketing & Branding",
          desc: "Develop strong brand identity and marketing strategies",
-         icon: "🎯",
          filename: "Module 8  (1).pdf"
        },
        {
          number: 9,
          title: "Customer Service Excellence",
          desc: "Deliver exceptional customer experiences",
-         icon: "⭐",
          filename: "Module 9  (2).pdf"
        },
        {
          number: 10,
          title: "Operations & Quality Control",
          desc: "Streamline operations and maintain quality standards",
-         icon: "⚙️",
          filename: "Module 10  (3).pdf"
        },
        {
          number: 11,
          title: "Financial Management & Accounting",
          desc: "Manage finances, track expenses, and maximize profits",
-         icon: "💰",
          filename: "Module 11 (4).pdf"
        },
        {
          number: 12,
          title: "Growth & Expansion Strategies",
          desc: "Scale your business and explore new opportunities",
-         icon: "🚀",
          filename: "Module 12 (4).pdf"
        }
      ];
 
-    // Bonus data
+    // Bonus data with prices and filenames
     const BONUSES = [
-      { sku: "bonus-menu-psych", price: 199, title: "Café Menu Psychology Blueprint", desc: "Design menus that increase average order value and customer satisfaction." },
-      { sku: "bonus-festival", price: 249, title: "Festival & Seasonal Marketing Guide", desc: "Ready-to-use ideas & creatives to boost festive sales." },
-      { sku: "bonus-loyalty", price: 179, title: "How to Create a Café Loyalty Program", desc: "Step-by-step template for a loyalty program that brings repeat customers." },
-      { sku: "bonus-photo", price: 299, title: "Photography Cheat Sheet", desc: "Quick setups for mouth-watering food & café photos (phone ready)." }
+      { sku: "bonus-menu-psych", price: 199, title: "Café Menu Psychology Blueprint", desc: "Design menus that increase average order value and customer satisfaction.", filename: "bonus-menu-psych.pdf" },
+      { sku: "bonus-festival", price: 249, title: "Festival & Seasonal Marketing Guide", desc: "Ready-to-use ideas & creatives to boost festive sales.", filename: "bonus-festival.pdf" },
+      { sku: "bonus-loyalty", price: 179, title: "How to Create a Café Loyalty Program", desc: "Step-by-step template for a loyalty program that brings repeat customers.", filename: "bonus-loyalty.pdf" },
+      { sku: "bonus-photo", price: 299, title: "Photography Cheat Sheet", desc: "Quick setups for mouth-watering food & café photos (phone ready).", filename: "bonus-photo.pdf" },
+      { sku: "bonus-calendar", price: 249, title: "100-Day Café Social Media Content Calendar", desc: "Ready-to-post 100-day social calendar tailored for cafés to boost engagement.", filename: "100-day café social media content calendar.pdf.pdf" },
+      { sku: "bonus-marketing", price: 199, title: "Offline and Online Marketing Strategies", desc: "Proven offline + online tactics to grow café footfall and sales.", filename: "Offline and Online Marketing Strategies .pdf" }
     ];
 
          // Simple user profile loading (like before GitHub)
@@ -209,16 +226,22 @@
            // Show user data
            document.getElementById('username').textContent = userData.name || 'User';
            document.getElementById('email').textContent = userData.email || 'user@example.com';
-           
-           if (userData.status === 'enrolled' && userData.courseAccess === 'full') {
-             document.getElementById('courseStatus').textContent = '✅ Fully Enrolled';
-             document.getElementById('bonusCount').textContent = '4 (All Bonuses Included)';
-             updateCourseAccessForEnrolledUser();
-           } else {
-             document.getElementById('courseStatus').textContent = '❌ Payment Required';
-             document.getElementById('bonusCount').textContent = '0 (Payment Required)';
-             loadCourseAccess();
-           }
+
+          if (userData.status === 'enrolled' && userData.courseAccess === 'full') {
+            document.getElementById('courseStatus').textContent = '✅ Fully Enrolled';
+            document.getElementById('bonusCount').textContent = '';
+            document.getElementById('summaryCourseStatus').textContent = '✅ Full Access';
+            document.getElementById('summaryBonusCount').textContent = '';
+            document.getElementById('summaryEnrolledAt').textContent = (userData.enrolledAt || '').slice(0,10);
+            updateCourseAccessForEnrolledUser();
+        } else {
+            document.getElementById('courseStatus').textContent = '❌ Payment Required';
+            document.getElementById('bonusCount').textContent = '';
+            document.getElementById('summaryCourseStatus').textContent = '⏳ Pending';
+            document.getElementById('summaryBonusCount').textContent = '';
+            document.getElementById('summaryEnrolledAt').textContent = '-';
+            loadCourseAccess();
+          }
          } catch (error) {
            loadDefaultProfile();
          }
@@ -232,7 +255,10 @@
        document.getElementById('username').textContent = 'abhijjetwankhede';
        document.getElementById('email').textContent = 'yuvapreneur@gmail.com';
        document.getElementById('courseStatus').textContent = '❌ Not Enrolled';
-       document.getElementById('bonusCount').textContent = '0';
+       document.getElementById('bonusCount').textContent = '';
+       document.getElementById('summaryCourseStatus').textContent = '❌ Not Enrolled';
+       document.getElementById('summaryBonusCount').textContent = '';
+       document.getElementById('summaryEnrolledAt').textContent = '-';
      }
     
     // Update course access for enrolled users
@@ -255,7 +281,7 @@
 
     // Load course access status
     function loadCourseAccess() {
-      const courseAccessDiv = document.getElementById('courseAccess');
+          const courseAccessDiv = document.getElementById('courseAccess');
       const enrollmentData = localStorage.getItem('userEnrollment');
       
       if (enrollmentData) {
@@ -273,7 +299,7 @@
                     <a href="index.html" class="inline-block bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
                       💳 Complete Payment
                     </a>
-                  </div>
+                    </div>
                 </div>
               </div>
             `;
@@ -296,58 +322,23 @@
                     <a href="index.html" class="inline-block bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
                       📝 Re-enroll with New Details
                     </a>
-                  </div>
+                    </div>
                 </div>
               </div>
             `;
           } else {
-            // Show not enrolled status
-            courseAccessDiv.innerHTML = `
-              <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                  <h3 class="text-lg font-semibold text-purple-800 mb-2">⚠️ Course Not Enrolled</h3>
-                  <p class="text-purple-700 mb-4">You need to enroll to access all 12 course modules and 4 exclusive bonuses.</p>
-                  <div class="text-center mt-6">
-                    <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
-                      🚀 Enroll Now
-                    </a>
-                  </div>
-                </div>
-              </div>
-            `;
+            // Hide course access section for non-enrolled users
+            courseAccessDiv.innerHTML = '';
+            courseAccessDiv.style.display = 'none';
           }
         } catch (error) {
           console.error('Error loading course access:', error);
-          // Show default not enrolled status
-          courseAccessDiv.innerHTML = `
-            <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-              <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <h3 class="text-lg font-semibold text-purple-800 mb-2">⚠️ Course Not Enrolled</h3>
-                <p class="text-purple-700 mb-4">You need to enroll to access all 12 course modules and 4 exclusive bonuses.</p>
-                <div class="text-center mt-6">
-                  <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
-                    🚀 Enroll Now
-                  </a>
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      } else {
-        // Show not enrolled status
-        courseAccessDiv.innerHTML = `
-          <div class="bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <h3 class="text-lg font-semibold text-purple-800 mb-2">⚠️ Course Not Enrolled</h3>
-              <p class="text-purple-700 mb-4">You need to enroll to access all 12 course modules and 4 exclusive bonuses.</p>
-              <div class="text-center mt-6">
-                <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors transform hover:scale-105">
-                  🚀 Enroll Now
-                </a>
-              </div>
-            </div>
-          </div>
-        `;
+          courseAccessDiv.innerHTML = '';
+          courseAccessDiv.style.display = 'none';
+          }
+        } else {
+        courseAccessDiv.innerHTML = '';
+        courseAccessDiv.style.display = 'none';
       }
     }
 
@@ -373,32 +364,39 @@
          if (isFullyEnrolled) {
            // Show unlocked modules with download option for enrolled users
            moduleCard.innerHTML = `
-             <div class="flex items-center justify-between mb-3">
-               <div class="text-3xl">${module.icon}</div>
-               <div class="bg-green-600 text-white text-sm font-bold px-3 py-1 rounded-full">Module ${module.number}</div>
+             <div class="flex items-center justify-between mb-4">
+               <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Module ${module.number}</div>
+               <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Unlocked</div>
              </div>
-             <h3 class="text-lg font-semibold text-gray-900 mb-2">${module.title}</h3>
-             <p class="text-gray-600 text-sm mb-4">${module.desc}</p>
-             <div class="text-center space-y-2">
-               <div class="text-xs text-green-600">✅ Unlocked - Full Access</div>
-               <a href="download.html?file=${encodeURIComponent(module.filename)}&title=${encodeURIComponent(module.title)}" 
-                  class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm transition-colors w-full text-center">
-                 📥 Download Module ${module.number}
-               </a>
-             </div>
+             <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight">${module.title}</h3>
+             <p class="text-gray-600 text-sm mb-6 leading-relaxed">${module.desc}</p>
+             <div class="space-y-3">
+               <div class="flex items-center text-xs text-green-600 font-medium">
+                 <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                 Full Access Granted
+                </div>
+               <a href="download.html?file=${encodeURIComponent('/uploads/pdfs/' + module.filename)}&title=${encodeURIComponent(module.title)}" 
+                  class="inline-block w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg text-center">
+                 Download Module ${module.number}
+                    </a>
+                  </div>
            `;
          } else {
            // Show locked modules for non-enrolled users
            moduleCard.innerHTML = `
-             <div class="flex items-center justify-between mb-3">
-               <div class="text-3xl">${module.icon}</div>
-               <div class="bg-purple-600 text-white text-sm font-bold px-3 py-1 rounded-full">Module ${module.number}</div>
+             <div class="flex items-center justify-between mb-4">
+               <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Module ${module.number}</div>
+               <div class="bg-gradient-to-r from-gray-400 to-gray-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Locked</div>
              </div>
-             <h3 class="text-lg font-semibold text-gray-900 mb-2">${module.title}</h3>
-             <p class="text-gray-600 text-sm mb-4">${module.desc}</p>
-             <div class="text-center">
-               <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm transition-colors w-full">
-                 🔒 Enroll to Unlock
+             <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight">${module.title}</h3>
+             <p class="text-gray-600 text-sm mb-6 leading-relaxed">${module.desc}</p>
+             <div class="space-y-3">
+               <div class="flex items-center text-xs text-gray-500 font-medium">
+                 <div class="w-2 h-2 bg-gray-400 rounded-full mr-2"></div>
+                 Enroll to Access
+               </div>
+               <button class="w-full bg-gradient-to-r from-gray-400 to-gray-500 text-white px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 cursor-not-allowed">
+                 Enroll to Unlock
                </button>
              </div>
            `;
@@ -410,122 +408,93 @@
 
          // Simple user bonuses loading (like before GitHub)
      function loadUserBonuses() {
-       const bonusesGrid = document.getElementById('bonusesGrid');
-       const enrollmentData = localStorage.getItem('userEnrollment');
-       
-       // Check if user is enrolled
-       const isFullyEnrolled = enrollmentData && (() => {
-         try {
-           const userData = JSON.parse(enrollmentData);
-           return userData.status === 'enrolled' && userData.courseAccess === 'full';
-         } catch (error) {
-           return false;
-         }
-       })();
-      
-      if (isFullyEnrolled) {
-        // Show all bonuses as accessible for enrolled users
-        bonusesGrid.innerHTML = `
-          <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="text-2xl mb-4">🎁</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Café Menu Psychology Blueprint</h3>
-            <p class="text-gray-600 text-sm mb-4">Design menus that increase average order value and customer satisfaction.</p>
-            <div class="space-y-2">
-              <div class="text-xs text-green-600">✅ Included with Enrollment</div>
-              <a href="download.html?file=bonus-menu-psych.pdf&title=Café Menu Psychology Blueprint" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                📥 Download Bonus
-              </a>
+      const bonusesGrid = document.getElementById('bonusesGrid');
+      const purchased = JSON.parse(localStorage.getItem('purchasedBonuses') || '[]');
+      const purchasedMap = new Map(purchased.map(b => [b.sku, b]));
+      bonusesGrid.innerHTML = '';
+      BONUSES.forEach(bonus => {
+        const isPurchased = purchasedMap.has(bonus.sku);
+        const card = document.createElement('div');
+        card.className = 'bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl';
+        const fileParam = encodeURIComponent('/uploads/bonuses/' + bonus.filename);
+        const titleParam = encodeURIComponent(bonus.title);
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-4">
+            <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Bonus</div>
+            <div class="text-sm ${isPurchased ? 'text-green-600' : 'text-purple-600'} font-medium">${isPurchased ? 'Purchased' : 'Individual Bonus'}</div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight">${bonus.title}</h3>
+          <p class="text-gray-600 text-sm mb-6 leading-relaxed">${bonus.desc}</p>
+          <div class="flex items-center justify-between mb-4">
+            <div class="text-2xl font-bold text-gradient">₹${bonus.price}</div>
+            <div class="flex items-center text-xs ${isPurchased ? 'text-green-600' : 'text-gray-500'} font-medium">
+              <div class="w-2 h-2 ${isPurchased ? 'bg-green-500' : 'bg-gray-400'} rounded-full mr-2"></div>
+              ${isPurchased ? 'Ready to Download' : 'Available for Purchase'}
             </div>
           </div>
-          
-          <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="text-2xl mb-4">🎁</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Festival & Seasonal Marketing Guide</h3>
-            <p class="text-gray-600 text-sm mb-4">Ready-to-use ideas & creatives to boost festive sales.</p>
-            <div class="space-y-2">
-              <div class="text-xs text-green-600">✅ Included with Enrollment</div>
-              <a href="download.html?file=bonus-festival.pdf&title=Festival & Seasonal Marketing Guide" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                📥 Download Bonus
+          <div class="space-y-3">
+            ${isPurchased ? `
+              <a href="download.html?file=${fileParam}&title=${titleParam}" class="inline-block w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg text-center">
+                Download Bonus
               </a>
-            </div>
-          </div>
-          
-          <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="text-2xl mb-4">🎁</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">How to Create a Café Loyalty Program</h3>
-            <p class="text-gray-600 text-sm mb-4">Step-by-step template for a loyalty program that brings repeat customers.</p>
-            <div class="space-y-2">
-              <div class="text-xs text-green-600">✅ Included with Enrollment</div>
-              <a href="download.html?file=bonus-loyalty.pdf&title=How to Create a Café Loyalty Program" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                📥 Download Bonus
-              </a>
-            </div>
-          </div>
-          
-          <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="text-2xl mb-4">🎁</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Photography Cheat Sheet</h3>
-            <p class="text-gray-600 text-sm mb-4">Quick setups for mouth-watering food & café photos (phone ready).</p>
-            <div class="space-y-2">
-              <div class="text-xs text-green-600">✅ Included with Enrollment</div>
-              <a href="download.html?file=bonus-photo.pdf&title=Photography Cheat Sheet" class="inline-block bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                📥 Download Bonus
-              </a>
-            </div>
-          </div>
+            ` : `
+              <button onclick="buyBonus('${bonus.sku}', ${bonus.price}, '${bonus.title.replace(/'/g, "\'")}', '${bonus.filename.replace(/'/g, "\'")}')" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg">
+                Buy Now - ₹${bonus.price}
+                  </button>
+                `}
+              </div>
         `;
-      } else {
-        // Show locked bonuses for non-enrolled users
-        bonusesGrid.innerHTML = `
-          <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="text-2xl mb-4">🎁</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Café Menu Psychology Blueprint</h3>
-            <p class="text-gray-600 text-sm mb-4">Design menus that increase average order value and customer satisfaction.</p>
-            <div class="space-y-2">
-              <div class="text-xs text-purple-600">🔒 Enroll to Access</div>
-              <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                🚀 Enroll Now
-              </a>
-            </div>
-          </div>
-          
-          <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="text-2xl mb-4">🎁</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Festival & Seasonal Marketing Guide</h3>
-            <p class="text-gray-600 text-sm mb-4">Ready-to-use ideas & creatives to boost festive sales.</p>
-            <div class="space-y-2">
-              <div class="text-xs text-purple-600">🔒 Enroll to Access</div>
-              <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                🚀 Enroll Now
-              </a>
-            </div>
-          </div>
-          
-          <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="text-2xl mb-4">🎁</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">How to Create a Café Loyalty Program</h3>
-            <p class="text-gray-600 text-sm mb-4">Step-by-step template for a loyalty program that brings repeat customers.</p>
-            <div class="space-y-2">
-              <div class="text-xs text-purple-600">🔒 Enroll to Access</div>
-              <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                🚀 Enroll Now
-              </a>
-            </div>
-          </div>
-          
-          <div class="bonus-card bg-white shadow-lg p-6 border border-gray-200 rounded-xl">
-            <div class="text-2xl mb-4">🎁</div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Photography Cheat Sheet</h3>
-            <p class="text-gray-600 text-sm mb-4">Quick setups for mouth-watering food & café photos (phone ready).</p>
-            <div class="space-y-2">
-              <div class="text-xs text-purple-600">🔒 Enroll to Access</div>
-              <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors w-full text-center">
-                🚀 Enroll Now
-              </a>
-            </div>
-          </div>
-        `;
-      }
+        bonusesGrid.appendChild(card);
+      });
+    }
+
+    function ensureRazorpayLoaded(cb) {
+      if (typeof Razorpay !== 'undefined') { cb(); return; }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = cb;
+      script.onerror = () => alert('❌ Failed to load payment gateway. Please try again.');
+      document.head.appendChild(script);
+    }
+
+    function buyBonus(sku, price, title, filename) {
+      const options = {
+        key: 'rzp_live_RAD4Q0Jypcn82a',
+        amount: price * 100,
+        currency: 'INR',
+        name: 'Café Business Masterclass',
+        description: `Bonus: ${title}`,
+        image: 'https://yuvapreneur.in/logo.png',
+        handler: function (response) {
+          const bonusData = {
+            sku,
+            title,
+            price,
+            filename,
+            paymentId: response.razorpay_payment_id,
+            purchasedAt: new Date().toISOString(),
+            status: 'purchased'
+          };
+          const existing = JSON.parse(localStorage.getItem('purchasedBonuses') || '[]');
+          const filtered = existing.filter(b => b.sku !== sku);
+          filtered.push(bonusData);
+          localStorage.setItem('purchasedBonuses', JSON.stringify(filtered));
+          loadUserBonuses();
+        },
+        notes: { bonus_sku: sku, bonus_title: title },
+        theme: { color: '#8B5CF6' }
+      };
+      ensureRazorpayLoaded(() => {
+        try {
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', function (resp) {
+            alert('❌ Payment failed: ' + (resp.error?.description || 'Unknown error'));
+          });
+          rzp.open();
+        } catch (e) {
+          alert('❌ Payment could not be started. Please try again.');
+        }
+      });
     }
 
          // Initialize dashboard
@@ -576,12 +545,13 @@
        }
      }
      
-     // Dashboard access check - handles both login and new purchases
+     // Dashboard access check - simplified and more reliable
      function verifyDashboardAccess() {
        const userEnrollment = localStorage.getItem('userEnrollment');
+       const tempUserData = localStorage.getItem('tempUserData');
        
-       // If no enrollment data at all, redirect to home
-       if (!userEnrollment) {
+       // Check if user has any enrollment data
+       if (!userEnrollment && !tempUserData) {
          showAccessDenied('❌ No Course Access\n\nYou need to purchase the course first.\n\nRedirecting to home page...');
          setTimeout(() => {
            window.location.href = 'index.html';
@@ -590,22 +560,33 @@
        }
        
        try {
-         const userData = JSON.parse(userEnrollment);
+         let userData = null;
          
-         // Check if user has valid course access (enrolled, pending, or manual access)
-         if (userData.status === 'enrolled' || 
+         // Try to get user data from enrollment first
+         if (userEnrollment) {
+           userData = JSON.parse(userEnrollment);
+         } else if (tempUserData) {
+           userData = JSON.parse(tempUserData);
+         }
+         
+         // Check if user has valid course access
+         if (userData && (
+             userData.status === 'enrolled' || 
              userData.status === 'pending_payment' || 
              userData.manualAccessGranted === true ||
-             userData.hasPurchasedCourse === true) {
+             userData.hasPurchasedCourse === true ||
+             userData.paymentId // If they have a payment ID, they're enrolled
+         )) {
            
-           // Set authentication if not already set (for new purchases)
+           // Set authentication if not already set
            if (!localStorage.getItem('userAuthenticated')) {
              localStorage.setItem('userAuthenticated', 'true');
              localStorage.setItem('loginTimestamp', Date.now().toString());
            }
            
+           console.log('✅ Dashboard access verified for user:', userData.email);
            return true;
-         } else {
+          } else {
            // User has data but no valid access
            showAccessDenied('❌ Course Access Required\n\nPlease complete your course purchase to access the dashboard.\n\nRedirecting to home page...');
            setTimeout(() => {
@@ -656,9 +637,9 @@
                </div>
              </div>
            </div>
-         </div>
-       `;
-     }
+              </div>
+            `;
+          }
      
      // Logout function with enhanced security
      function logout() {
@@ -702,9 +683,9 @@
            key: 'rzp_live_R9QVhOlTJvswsH',
            amount: 100, // ₹1 in paise
            currency: 'INR',
-           name: 'Café Business Masterclass',
+           name: 'Yuvapreneur',
            description: 'Complete Course + 4 Bonuses - Payment Retry',
-           image: 'https://your-logo-url.com/logo.png',
+                       image: 'https://yuvapreneur.in/logo.png',
            handler: function (response) {
              alert('🎉 Payment Successful! Welcome to the Café Business Masterclass!\n\nPayment ID: ' + response.razorpay_payment_id + '\n\nYou now have full access to all 12 modules and 4 bonuses!\n\nRefreshing dashboard...');
              
@@ -759,7 +740,7 @@
              retryBtn.disabled = false;
            };
            document.head.appendChild(script);
-         } else {
+        } else {
            openRazorpayPayment(options);
          }
          

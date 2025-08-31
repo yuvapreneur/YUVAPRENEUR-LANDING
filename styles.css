@@ -1,7 +1,19 @@
+:root {
+  --grad-start: #6D28D9; /* purple */
+  --grad-mid: #EC4899;   /* pink */
+  --grad-end: #F97316;   /* orange */
+  --accent: #6D28D9;
+  --bg-light: #F3E8FF;   /* light lavender */
+  --bg-lighter: #FFF1F9;  /* soft purple */
+  --bg-white: #FFFFFF;  /* pure white */
+  --bg-grey: #FAFAFA;    /* light greyish */
+}
+
 body {
-  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-lighter) 100%);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #ffffff;
+  color: #0f172a;
+  min-height: 100vh;
 }
 
 .glass {
@@ -13,7 +25,7 @@ body {
 }
 
 .glossy {
-  background: linear-gradient(135deg, #8b45ff 0%, #6b21a8 100%);
+  background: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-mid) 50%, var(--grad-end) 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -40,8 +52,8 @@ body {
 
 .glossy:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(139, 69, 255, 0.6);
-  background: linear-gradient(135deg, #9d5bff 0%, #7c3aed 100%);
+  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.35);
+  background: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-mid) 50%, var(--grad-end) 100%);
 }
 
 .glossy:active {
@@ -49,7 +61,7 @@ body {
 }
 
 .glossy-button {
-  background: linear-gradient(135deg, #8b45ff 0%, #6b21a8 100%);
+  background: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-mid) 50%, var(--grad-end) 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -59,10 +71,83 @@ body {
   display: inline-block;
 }
 
+/* Reusable gradient button matching the screenshot style */
+.btn-gradient {
+  background: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-mid) 50%, var(--grad-end) 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(124, 58, 237, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(124, 58, 237, 0.35);
+}
+
+/* Text gradient utility */
+.text-gradient {
+  background: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-mid) 50%, var(--grad-end) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Global overrides: replace flat purple utilities with gradient theme */
+.text-purple-600,
+.text-purple-700,
+.text-purple-500 {
+  background: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-mid) 50%, var(--grad-end) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+.hover\:text-purple-600:hover,
+.hover\:text-purple-700:hover {
+  background: linear-gradient(90deg, var(--grad-start), var(--grad-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+.bg-purple-600,
+.bg-purple-700,
+.hover\:bg-purple-700:hover {
+  background: linear-gradient(90deg, var(--grad-start), var(--grad-end)) !important;
+}
+
+.border-purple-200,
+.border-purple-300,
+.border-purple-400,
+.border-purple-500 {
+  border-color: var(--grad-start) !important;
+}
+
+.focus\:border-purple-500:focus,
+.focus\:border-purple-600:focus,
+.focus\:ring-purple-200:focus {
+  border-color: var(--grad-start) !important;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2) !important;
+}
+
+/* Neutralize pale purple backgrounds to neutral gray */
+.bg-purple-50 {
+  background: #f8fafc !important; /* slate-50 */
+}
+
+.text-purple-accent {
+  background: linear-gradient(90deg, var(--grad-start), var(--grad-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
 .glossy-button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(139, 69, 255, 0.6);
-  background: linear-gradient(135deg, #9d5bff 0%, #7c3aed 100%);
+  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.35);
+  background: linear-gradient(90deg, var(--grad-start), var(--grad-end));
 }
 
 /* Module cards styling */
@@ -84,7 +169,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #8b45ff, #6b21a8);
+  background: linear-gradient(90deg, var(--grad-start), var(--grad-end));
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -152,7 +237,7 @@ input:focus {
 
 /* Purple accent colors */
 .text-purple-accent {
-  color: #8b45ff;
+  color: var(--accent);
 }
 
 .bg-purple-accent {
@@ -160,7 +245,7 @@ input:focus {
 }
 
 .border-purple-accent {
-  border-color: #8b45ff;
+  border-color: var(--accent);
 }
 
 /* Responsive adjustments */

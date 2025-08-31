@@ -1,29 +1,16 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    }
-  ],
+    { "src": "api/**/*.js", "use": "@vercel/node" },
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.css", "use": "@vercel/static" },
+    { "src": "*.js", "use": "@vercel/static" },
+    { "src": "*.pdf", "use": "@vercel/static" },
+    { "src": "uploads/**", "use": "@vercel/static" }
+  ]
+  ,
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "env": {
-    "MONGODB_URI": "mongodb+srv://admin:hGw0wSOgM7PJ8VUe@cluster0.pp4ab3i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-    "JWT_SECRET": "your-super-secret-jwt-key-change-this-in-production",
-    "RAZORPAY_KEY_ID": "rzp_live_RAD4Q0Jypcn82a",
-    "RAZORPAY_KEY_SECRET": "zjOdjWDRhxv45thjpI8H0i73"
-  }
+    { "src": "/(.*)\\.css", "headers": { "cache-control": "no-cache" }, "dest": "/$1.css" },
+    { "src": "/(.*)\\.html", "headers": { "cache-control": "no-cache" }, "dest": "/$1.html" }
+  ]
 }
