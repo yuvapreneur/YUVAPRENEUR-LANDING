@@ -76,12 +76,12 @@ export default async function handler(req, res) {
     }
     
   } else if (req.method === 'GET') {
-    // Get user by email
+    // Get user by email or phone
     try {
-      const { email } = req.query;
+      const { email, phone } = req.query;
       
-      if (!email) {
-        return res.status(400).json({ error: 'Email is required' });
+      if (!email && !phone) {
+        return res.status(400).json({ error: 'Email or phone is required' });
       }
       
       const fs = require('fs');
@@ -94,7 +94,13 @@ export default async function handler(req, res) {
       }
       
       const users = JSON.parse(fs.readFileSync(usersFile, 'utf8'));
-      const user = users.find(u => u.email === email.toLowerCase());
+      let user = null;
+      
+      if (email) {
+        user = users.find(u => u.email === email.toLowerCase());
+      } else if (phone) {
+        user = users.find(u => u.phone === phone);
+      }
       
       if (!user) {
         return res.status(404).json({ error: 'User not found' });

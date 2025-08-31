@@ -59,10 +59,10 @@
             <button onclick="hideForgotPassword()" class="text-gray-500 hover:text-gray-700">✕</button>
           </div>
           
-          <!-- Step 1: Email Input -->
-          <div id="emailStep">
-            <p class="text-gray-600 mb-4">Enter your email address to receive a password reset code.</p>
-            <input type="email" id="resetEmail" placeholder="Enter your email" 
+          <!-- Step 1: Phone Input -->
+          <div id="phoneStep">
+            <p class="text-gray-600 mb-4">Enter your phone number to receive a password reset code.</p>
+            <input type="tel" id="resetPhone" placeholder="Enter your phone number" 
                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-600 focus:bg-white transition-colors mb-4">
             <button onclick="sendOTP()" class="w-full px-6 py-3 text-white font-semibold rounded-lg transition-colors btn-gradient">
               Send Reset Code
@@ -196,6 +196,28 @@
         }
       }
       
+      // 5. Check enrollments.json file for users who purchased yesterday
+      if (!userData) {
+        try {
+          const enrollmentsResponse = await fetch('/api/enrollments');
+          if (enrollmentsResponse.ok) {
+            const enrollmentsData = await enrollmentsResponse.json();
+            const enrollment = enrollmentsData.enrollments?.find(e => e.email === email);
+            if (enrollment && (enrollment.hasMainCourse || enrollment.paymentId)) {
+              userData = {
+                ...enrollment,
+                status: 'enrolled',
+                courseAccess: 'full',
+                hasPurchasedCourse: true
+              };
+              console.log('✅ Found user in enrollments.json:', userData);
+            }
+          }
+        } catch (error) {
+          console.log('Could not check enrollments.json:', error);
+        }
+      }
+      
       // If no user found, deny access
       if (!userData) {
         alert('❌ User not found\n\nEmail: ' + email + '\n\nIf you purchased the course, please:\n1. Use the same email you used during purchase\n2. Try logging in from the same device/browser\n3. Contact support if you need help');
@@ -276,6 +298,7 @@
     // Forgot Password Functions
     let currentOTP = '';
     let resetEmail = '';
+    let resetPhone = ''; // Added for phone number
     
     function showForgotPassword() {
       document.getElementById('forgotPasswordModal').classList.remove('hidden');
@@ -288,10 +311,10 @@
     }
     
     function resetSteps() {
-      document.getElementById('emailStep').classList.remove('hidden');
+      document.getElementById('phoneStep').classList.remove('hidden');
       document.getElementById('otpStep').classList.add('hidden');
       document.getElementById('newPasswordStep').classList.add('hidden');
-      document.getElementById('resetEmail').value = '';
+      document.getElementById('resetPhone').value = '';
       document.getElementById('otpInput').value = '';
       document.getElementById('newPassword').value = '';
       document.getElementById('confirmPassword').value = '';
@@ -299,24 +322,26 @@
     }
     
     async function sendOTP() {
-      const email = document.getElementById('resetEmail').value.trim().toLowerCase();
+      const phone = document.getElementById('resetPhone').value.trim();
       
-      if (!email) {
-        showMessage('Please enter your email address.', 'error');
+      if (!phone) {
+        showMessage('Please enter your phone number.', 'error');
         return;
       }
       
-                   // Check if email exists in our data and has purchased course
+      // Check if phone exists in our data and has purchased course
       let userFound = false;
       let hasPurchased = false;
+      let userEmail = '';
       
       // 1. First, try to get user from backend
       try {
-        const backendResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`);
+        const backendResponse = await fetch(`/api/users?phone=${encodeURIComponent(phone)}`);
         if (backendResponse.ok) {
           const backendData = await backendResponse.json();
           if (backendData.success && backendData.user) {
             userFound = true;
+            userEmail = backendData.user.email;
             hasPurchased = backendData.user.status === 'enrolled' || backendData.user.hasPurchasedCourse === true || backendData.user.paymentId;
           }
         }
@@ -330,8 +355,9 @@
         if (enrollmentData) {
           try {
             const userData = JSON.parse(enrollmentData);
-            if (userData.email === email) {
+            if (userData.phone === phone) {
               userFound = true;
+              userEmail = userData.email;
               hasPurchased = userData.status === 'enrolled' || userData.hasPurchasedCourse === true || userData.paymentId;
             }
           } catch (error) {
@@ -346,8 +372,9 @@
         if (tempUserData) {
           try {
             const userData = JSON.parse(tempUserData);
-            if (userData.email === email) {
+            if (userData.phone === phone) {
               userFound = true;
+              userEmail = userData.email;
               hasPurchased = userData.status === 'enrolled' || userData.hasPurchasedCourse === true || userData.paymentId;
             }
           } catch (error) {
@@ -363,8 +390,9 @@
           if (key.includes('user') || key.includes('enrollment') || key.includes('temp')) {
             try {
               const data = JSON.parse(localStorage.getItem(key));
-              if (data && data.email === email && (data.hasPurchasedCourse || data.paymentId || data.status === 'enrolled')) {
+              if (data && data.phone === phone && (data.hasPurchasedCourse || data.paymentId || data.status === 'enrolled')) {
                 userFound = true;
+                userEmail = data.email;
                 hasPurchased = true;
                 break;
               }
@@ -376,41 +404,42 @@
       }
       
       if (!userFound) {
-        showMessage('Email not found. Please use the email you used to purchase the course.', 'error');
+        showMessage('Phone number not found. Please use the phone number you used to purchase the course.', 'error');
         return;
       }
       
       if (!hasPurchased) {
-        showMessage('This email has not purchased the course. Please purchase the course first.', 'error');
+        showMessage('This phone number has not purchased the course. Please purchase the course first.', 'error');
         return;
       }
       
       // Generate OTP (6 digits)
       currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
-      resetEmail = email;
+      resetEmail = userEmail; // Store email for password update
+      resetPhone = phone; // Store phone for reference
       
       // Show loading state
-      const sendButton = document.querySelector('#emailStep button');
+      const sendButton = document.querySelector('#phoneStep button');
       const originalText = sendButton.textContent;
       sendButton.textContent = 'Sending...';
       sendButton.disabled = true;
       
-      // Simulate email sending (2 second delay)
+      // Simulate SMS sending (2 second delay)
       setTimeout(() => {
         // Reset button state
         sendButton.textContent = originalText;
         sendButton.disabled = false;
         
         // Show OTP step
-        document.getElementById('emailStep').classList.add('hidden');
+        document.getElementById('phoneStep').classList.add('hidden');
         document.getElementById('otpStep').classList.remove('hidden');
-        showMessage('OTP sent to your email. Please check your inbox.', 'success');
+        showMessage('OTP sent to your phone. Please check your messages.', 'success');
         
         // For development/testing, show OTP in console and alert
-        console.log('OTP for', email, ':', currentOTP);
+        console.log('OTP for', phone, ':', currentOTP);
         
         // Show OTP in alert for testing purposes
-        alert(`📧 OTP sent to ${email}: ${currentOTP}\n\n📧 Email Details:\nTo: ${email}\nSubject: Your Password Reset Code - Yuvapreneur\n\n(In production, this would be sent via email service)`);
+        alert(`📱 OTP sent to ${phone}: ${currentOTP}\n\n📱 SMS Details:\nTo: ${phone}\nMessage: Your password reset code is ${currentOTP}\n\n(In production, this would be sent via SMS service)`);
         
       }, 2000);
     }
