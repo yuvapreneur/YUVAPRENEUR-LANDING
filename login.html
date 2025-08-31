@@ -251,7 +251,7 @@
         }
       }
       
-      // 7. Hardcoded fallback for known users
+      // 7. Hardcoded fallback for known users (only if password matches)
       if (!userData) {
         // Direct check for known users
         const knownUsers = [
@@ -267,9 +267,11 @@
         ];
         
         const knownUser = knownUsers.find(u => u.email === email);
-        if (knownUser) {
+        if (knownUser && knownUser.password === password.trim()) {
           userData = knownUser;
           console.log('✅ Found user in hardcoded fallback:', userData);
+        } else if (knownUser) {
+          console.log('⚠️ Known user found but password mismatch');
         }
       }
       
@@ -316,10 +318,26 @@
       const storedPass = String(userData.password || '').trim();
       const inputPass = String(password || '').trim();
       
-      // If user has no password set, allow login with any password
+      console.log('🔐 Password check:', { 
+        hasStoredPassword: !!storedPass, 
+        storedPassword: storedPass ? '***' : 'none',
+        inputPassword: inputPass ? '***' : 'none'
+      });
+      
+      // Require password for all users
+      if (!inputPass) {
+        alert('❌ Password Required\n\nPlease enter your password to login.');
+        return;
+      }
+      
+      // If user has no password set, deny access
       if (!storedPass) {
-        console.log('⚠️ User has no password set, allowing login');
-      } else if (inputPass && storedPass !== inputPass) {
+        alert('❌ Account Not Set Up\n\nThis account does not have a password set. Please contact support.');
+        return;
+      }
+      
+      // Check if password matches
+      if (storedPass !== inputPass) {
         alert('❌ Wrong Password\n\nPlease use the correct password for this account.\n\nIf you forgot your password, use the "Forgot Password" link below.');
         return;
       }
