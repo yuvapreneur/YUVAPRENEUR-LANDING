@@ -130,12 +130,7 @@
       // SIMPLE TEST: Direct check of enrollments.json
       try {
         console.log('🧪 Testing enrollments API...');
-        const testResponse = await fetch('/api/enrollments', {
-          headers: {
-            'X-API-Key': 'yuvapreneur2024',
-            'Content-Type': 'application/json'
-          }
-        });
+        const testResponse = await fetch('/api/enrollments');
         console.log('📡 Test response status:', testResponse.status);
         
         if (testResponse.ok) {
@@ -178,12 +173,7 @@
       
              // 1. First, try to get user from backend
        try {
-         const backendResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`, {
-           headers: {
-             'X-API-Key': 'yuvapreneur2024',
-             'Content-Type': 'application/json'
-           }
-         });
+         const backendResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`);
          if (backendResponse.ok) {
           const backendData = await backendResponse.json();
           if (backendData.success && backendData.user) {
@@ -259,12 +249,7 @@
        if (!userData) {
          try {
            console.log('🔍 Checking enrollments.json for email:', email);
-           const enrollmentsResponse = await fetch('/api/enrollments', {
-             headers: {
-               'X-API-Key': 'yuvapreneur2024',
-               'Content-Type': 'application/json'
-             }
-           });
+           const enrollmentsResponse = await fetch('/api/enrollments');
            console.log('📡 Enrollments API response status:', enrollmentsResponse.status);
           
           if (enrollmentsResponse.ok) {
@@ -500,12 +485,7 @@
       
              // 1. First, try to get user from backend
        try {
-         const backendResponse = await fetch(`/api/users?phone=${encodeURIComponent(phone)}`, {
-           headers: {
-             'X-API-Key': 'yuvapreneur2024',
-             'Content-Type': 'application/json'
-           }
-         });
+         const backendResponse = await fetch(`/api/users?phone=${encodeURIComponent(phone)}`);
          if (backendResponse.ok) {
           const backendData = await backendResponse.json();
           if (backendData.success && backendData.user) {
@@ -661,8 +641,7 @@
          const updateResponse = await fetch('/api/users', {
            method: 'PUT',
            headers: {
-             'Content-Type': 'application/json',
-             'X-API-Key': 'yuvapreneur2024'
+             'Content-Type': 'application/json'
            },
            body: JSON.stringify({
              email: resetEmail,
