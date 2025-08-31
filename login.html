@@ -301,32 +301,16 @@
         }
       }
       
-      // 8. Final check - if email exists anywhere, grant access
-      if (!userData) {
-        // Check if this email was used in any recent activity
-        const recentActivity = localStorage.getItem('recentLoginAttempts') || '[]';
-        try {
-          const attempts = JSON.parse(recentActivity);
-          const hasRecentActivity = attempts.some(attempt => attempt.email === email);
-          if (hasRecentActivity) {
-            // Grant access to user who has recent activity
-            userData = {
-              email: email,
-              name: email.split('@')[0], // Use email prefix as name
-              status: 'enrolled',
-              courseAccess: 'full',
-              hasPurchasedCourse: true,
-              manualAccessGranted: true
-            };
-            console.log('✅ Granting access based on recent activity:', userData);
-          }
-        } catch (error) {
-          console.log('Could not check recent activity:', error);
-        }
-      }
+      // 8. Final check - if email exists anywhere, grant access (REMOVED - too permissive)
+      // This was allowing access without proper password validation
+      console.log('🔒 Skipping recent activity fallback for security');
       
       // If no user found, deny access
       if (!userData) {
+        console.log('❌ No user found after all checks');
+        console.log('📧 Email searched:', email);
+        console.log('🔑 Password provided:', password ? '***' : 'none');
+        
         // Track this login attempt for future reference
         const recentAttempts = JSON.parse(localStorage.getItem('recentLoginAttempts') || '[]');
         recentAttempts.push({
