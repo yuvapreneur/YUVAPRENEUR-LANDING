@@ -130,7 +130,12 @@
       // SIMPLE TEST: Direct check of enrollments.json
       try {
         console.log('🧪 Testing enrollments API...');
-        const testResponse = await fetch('/api/enrollments');
+        const testResponse = await fetch('/api/enrollments', {
+          headers: {
+            'X-API-Key': 'yuvapreneur2024',
+            'Content-Type': 'application/json'
+          }
+        });
         console.log('📡 Test response status:', testResponse.status);
         
         if (testResponse.ok) {
@@ -171,10 +176,15 @@
       // Check all possible data sources for user
       let userData = null;
       
-      // 1. First, try to get user from backend
-      try {
-        const backendResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`);
-        if (backendResponse.ok) {
+             // 1. First, try to get user from backend
+       try {
+         const backendResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`, {
+           headers: {
+             'X-API-Key': 'yuvapreneur2024',
+             'Content-Type': 'application/json'
+           }
+         });
+         if (backendResponse.ok) {
           const backendData = await backendResponse.json();
           if (backendData.success && backendData.user) {
             userData = backendData.user;
@@ -245,12 +255,17 @@
          }
        }
       
-      // 5. Check enrollments.json file for users who purchased yesterday
-      if (!userData) {
-        try {
-          console.log('🔍 Checking enrollments.json for email:', email);
-          const enrollmentsResponse = await fetch('/api/enrollments');
-          console.log('📡 Enrollments API response status:', enrollmentsResponse.status);
+             // 5. Check enrollments.json file for users who purchased yesterday
+       if (!userData) {
+         try {
+           console.log('🔍 Checking enrollments.json for email:', email);
+           const enrollmentsResponse = await fetch('/api/enrollments', {
+             headers: {
+               'X-API-Key': 'yuvapreneur2024',
+               'Content-Type': 'application/json'
+             }
+           });
+           console.log('📡 Enrollments API response status:', enrollmentsResponse.status);
           
           if (enrollmentsResponse.ok) {
             const enrollmentsData = await enrollmentsResponse.json();
@@ -483,10 +498,15 @@
       let hasPurchased = false;
       let userEmail = '';
       
-      // 1. First, try to get user from backend
-      try {
-        const backendResponse = await fetch(`/api/users?phone=${encodeURIComponent(phone)}`);
-        if (backendResponse.ok) {
+             // 1. First, try to get user from backend
+       try {
+         const backendResponse = await fetch(`/api/users?phone=${encodeURIComponent(phone)}`, {
+           headers: {
+             'X-API-Key': 'yuvapreneur2024',
+             'Content-Type': 'application/json'
+           }
+         });
+         if (backendResponse.ok) {
           const backendData = await backendResponse.json();
           if (backendData.success && backendData.user) {
             userFound = true;
@@ -642,6 +662,7 @@
            method: 'PUT',
            headers: {
              'Content-Type': 'application/json',
+             'X-API-Key': 'yuvapreneur2024'
            },
            body: JSON.stringify({
              email: resetEmail,

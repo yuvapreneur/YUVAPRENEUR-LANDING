@@ -1,5 +1,29 @@
 // API endpoint to manage user data for cross-browser login
 export default async function handler(req, res) {
+  // Add CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-API-Key');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  // API Key validation
+  const apiKey = req.headers['x-api-key'] || req.headers['authorization'];
+  const validApiKey = process.env.USERS_API_KEY || 'yuvapreneur2024';
+  
+  if (!apiKey || apiKey !== validApiKey) {
+    console.log('❌ Invalid API key:', apiKey);
+    return res.status(401).json({ 
+      error: 'Unauthorized',
+      message: 'Invalid API key'
+    });
+  }
+  
+  console.log('✅ API key validated');
+  
   if (req.method === 'POST') {
     // Create or update user
     try {
