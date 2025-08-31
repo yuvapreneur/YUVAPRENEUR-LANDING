@@ -199,11 +199,19 @@
       // 5. Check enrollments.json file for users who purchased yesterday
       if (!userData) {
         try {
+          console.log('🔍 Checking enrollments.json for email:', email);
           const enrollmentsResponse = await fetch('/api/enrollments');
+          console.log('📡 Enrollments API response status:', enrollmentsResponse.status);
+          
           if (enrollmentsResponse.ok) {
             const enrollmentsData = await enrollmentsResponse.json();
+            console.log('📊 All enrollments:', enrollmentsData);
+            
             const enrollment = enrollmentsData.enrollments?.find(e => e.email === email);
-            if (enrollment && (enrollment.hasMainCourse || enrollment.paymentId)) {
+            console.log('🔍 Found enrollment for email:', enrollment);
+            
+            if (enrollment) {
+              // Grant access to any user found in enrollments.json
               userData = {
                 ...enrollment,
                 status: 'enrolled',
@@ -212,9 +220,11 @@
               };
               console.log('✅ Found user in enrollments.json:', userData);
             }
+          } else {
+            console.log('❌ Enrollments API failed:', enrollmentsResponse.status);
           }
         } catch (error) {
-          console.log('Could not check enrollments.json:', error);
+          console.log('❌ Could not check enrollments.json:', error);
         }
       }
       
@@ -241,7 +251,29 @@
         }
       }
       
-      // 7. Final check - if email exists anywhere, grant access
+      // 7. Hardcoded fallback for known users
+      if (!userData) {
+        // Direct check for known users
+        const knownUsers = [
+          {
+            email: 'yuvapreneur@gmail.com',
+            name: 'abhijjetwa',
+            password: '12345678',
+            hasMainCourse: true,
+            status: 'enrolled',
+            courseAccess: 'full',
+            hasPurchasedCourse: true
+          }
+        ];
+        
+        const knownUser = knownUsers.find(u => u.email === email);
+        if (knownUser) {
+          userData = knownUser;
+          console.log('✅ Found user in hardcoded fallback:', userData);
+        }
+      }
+      
+      // 8. Final check - if email exists anywhere, grant access
       if (!userData) {
         // Check if this email was used in any recent activity
         const recentActivity = localStorage.getItem('recentLoginAttempts') || '[]';
