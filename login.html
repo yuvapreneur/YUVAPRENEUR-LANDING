@@ -276,18 +276,50 @@
       // Check all possible data sources for user
       let userData = null;
       
-             // 1. First, try to get user from backend
+             // 1. First, try to get user from MongoDB backend
+       try {
+         console.log('🔍 Step 1: Checking MongoDB backend...');
+         const mongoResponse = await fetch('/api/login-mongodb', {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({ email, password })
+         });
+         
+         if (mongoResponse.ok) {
+           const mongoData = await mongoResponse.json();
+           if (mongoData.success && mongoData.user) {
+             console.log('✅ Found user in MongoDB:', mongoData.user);
+             
+             // Store user data for session
+             localStorage.setItem('userEnrollment', JSON.stringify(mongoData.user));
+             localStorage.setItem('userAuthenticated', 'true');
+             localStorage.setItem('loginTimestamp', Date.now().toString());
+             
+             // Redirect to dashboard
+             window.location.href = 'dashboard.html';
+             return;
+           }
+         } else {
+           console.log('❌ MongoDB login failed:', mongoResponse.status);
+         }
+       } catch (error) {
+         console.log('❌ MongoDB backend not available:', error);
+       }
+       
+       // 2. Fallback: try file-based backend
        try {
          const backendResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`);
          if (backendResponse.ok) {
           const backendData = await backendResponse.json();
           if (backendData.success && backendData.user) {
             userData = backendData.user;
-            console.log('✅ Found user in backend:', userData);
+            console.log('✅ Found user in file backend:', userData);
           }
         }
       } catch (error) {
-        console.log('Backend not available, checking local storage');
+        console.log('File backend not available, checking local storage');
       }
       
       // 2. Check enrollment data if backend failed

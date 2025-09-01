@@ -480,7 +480,7 @@
               console.log('📝 Calling payment success endpoint...');
               console.log('📊 User data to save:', userData);
               
-              const paymentSuccessResponse = await fetch('/api/payment-success', {
+              const paymentSuccessResponse = await fetch('/api/payment-success-mongodb', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -709,7 +709,7 @@
         paymentDate: new Date().toISOString()
       };
       
-      fetch('/api/payment-success', {
+      fetch('/api/payment-success-mongodb', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
