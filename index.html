@@ -812,12 +812,38 @@
       });
     }
     
+    // Check database for password hashing
+    function checkDatabasePasswords() {
+      console.log('🔍 Checking database for password hashing...');
+      
+      fetch('/api/auth-mongodb?action=check-database', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Database password check result:', data);
+        console.log('🔍 Password Analysis:');
+        data.passwordAnalysis.forEach(user => {
+          console.log(`📧 ${user.email}: ${user.isHashed ? '✅ HASHED' : '❌ PLAIN TEXT'} (${user.passwordPreview})`);
+        });
+        alert('Database password check completed! Check console for details.');
+      })
+      .catch(error => {
+        console.error('❌ Database check failed:', error);
+        alert('Database check failed! Check console for details.');
+      });
+    }
+    
     // Make test functions available globally
     window.testRazorpayDirect = testRazorpayDirect;
     window.testPaymentSuccessCallback = testPaymentSuccessCallback;
     window.testRegistration = testRegistration;
     window.testLogin = testLogin;
     window.testPasswordHashing = testPasswordHashing;
+    window.checkDatabasePasswords = checkDatabasePasswords;
     
     // Load Razorpay when page loads
     document.addEventListener('DOMContentLoaded', function() {

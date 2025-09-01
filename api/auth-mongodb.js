@@ -143,11 +143,23 @@ export default async function handler(req, res) {
          passwordMatch = await bcrypt.compare(password.trim(), user.password);
          console.log('🔐 Checking hashed password:', passwordMatch);
          console.log('🔐 bcrypt.compare result:', passwordMatch);
+         
+         // 🔎 Important Debugging - as requested
+         console.log('🔍 DEBUG: password, user.password, isMatch');
+         console.log('🔍 password:', password.trim());
+         console.log('🔍 user.password:', user.password);
+         console.log('🔍 isMatch:', passwordMatch);
        } else {
          // Password is plain text (for existing users)
          passwordMatch = user.password && user.password.trim() === password.trim();
          console.log('🔐 Checking plain text password:', passwordMatch);
          console.log('🔐 Plain text comparison result:', passwordMatch);
+         
+         // 🔎 Important Debugging - as requested
+         console.log('🔍 DEBUG: password, user.password, isMatch');
+         console.log('🔍 password:', password.trim());
+         console.log('🔍 user.password:', user.password);
+         console.log('🔍 isMatch:', passwordMatch);
        }
       
       if (!passwordMatch) {
@@ -244,7 +256,34 @@ export default async function handler(req, res) {
         message: 'Password updated successfully'
       });
       
-         } else if (action === 'test-password' && req.method === 'POST') {
+         } else if (action === 'check-database' && req.method === 'GET') {
+       // Database check endpoint - verify password hashing
+       console.log('🔍 Checking database for password hashing...');
+       
+       const users = await enrollments.find({}).limit(5).toArray();
+       console.log('🔍 Found users in database:', users.length);
+       
+       const passwordAnalysis = users.map(user => ({
+         email: user.email,
+         name: user.name,
+         hasPassword: !!user.password,
+         passwordLength: user.password ? user.password.length : 0,
+         isHashed: user.password ? user.password.startsWith('$2a$') : false,
+         passwordPreview: user.password ? user.password.substring(0, 20) + '...' : 'null'
+       }));
+       
+       await client.close();
+       
+       console.log('🔍 Password analysis:', passwordAnalysis);
+       
+       return res.status(200).json({
+         success: true,
+         message: 'Database password check completed',
+         totalUsers: users.length,
+         passwordAnalysis: passwordAnalysis
+       });
+       
+     } else if (action === 'test-password' && req.method === 'POST') {
        // Password hashing test endpoint
        const { password } = req.body;
        
