@@ -127,6 +127,51 @@
       
       console.log('🔍 Login attempt:', { email, password });
       
+      // IMMEDIATE TEST: Check hardcoded users first
+      const knownUsers = [
+        {
+          email: 'yuvapreneur@gmail.com',
+          name: 'abhijjetwa',
+          password: '12345678',
+          hasMainCourse: true,
+          status: 'enrolled',
+          courseAccess: 'full',
+          hasPurchasedCourse: true
+        },
+        {
+          email: 'info.learnabhi@gmail.com',
+          name: 'Learn Abhi',
+          password: 'learnabhi@123',
+          hasMainCourse: true,
+          status: 'enrolled',
+          courseAccess: 'full',
+          hasPurchasedCourse: true
+        }
+      ];
+      
+      console.log('🧪 Testing hardcoded users...');
+      const knownUser = knownUsers.find(u => u.email === email);
+      console.log('🔍 Found known user:', knownUser);
+      
+      if (knownUser && knownUser.password === password.trim()) {
+        console.log('✅ Hardcoded login successful!');
+        
+        // Store user data for session
+        localStorage.setItem('userEnrollment', JSON.stringify(knownUser));
+        localStorage.setItem('userAuthenticated', 'true');
+        localStorage.setItem('loginTimestamp', Date.now().toString());
+        
+        // Redirect to dashboard
+        window.location.href = 'dashboard.html';
+        return;
+      } else if (knownUser) {
+        console.log('❌ Hardcoded user found but password mismatch');
+        alert('❌ Wrong Password\n\nPlease use the correct password for this account.');
+        return;
+      } else {
+        console.log('❌ No hardcoded user found for email:', email);
+      }
+      
       // SIMPLE TEST: Direct check of enrollments.json
       try {
         console.log('🧪 Testing enrollments API...');
