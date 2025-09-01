@@ -786,11 +786,38 @@
       });
     }
     
+    // Test password hashing
+    function testPasswordHashing() {
+      console.log('🧪 Testing password hashing...');
+      
+      const testData = {
+        password: 'test123'
+      };
+      
+      fetch('/api/test-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Password hashing test result:', data);
+        alert('Password hashing test completed! Check console for details.');
+      })
+      .catch(error => {
+        console.error('❌ Password hashing test failed:', error);
+        alert('Password hashing test failed! Check console for details.');
+      });
+    }
+    
     // Make test functions available globally
     window.testRazorpayDirect = testRazorpayDirect;
     window.testPaymentSuccessCallback = testPaymentSuccessCallback;
     window.testRegistration = testRegistration;
     window.testLogin = testLogin;
+    window.testPasswordHashing = testPasswordHashing;
     
     // Load Razorpay when page loads
     document.addEventListener('DOMContentLoaded', function() {

@@ -55,6 +55,11 @@ export default async function handler(req, res) {
     if (password && password.trim()) {
       hashedPassword = await bcrypt.hash(password.trim(), 10);
       console.log('🔐 Password hashed for new user');
+      console.log('🔍 Original password:', password.trim());
+      console.log('🔍 Hashed password:', hashedPassword);
+      console.log('🔍 Hash starts with $2a$:', hashedPassword.startsWith('$2a$'));
+    } else {
+      console.log('⚠️ No password provided for payment success');
     }
     
     // Create enrollment data
