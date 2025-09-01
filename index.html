@@ -741,7 +741,7 @@
         state: 'Maharashtra'
       };
       
-      fetch('/api/register-mongodb', {
+      fetch('/api/auth-mongodb?action=register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -768,7 +768,7 @@
         password: 'test123'
       };
       
-      fetch('/api/login-mongodb', {
+      fetch('/api/auth-mongodb?action=login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

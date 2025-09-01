@@ -279,7 +279,7 @@
              // 1. First, try to get user from MongoDB backend
        try {
          console.log('🔍 Step 1: Checking MongoDB backend...');
-         const mongoResponse = await fetch('/api/login-mongodb', {
+         const mongoResponse = await fetch('/api/auth-mongodb?action=login', {
            method: 'POST',
            headers: {
              'Content-Type': 'application/json',
