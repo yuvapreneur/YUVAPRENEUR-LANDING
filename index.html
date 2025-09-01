@@ -475,15 +475,27 @@
             localStorage.setItem('loginTimestamp', Date.now().toString());
             localStorage.removeItem('tempUserData');
             
-            // Save to backend for cross-browser access
+            // Save to backend for cross-browser access (CRITICAL: This creates the user in DB)
             try {
               console.log('📝 Saving to users API...');
+              console.log('📊 User data to save:', userData);
+              
               const saveResponse = await fetch('/api/users', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(userData)
+                body: JSON.stringify({
+                  name: userData.name,
+                  email: userData.email,
+                  phone: userData.phone,
+                  profession: userData.profession,
+                  city: userData.city,
+                  state: userData.state,
+                  password: userData.password,
+                  status: 'enrolled',
+                  paymentId: userData.paymentId
+                })
               });
               
               console.log('📡 Users API response status:', saveResponse.status);
@@ -493,10 +505,15 @@
                 console.log('✅ User data saved to backend for cross-browser access:', responseData);
               } else {
                 const errorData = await saveResponse.text();
-                console.warn('⚠️ Failed to save user data to backend:', errorData);
+                console.error('❌ CRITICAL: Failed to save user data to backend:', errorData);
+                // Don't continue if user creation fails
+                alert('❌ Payment successful but failed to create account. Please contact support with payment ID: ' + userData.paymentId);
+                return;
               }
             } catch (error) {
-              console.error('❌ Could not save to backend:', error);
+              console.error('❌ CRITICAL: Could not save to backend:', error);
+              alert('❌ Payment successful but failed to create account. Please contact support with payment ID: ' + userData.paymentId);
+              return;
             }
             
             // Save to enrollments.json for admin tracking
@@ -537,9 +554,27 @@
               } else {
                 const errorData = await enrollResponse.text();
                 console.warn('⚠️ Failed to save to enrollments.json:', errorData);
+                // This is not critical, user can still login via users API
               }
             } catch (error) {
               console.error('❌ Could not save to enrollments.json:', error);
+              // This is not critical, user can still login via users API
+            }
+            
+            // Test: Verify user was created in database
+            try {
+              console.log('🧪 Testing: Verifying user creation in database...');
+              const testResponse = await fetch(`/api/users?email=${encodeURIComponent(userData.email)}`);
+              if (testResponse.ok) {
+                const testData = await testResponse.json();
+                if (testData.success && testData.user) {
+                  console.log('✅ VERIFIED: User exists in database:', testData.user);
+                } else {
+                  console.warn('⚠️ WARNING: User not found in database after creation');
+                }
+              }
+            } catch (error) {
+              console.error('❌ Could not verify user creation:', error);
             }
             
             // Redirect to dashboard immediately
