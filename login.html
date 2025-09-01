@@ -153,21 +153,29 @@
       const knownUser = knownUsers.find(u => u.email === email);
       console.log('🔍 Found known user:', knownUser);
       
-      if (knownUser && knownUser.password === password.trim()) {
-        console.log('✅ Hardcoded login successful!');
+      if (knownUser) {
+        console.log('🔐 Password comparison:');
+        console.log('  - Stored password:', knownUser.password);
+        console.log('  - Input password:', password);
+        console.log('  - Input password (trimmed):', password.trim());
+        console.log('  - Passwords match:', knownUser.password === password.trim());
         
-        // Store user data for session
-        localStorage.setItem('userEnrollment', JSON.stringify(knownUser));
-        localStorage.setItem('userAuthenticated', 'true');
-        localStorage.setItem('loginTimestamp', Date.now().toString());
-        
-        // Redirect to dashboard
-        window.location.href = 'dashboard.html';
-        return;
-      } else if (knownUser) {
-        console.log('❌ Hardcoded user found but password mismatch');
-        alert('❌ Wrong Password\n\nPlease use the correct password for this account.');
-        return;
+        if (knownUser.password === password.trim()) {
+          console.log('✅ Hardcoded login successful!');
+          
+          // Store user data for session
+          localStorage.setItem('userEnrollment', JSON.stringify(knownUser));
+          localStorage.setItem('userAuthenticated', 'true');
+          localStorage.setItem('loginTimestamp', Date.now().toString());
+          
+          // Redirect to dashboard
+          window.location.href = 'dashboard.html';
+          return;
+        } else {
+          console.log('❌ Hardcoded user found but password mismatch');
+          alert('❌ Wrong Password\n\nPlease use the correct password for this account.');
+          return;
+        }
       } else {
         console.log('❌ No hardcoded user found for email:', email);
       }
