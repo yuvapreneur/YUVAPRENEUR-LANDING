@@ -727,7 +727,7 @@
       });
     }
     
-    // Test registration endpoint
+    // Test registration endpoint (simple version)
     function testRegistration() {
       console.log('🧪 Testing registration endpoint...');
       
@@ -759,6 +759,34 @@
       });
     }
     
+    // Simple registration test (minimal data)
+    function testSimpleRegistration() {
+      console.log('🧪 Testing simple registration...');
+      
+      const testData = {
+        name: 'Simple Test',
+        email: 'simple@test.com',
+        password: '123456'
+      };
+      
+      fetch('/api/auth-mongodb?action=register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Simple registration result:', data);
+        alert('Simple registration completed! Check console for details.');
+      })
+      .catch(error => {
+        console.error('❌ Simple registration failed:', error);
+        alert('Simple registration failed! Check console for details.');
+      });
+    }
+    
     // Test login endpoint
     function testLogin() {
       console.log('🧪 Testing login endpoint...');
@@ -783,6 +811,33 @@
       .catch(error => {
         console.error('❌ Login test failed:', error);
         alert('Login test failed! Check console for details.');
+      });
+    }
+    
+    // Simple login test
+    function testSimpleLogin() {
+      console.log('🧪 Testing simple login...');
+      
+      const testData = {
+        email: 'simple@test.com',
+        password: '123456'
+      };
+      
+      fetch('/api/auth-mongodb?action=login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Simple login result:', data);
+        alert('Simple login completed! Check console for details.');
+      })
+      .catch(error => {
+        console.error('❌ Simple login failed:', error);
+        alert('Simple login failed! Check console for details.');
       });
     }
     
@@ -841,7 +896,9 @@
     window.testRazorpayDirect = testRazorpayDirect;
     window.testPaymentSuccessCallback = testPaymentSuccessCallback;
     window.testRegistration = testRegistration;
+    window.testSimpleRegistration = testSimpleRegistration;
     window.testLogin = testLogin;
+    window.testSimpleLogin = testSimpleLogin;
     window.testPasswordHashing = testPasswordHashing;
     window.checkDatabasePasswords = checkDatabasePasswords;
     

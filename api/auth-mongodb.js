@@ -57,10 +57,9 @@ export default async function handler(req, res) {
       
              // Hash password
        const hashedPassword = await bcrypt.hash(password.trim(), 10);
-       console.log('🔐 Password hashed for registration');
-       console.log('🔍 Original password:', password.trim());
-       console.log('🔍 Hashed password:', hashedPassword);
-       console.log('🔍 Hash starts with $2a$:', hashedPassword.startsWith('$2a$'));
+       console.log("Original Password:", password.trim());
+       console.log("Hashed Password:", hashedPassword);
+       console.log("Hash starts with $2a$:", hashedPassword.startsWith('$2a$'));
       
       // Create user data
       const userData = {
@@ -131,35 +130,18 @@ export default async function handler(req, res) {
              // Check password (support both hashed and plain text for migration)
        let passwordMatch = false;
        
-       console.log('🔍 DEBUGGING PASSWORD COMPARISON:');
-       console.log('🔍 Entered password:', password.trim());
-       console.log('🔍 Stored password:', user.password);
-       console.log('🔍 Stored password type:', typeof user.password);
-       console.log('🔍 Stored password length:', user.password ? user.password.length : 'null');
-       console.log('🔍 Stored password starts with $2a$:', user.password ? user.password.startsWith('$2a$') : 'null');
+       // 🔎 Direct Debug Logs - as requested
+       console.log("Entered Password:", password.trim());
+       console.log("Stored Password (hashed):", user.password);
        
        if (user.password && user.password.startsWith('$2a$')) {
          // Password is hashed with bcrypt
          passwordMatch = await bcrypt.compare(password.trim(), user.password);
-         console.log('🔐 Checking hashed password:', passwordMatch);
-         console.log('🔐 bcrypt.compare result:', passwordMatch);
-         
-         // 🔎 Important Debugging - as requested
-         console.log('🔍 DEBUG: password, user.password, isMatch');
-         console.log('🔍 password:', password.trim());
-         console.log('🔍 user.password:', user.password);
-         console.log('🔍 isMatch:', passwordMatch);
+         console.log("Password Match Result:", passwordMatch);
        } else {
          // Password is plain text (for existing users)
          passwordMatch = user.password && user.password.trim() === password.trim();
-         console.log('🔐 Checking plain text password:', passwordMatch);
-         console.log('🔐 Plain text comparison result:', passwordMatch);
-         
-         // 🔎 Important Debugging - as requested
-         console.log('🔍 DEBUG: password, user.password, isMatch');
-         console.log('🔍 password:', password.trim());
-         console.log('🔍 user.password:', user.password);
-         console.log('🔍 isMatch:', passwordMatch);
+         console.log("Password Match Result (plain text):", passwordMatch);
        }
       
       if (!passwordMatch) {
