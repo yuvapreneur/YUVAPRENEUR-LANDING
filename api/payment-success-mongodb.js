@@ -1,5 +1,6 @@
 // API endpoint for payment success callback using MongoDB
 import { MongoClient } from 'mongodb';
+import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
   // Add CORS headers
@@ -49,6 +50,13 @@ export default async function handler(req, res) {
     const db = client.db('cafe_masterclass');
     const enrollments = db.collection('enrollments');
     
+    // Hash password if provided
+    let hashedPassword = '';
+    if (password && password.trim()) {
+      hashedPassword = await bcrypt.hash(password.trim(), 10);
+      console.log('🔐 Password hashed for new user');
+    }
+    
     // Create enrollment data
     const enrollmentData = {
       name: name.trim(),
@@ -59,7 +67,7 @@ export default async function handler(req, res) {
       state: state || '',
       hasMainCourse: true,
       bonuses: [],
-      password: password || '',
+      password: hashedPassword,
       paymentId: paymentId,
       paymentDate: paymentDate ? new Date(paymentDate) : new Date(),
       createdAt: new Date(),

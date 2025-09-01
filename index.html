@@ -727,9 +727,70 @@
       });
     }
     
+    // Test registration endpoint
+    function testRegistration() {
+      console.log('🧪 Testing registration endpoint...');
+      
+      const testData = {
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'test123',
+        phone: '9999999999',
+        profession: 'student',
+        city: 'Mumbai',
+        state: 'Maharashtra'
+      };
+      
+      fetch('/api/register-mongodb', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Registration test result:', data);
+        alert('Registration test completed! Check console for details.');
+      })
+      .catch(error => {
+        console.error('❌ Registration test failed:', error);
+        alert('Registration test failed! Check console for details.');
+      });
+    }
+    
+    // Test login endpoint
+    function testLogin() {
+      console.log('🧪 Testing login endpoint...');
+      
+      const testData = {
+        email: 'test@example.com',
+        password: 'test123'
+      };
+      
+      fetch('/api/login-mongodb', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Login test result:', data);
+        alert('Login test completed! Check console for details.');
+      })
+      .catch(error => {
+        console.error('❌ Login test failed:', error);
+        alert('Login test failed! Check console for details.');
+      });
+    }
+    
     // Make test functions available globally
     window.testRazorpayDirect = testRazorpayDirect;
     window.testPaymentSuccessCallback = testPaymentSuccessCallback;
+    window.testRegistration = testRegistration;
+    window.testLogin = testLogin;
     
     // Load Razorpay when page loads
     document.addEventListener('DOMContentLoaded', function() {

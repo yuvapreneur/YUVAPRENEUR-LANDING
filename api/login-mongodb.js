@@ -1,5 +1,6 @@
 // API endpoint for login using MongoDB
 import { MongoClient } from 'mongodb';
+import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
   // Add CORS headers
@@ -54,8 +55,20 @@ export default async function handler(req, res) {
       });
     }
     
-    // Check password
-    if (!user.password || user.password.trim() !== password.trim()) {
+    // Check password (support both hashed and plain text for migration)
+    let passwordMatch = false;
+    
+    if (user.password && user.password.startsWith('$2a$')) {
+      // Password is hashed with bcrypt
+      passwordMatch = await bcrypt.compare(password.trim(), user.password);
+      console.log('🔐 Checking hashed password:', passwordMatch);
+    } else {
+      // Password is plain text (for existing users)
+      passwordMatch = user.password && user.password.trim() === password.trim();
+      console.log('🔐 Checking plain text password:', passwordMatch);
+    }
+    
+    if (!passwordMatch) {
       console.log('❌ Password mismatch for user:', email);
       return res.status(401).json({ 
         success: false, 
