@@ -475,12 +475,12 @@
             localStorage.setItem('loginTimestamp', Date.now().toString());
             localStorage.removeItem('tempUserData');
             
-            // Save to backend for cross-browser access (CRITICAL: This creates the user in DB)
+            // Save to backend via payment success endpoint (CRITICAL: This creates the user in DB)
             try {
-              console.log('📝 Saving to users API...');
+              console.log('📝 Calling payment success endpoint...');
               console.log('📊 User data to save:', userData);
               
-              const saveResponse = await fetch('/api/users', {
+              const paymentSuccessResponse = await fetch('/api/payment-success', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -493,72 +493,27 @@
                   city: userData.city,
                   state: userData.state,
                   password: userData.password,
-                  status: 'enrolled',
-                  paymentId: userData.paymentId
+                  paymentId: userData.paymentId,
+                  paymentDate: userData.paymentDate
                 })
               });
               
-              console.log('📡 Users API response status:', saveResponse.status);
+              console.log('📡 Payment success API response status:', paymentSuccessResponse.status);
               
-              if (saveResponse.ok) {
-                const responseData = await saveResponse.json();
-                console.log('✅ User data saved to backend for cross-browser access:', responseData);
+              if (paymentSuccessResponse.ok) {
+                const responseData = await paymentSuccessResponse.json();
+                console.log('✅ Payment success processed:', responseData);
               } else {
-                const errorData = await saveResponse.text();
-                console.error('❌ CRITICAL: Failed to save user data to backend:', errorData);
+                const errorData = await paymentSuccessResponse.text();
+                console.error('❌ CRITICAL: Failed to process payment success:', errorData);
                 // Don't continue if user creation fails
                 alert('❌ Payment successful but failed to create account. Please contact support with payment ID: ' + userData.paymentId);
                 return;
               }
             } catch (error) {
-              console.error('❌ CRITICAL: Could not save to backend:', error);
+              console.error('❌ CRITICAL: Could not process payment success:', error);
               alert('❌ Payment successful but failed to create account. Please contact support with payment ID: ' + userData.paymentId);
               return;
-            }
-            
-            // Save to enrollments.json for admin tracking
-            try {
-              console.log('📝 Saving to enrollments.json...');
-              const enrollmentData = {
-                _id: Date.now().toString(),
-                name: userData.name,
-                email: userData.email,
-                phone: userData.phone || '',
-                profession: userData.profession || '',
-                city: userData.city || '',
-                state: userData.state || '',
-                hasMainCourse: true,
-                bonuses: [],
-                password: userData.password || '',
-                paymentId: userData.paymentId,
-                paymentDate: userData.paymentDate,
-                createdAt: userData.enrolledAt,
-                updatedAt: new Date().toISOString()
-              };
-              
-              console.log('📊 Enrollment data to save:', enrollmentData);
-              
-              const enrollResponse = await fetch('/api/enrollments', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(enrollmentData)
-              });
-              
-              console.log('📡 Enrollment API response status:', enrollResponse.status);
-              
-              if (enrollResponse.ok) {
-                const responseData = await enrollResponse.json();
-                console.log('✅ Enrollment saved to enrollments.json:', responseData);
-              } else {
-                const errorData = await enrollResponse.text();
-                console.warn('⚠️ Failed to save to enrollments.json:', errorData);
-                // This is not critical, user can still login via users API
-              }
-            } catch (error) {
-              console.error('❌ Could not save to enrollments.json:', error);
-              // This is not critical, user can still login via users API
             }
             
             // Test: Verify user was created in database
