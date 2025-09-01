@@ -14,6 +14,7 @@
   },
   {
     "_id": "1756005451463",
+    
     "name": "abhijjet",
     "email": "abhijeetwankhede61@gmail.com",
     "phone": "9022005019",
@@ -48,17 +49,19 @@
     "password": "12345678"
   },
   {
-    "_id": "1756021276601",
-    "name": "abhijjet",
-    "email": "abhijeetwankhede143@gmail.com",
-    "phone": "9022005019",
-    "password": "abcdefghi",
-    "profession": "",
-    "city": "",
-    "state": "",
+    "_id": "1756385000000",
+    "name": "Learn Abhi",
+    "email": "info.learnabhi@gmail.com",
+    "phone": "9999999999",
+    "profession": "entrepreneur",
+    "city": "Mumbai",
+    "state": "Maharashtra",
     "hasMainCourse": true,
     "bonuses": [],
-    "createdAt": "2025-08-24T07:41:16.603Z",
-    "updatedAt": "2025-08-24T08:13:30.296Z"
+    "password": "learnabhi@123",
+    "paymentId": "pay_test_123456",
+    "paymentDate": "2025-01-25T12:00:00.000Z",
+    "createdAt": "2025-01-25T12:00:00.000Z",
+    "updatedAt": "2025-01-25T12:00:00.000Z"
   }
 ]
