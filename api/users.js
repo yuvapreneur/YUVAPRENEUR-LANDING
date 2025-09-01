@@ -56,8 +56,10 @@ export default async function handler(req, res) {
         }
       }
       
-      // Check if user already exists
-      const existingUserIndex = users.findIndex(user => user.email === email);
+      // Check if user already exists (case-insensitive)
+      const existingUserIndex = users.findIndex(user => 
+        user.email && user.email.toLowerCase().trim() === email.toLowerCase().trim()
+      );
       
       const userData = {
         email: email.toLowerCase(),
@@ -121,7 +123,8 @@ export default async function handler(req, res) {
       let user = null;
       
       if (email) {
-        user = users.find(u => u.email === email.toLowerCase());
+        // Case-insensitive email search
+        user = users.find(u => u.email && u.email.toLowerCase().trim() === email.toLowerCase().trim());
       } else if (phone) {
         user = users.find(u => u.phone === phone);
       }

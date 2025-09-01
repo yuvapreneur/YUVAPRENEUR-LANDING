@@ -234,10 +234,18 @@
           const testData = await testResponse.json();
           console.log('📊 Test data:', testData);
           
-          const testUser = testData.enrollments?.find(e => e.email === email);
+          // Case-insensitive email search
+          const testUser = testData.enrollments?.find(e => 
+            e.email && e.email.toLowerCase().trim() === email.toLowerCase().trim()
+          );
           console.log('🔍 Test user found:', testUser);
+          console.log('🔐 Password comparison:');
+          console.log('  - Stored password:', testUser?.password);
+          console.log('  - Input password:', password);
+          console.log('  - Input password (trimmed):', password.trim());
+          console.log('  - Passwords match:', testUser?.password && testUser.password.trim() === password.trim());
           
-          if (testUser && testUser.password === password) {
+          if (testUser && testUser.password && testUser.password.trim() === password.trim()) {
             console.log('✅ Test login successful!');
             // Grant access
             const userData = {

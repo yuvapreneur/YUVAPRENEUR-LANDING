@@ -693,6 +693,44 @@
       openRazorpayPayment(testData);
     }
     
+    // Test payment success callback directly
+    function testPaymentSuccessCallback() {
+      console.log('🧪 Testing payment success callback directly...');
+      
+      const testData = {
+        name: 'Test User',
+        email: 'test@example.com',
+        phone: '9999999999',
+        profession: 'student',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        password: 'test123',
+        paymentId: 'pay_test_' + Date.now(),
+        paymentDate: new Date().toISOString()
+      };
+      
+      fetch('/api/payment-success', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Payment success test result:', data);
+        alert('Payment success test completed! Check console for details.');
+      })
+      .catch(error => {
+        console.error('❌ Payment success test failed:', error);
+        alert('Payment success test failed! Check console for details.');
+      });
+    }
+    
+    // Make test functions available globally
+    window.testRazorpayDirect = testRazorpayDirect;
+    window.testPaymentSuccessCallback = testPaymentSuccessCallback;
+    
     // Load Razorpay when page loads
     document.addEventListener('DOMContentLoaded', function() {
       loadRazorpay();

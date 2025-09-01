@@ -76,8 +76,10 @@ export default async function handler(req, res) {
       }
     }
     
-    // Check if user already exists
-    const existingUserIndex = users.findIndex(user => user.email === userData.email);
+    // Check if user already exists (case-insensitive)
+    const existingUserIndex = users.findIndex(user => 
+      user.email && user.email.toLowerCase().trim() === userData.email.toLowerCase().trim()
+    );
     
     if (existingUserIndex >= 0) {
       // Update existing user
