@@ -482,8 +482,8 @@
                console.log('📝 Calling payment verification endpoint...');
                console.log('📊 User data to save:', userData);
                
-               // Call backend but don't wait for response - proceed immediately
-               fetch('/api/payment-success-mongodb', {
+               // Call backend and wait for response
+               const paymentVerificationResponse = await fetch('/api/payment-success-mongodb', {
                  method: 'POST',
                  headers: {
                    'Content-Type': 'application/json',
@@ -501,31 +501,45 @@
                    razorpay_order_id: response.razorpay_order_id,
                    razorpay_signature: response.razorpay_signature
                  })
-               }).then(response => {
-                 console.log('📡 Backend response status:', response.status);
-                 if (response.ok) {
-                   console.log('✅ Backend user creation successful');
-                 } else {
-                   console.log('⚠️ Backend user creation failed, but proceeding anyway');
-                 }
-               }).catch(error => {
-                 console.log('⚠️ Backend call failed, but proceeding anyway:', error);
                });
                
-               console.log('✅ Payment successful, proceeding to dashboard immediately');
+               console.log('📡 Payment verification response status:', paymentVerificationResponse.status);
                
-               // Redirect to dashboard immediately without waiting for backend
-               setTimeout(() => {
-                 window.location.href = 'dashboard.html';
-               }, 1000);
+               if (paymentVerificationResponse.ok) {
+                 const responseData = await paymentVerificationResponse.json();
+                 console.log('✅ Payment verification successful:', responseData);
+                 
+                 // Show success message
+                 messageDiv.innerHTML = '<div class="text-green-600 font-semibold">✅ Payment verified! Redirecting to dashboard...</div>';
+                 
+                 // Redirect to dashboard after successful verification
+                 setTimeout(() => {
+                   window.location.href = 'dashboard.html';
+                 }, 1000);
+                 
+               } else {
+                 const errorData = await paymentVerificationResponse.text();
+                 console.error('❌ Payment verification failed:', errorData);
+                 
+                 // Show error message
+                 messageDiv.innerHTML = '<div class="text-red-600 font-semibold">❌ Payment verification failed. Please contact support.</div>';
+                 
+                 // Reset button
+                 const submitBtn = document.querySelector('#enrollmentForm button[type="submit"]');
+                 submitBtn.textContent = '🚀 Enroll Now - ₹1';
+                 submitBtn.disabled = false;
+               }
                
              } catch (error) {
                console.error('❌ Backend call error:', error);
-               // Still proceed to dashboard even if backend fails
-               console.log('✅ Proceeding to dashboard despite backend error');
-               setTimeout(() => {
-                 window.location.href = 'dashboard.html';
-               }, 1000);
+               
+               // Show error message
+               messageDiv.innerHTML = '<div class="text-red-600 font-semibold">❌ Payment verification failed. Please contact support.</div>';
+               
+               // Reset button
+               const submitBtn = document.querySelector('#enrollmentForm button[type="submit"]');
+               submitBtn.textContent = '🚀 Enroll Now - ₹1';
+               submitBtn.disabled = false;
              }
             
           } catch (error) {

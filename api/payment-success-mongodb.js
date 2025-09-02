@@ -49,22 +49,94 @@ export default async function handler(req, res) {
     });
     
     // Validate required fields
-    if (!name || !email || !paymentId) {
-      console.log('❌ Missing required fields:', { name: !!name, email: !!email, paymentId: !!paymentId });
+    if (!name || !email || !paymentId || !razorpay_order_id || !razorpay_signature) {
+      console.log('❌ Missing required fields:', { 
+        name: !!name, 
+        email: !!email, 
+        paymentId: !!paymentId,
+        razorpay_order_id: !!razorpay_order_id,
+        razorpay_signature: !!razorpay_signature
+      });
       return res.status(400).json({ 
         success: false, 
-        message: 'Name, email, and payment ID are required' 
+        message: 'Name, email, payment ID, order ID, and signature are required' 
       });
     }
     
     console.log('💳 Starting payment verification for:', { name, email, paymentId });
     
-    // Simplified approach: Skip Razorpay API verification and proceed directly to user creation
-    // Since payment was successful on frontend, we trust it and create the user account
-    console.log('⚠️ Skipping Razorpay API verification - proceeding directly to user creation');
+    // Step 1: Verify Razorpay payment signature
+    console.log('🔐 Step 1: Verifying Razorpay payment signature...');
     
-    // Step 1: Create user account
-    console.log('👤 Step 1: Creating user account...');
+    try {
+      // Generate signature on backend
+      const hmac = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET);
+      hmac.update(razorpay_order_id + '|' + paymentId);
+      const generatedSignature = hmac.digest('hex');
+      
+      console.log('🔍 Signature verification details:', {
+        orderId: razorpay_order_id,
+        paymentId: paymentId,
+        receivedSignature: razorpay_signature,
+        generatedSignature: generatedSignature,
+        signaturesMatch: generatedSignature === razorpay_signature
+      });
+      
+      if (generatedSignature !== razorpay_signature) {
+        console.log('❌ Payment signature verification failed');
+        return res.status(400).json({
+          success: false,
+          message: 'Payment verification failed - invalid signature'
+        });
+      }
+      
+      console.log('✅ Payment signature verified successfully');
+      
+    } catch (signatureError) {
+      console.error('❌ Signature verification error:', signatureError);
+      return res.status(400).json({
+        success: false,
+        message: 'Payment verification failed - signature error'
+      });
+    }
+    
+    // Step 2: Verify payment with Razorpay API
+    console.log('🔍 Step 2: Verifying payment with Razorpay API...');
+    
+    try {
+      const razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET,
+      });
+      
+      const payment = await razorpay.payments.fetch(paymentId);
+      console.log('📊 Razorpay payment details:', {
+        id: payment.id,
+        status: payment.status,
+        amount: payment.amount,
+        currency: payment.currency
+      });
+      
+      if (payment.status !== 'captured') {
+        console.log('❌ Payment not captured yet:', payment.status);
+        return res.status(400).json({
+          success: false,
+          message: 'Payment not captured yet'
+        });
+      }
+      
+      console.log('✅ Payment verified with Razorpay API');
+      
+    } catch (apiError) {
+      console.error('❌ Razorpay API verification error:', apiError);
+      return res.status(400).json({
+        success: false,
+        message: 'Payment verification failed - API error'
+      });
+    }
+    
+    // Step 3: Create or update user in database
+    console.log('👤 Step 3: Creating/updating user account...');
     
     // Connect to MongoDB
     const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
@@ -229,6 +301,7 @@ export default async function handler(req, res) {
       console.error('❌ Database operation failed:', dbError);
       throw dbError;
     }
+    
     await client.close();
     console.log('🔌 MongoDB connection closed');
     
@@ -238,20 +311,20 @@ export default async function handler(req, res) {
       paymentId: result.value.paymentId 
     });
     
-          // Step 3: Return success response
-      return res.status(200).json({
-        success: true,
-        message: 'Payment verified and user created successfully',
-        user: {
-          _id: result.value._id,
-          name: result.value.name,
-          email: result.value.email,
-          phone: result.value.phone,
-          hasMainCourse: result.value.hasMainCourse,
-          paymentId: result.value.paymentId,
-          createdAt: result.value.createdAt
-        }
-      });
+    // Step 4: Return success response
+    return res.status(200).json({
+      success: true,
+      message: 'Payment verified and user created successfully',
+      user: {
+        _id: result.value._id,
+        name: result.value.name,
+        email: result.value.email,
+        phone: result.value.phone,
+        hasMainCourse: result.value.hasMainCourse,
+        paymentId: result.value.paymentId,
+        createdAt: result.value.createdAt
+      }
+    });
     
   } catch (error) {
     console.error('❌ Payment success error:', error);
