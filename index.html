@@ -438,69 +438,92 @@
     });
     
         // Razorpay payment function
-    function openRazorpayPayment(userData) {
-      const options = {
-        key: 'rzp_live_RAD4Q0Jypcn82a', // Your live key
-        amount: 100, // ₹1 in paise
-        currency: 'INR',
-        name: 'Yuvapreneur',
-        description: 'Complete Course + 4 Bonuses - Full Access',
-        image: 'https://yuvapreneur.in/logo.png',
-        handler: async function (response) {
-          // Payment successful
-          console.log('Payment successful. ID:', response.razorpay_payment_id);
-          console.log('Payment signature:', response.razorpay_signature);
-          console.log('Order ID:', response.razorpay_order_id);
-          
-          // Show success message
-          const messageDiv = document.getElementById('enrollmentMessage');
-          messageDiv.innerHTML = '<div class="text-green-600 font-semibold">✅ Payment Successful! Verifying payment...</div>';
-          
-          try {
-            const tempData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
+    async function openRazorpayPayment(userData) {
+      try {
+        // Step 1: Create Razorpay order first
+        console.log('🔍 Step 1: Creating Razorpay order...');
+        const orderResponse = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            amount: 100, // ₹1 in paise
+            currency: 'INR',
+            receipt: 'receipt_' + Date.now()
+          })
+        });
+        
+        if (!orderResponse.ok) {
+          throw new Error('Failed to create order');
+        }
+        
+        const orderData = await orderResponse.json();
+        console.log('✅ Order created:', orderData);
+        
+        const options = {
+          key: 'rzp_live_RAD4Q0Jypcn82a', // Your live key
+          amount: 100, // ₹1 in paise
+          currency: 'INR',
+          name: 'Yuvapreneur',
+          description: 'Complete Course + 4 Bonuses - Full Access',
+          image: 'https://yuvapreneur.in/logo.png',
+          order_id: orderData.orderId, // Use the created order ID
+          handler: async function (response) {
+            // Payment successful
+            console.log('Payment successful. ID:', response.razorpay_payment_id);
+            console.log('Payment signature:', response.razorpay_signature);
+            console.log('Order ID:', response.razorpay_order_id);
             
-            // Create user data with payment info
-            const userData = {
-              ...tempData,
-              status: 'enrolled',
-              courseAccess: 'full',
-              hasPurchasedCourse: true,
-              paymentId: response.razorpay_payment_id,
-              paymentDate: new Date().toISOString(),
-              enrolledAt: new Date().toISOString(),
-              lastLogin: new Date().toISOString()
-            };
+            // Show success message
+            const messageDiv = document.getElementById('enrollmentMessage');
+            messageDiv.innerHTML = '<div class="text-green-600 font-semibold">✅ Payment Successful! Verifying payment...</div>';
             
-            // Store user data immediately for local access
-            localStorage.setItem('userEnrollment', JSON.stringify(userData));
-            localStorage.setItem('userAuthenticated', 'true');
-            localStorage.setItem('loginTimestamp', Date.now().toString());
-            localStorage.removeItem('tempUserData');
-            
-            // Save to backend via payment verification endpoint (CRITICAL: This verifies payment and creates user)
             try {
-              console.log('📝 Calling payment verification endpoint...');
-              console.log('📊 User data to save:', userData);
+              const tempData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
               
-              const paymentVerificationResponse = await fetch('/api/payment-success-mongodb', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  name: userData.name,
-                  email: userData.email,
-                  phone: userData.phone,
-                  profession: userData.profession,
-                  city: userData.city,
-                  state: userData.state,
-                  password: userData.password || tempData.password || '',
-                  paymentId: userData.paymentId,
-                  paymentDate: userData.paymentDate,
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_signature: response.razorpay_signature
-                })
-              });
+              // Create user data with payment info
+              const userData = {
+                ...tempData,
+                status: 'enrolled',
+                courseAccess: 'full',
+                hasPurchasedCourse: true,
+                paymentId: response.razorpay_payment_id,
+                paymentDate: new Date().toISOString(),
+                enrolledAt: new Date().toISOString(),
+                lastLogin: new Date().toISOString()
+              };
+              
+              // Store user data immediately for local access
+              localStorage.setItem('userEnrollment', JSON.stringify(userData));
+              localStorage.setItem('userAuthenticated', 'true');
+              localStorage.setItem('loginTimestamp', Date.now().toString());
+              localStorage.removeItem('tempUserData');
+              
+              // Save to backend via payment verification endpoint (CRITICAL: This verifies payment and creates user)
+              try {
+                console.log('📝 Calling payment verification endpoint...');
+                console.log('📊 User data to save:', userData);
+                
+                const paymentVerificationResponse = await fetch('/api/payment-success-mongodb', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    name: userData.name,
+                    email: userData.email,
+                    phone: userData.phone,
+                    profession: userData.profession,
+                    city: userData.city,
+                    state: userData.state,
+                    password: userData.password || tempData.password || '',
+                    paymentId: userData.paymentId,
+                    paymentDate: userData.paymentDate,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                  })
+                });
               
               console.log('📡 Payment verification API response status:', paymentVerificationResponse.status);
               console.log('📊 Data sent to payment verification:', {
