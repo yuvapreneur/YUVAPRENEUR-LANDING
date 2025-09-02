@@ -480,7 +480,7 @@
               console.log('📝 Calling payment verification endpoint...');
               console.log('📊 User data to save:', userData);
               
-              const paymentVerificationResponse = await fetch('/api/payment/verify', {
+              const paymentVerificationResponse = await fetch('/api/payment-success-mongodb', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

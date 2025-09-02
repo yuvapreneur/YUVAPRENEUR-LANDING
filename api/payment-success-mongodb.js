@@ -1,6 +1,7 @@
-// API endpoint for payment success callback using MongoDB
+// API endpoint for payment verification and user creation
 import { MongoClient } from 'mongodb';
 import bcrypt from 'bcryptjs';
+import Razorpay from 'razorpay';
 
 export default async function handler(req, res) {
   // Add CORS headers
@@ -14,7 +15,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
   
   try {
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
       paymentDate 
     } = req.body;
     
-    console.log('🔍 DEBUG: Received payment success data:', {
+    console.log('🔍 DEBUG: Received payment verification request:', {
       name: name ? 'present' : 'missing',
       email: email ? 'present' : 'missing', 
       phone: phone ? 'present' : 'missing',
@@ -42,6 +43,7 @@ export default async function handler(req, res) {
       paymentDate: paymentDate ? 'present' : 'missing'
     });
     
+    // Validate required fields
     if (!name || !email || !paymentId) {
       console.log('❌ Missing required fields:', { name: !!name, email: !!email, paymentId: !!paymentId });
       return res.status(400).json({ 
@@ -50,7 +52,45 @@ export default async function handler(req, res) {
       });
     }
     
-    console.log('💳 Payment success callback received:', { name, email, paymentId });
+    console.log('💳 Starting payment verification for:', { name, email, paymentId });
+    
+    // Step 1: Verify Razorpay payment
+    try {
+      console.log('🔍 Step 1: Verifying Razorpay payment...');
+      
+      const razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID || 'rzp_live_RAD4Q0Jypcn82a',
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+      });
+      
+      const payment = await razorpay.payments.fetch(paymentId);
+      console.log('📊 Payment details:', {
+        id: payment.id,
+        status: payment.status,
+        amount: payment.amount,
+        currency: payment.currency,
+        method: payment.method,
+        captured: payment.captured
+      });
+      
+      // Check if payment is captured
+      if (payment.status !== 'captured') {
+        console.log('❌ Payment not captured. Status:', payment.status);
+        return res.status(400).json({
+          success: false,
+          message: `Payment not captured. Status: ${payment.status}`
+        });
+      }
+      
+      console.log('✅ Payment verification successful');
+      
+    } catch (paymentError) {
+      console.error('❌ Payment verification failed:', paymentError);
+      return res.status(400).json({
+        success: false,
+        message: `Payment verification failed: ${paymentError.message}`
+      });
+    }
     
     // Connect to MongoDB
     const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
@@ -115,8 +155,8 @@ export default async function handler(req, res) {
         
         return res.status(200).json({
           success: true,
-          message: 'Enrollment saved successfully (file-based)',
-          enrollment: {
+          message: 'Payment verified and user created successfully (file-based)',
+          user: {
             name: enrollmentData.name,
             email: enrollmentData.email,
             phone: enrollmentData.phone,
@@ -199,19 +239,20 @@ export default async function handler(req, res) {
       paymentId: result.value.paymentId 
     });
     
-    return res.status(200).json({
-      success: true,
-      message: 'Enrollment saved successfully',
-      enrollment: {
-        _id: result.value._id,
-        name: result.value.name,
-        email: result.value.email,
-        phone: result.value.phone,
-        hasMainCourse: result.value.hasMainCourse,
-        paymentId: result.value.paymentId,
-        createdAt: result.value.createdAt
-      }
-    });
+          // Step 3: Return success response
+      return res.status(200).json({
+        success: true,
+        message: 'Payment verified and user created successfully',
+        user: {
+          _id: result.value._id,
+          name: result.value.name,
+          email: result.value.email,
+          phone: result.value.phone,
+          hasMainCourse: result.value.hasMainCourse,
+          paymentId: result.value.paymentId,
+          createdAt: result.value.createdAt
+        }
+      });
     
   } catch (error) {
     console.error('❌ Payment success error:', error);
