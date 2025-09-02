@@ -239,33 +239,32 @@ export default async function handler(req, res) {
       });
       
          } else if (action === 'check-database' && req.method === 'GET') {
-       // Database check endpoint - verify password hashing
-       console.log('🔍 Checking database for password hashing...');
-       
-       const users = await enrollments.find({}).limit(5).toArray();
-       console.log('🔍 Found users in database:', users.length);
-       
-       const passwordAnalysis = users.map(user => ({
-         email: user.email,
-         name: user.name,
-         hasPassword: !!user.password,
-         passwordLength: user.password ? user.password.length : 0,
-         isHashed: user.password ? user.password.startsWith('$2a$') : false,
-         passwordPreview: user.password ? user.password.substring(0, 20) + '...' : 'null'
-       }));
-       
-       await client.close();
-       
-       console.log('🔍 Password analysis:', passwordAnalysis);
-       
-       return res.status(200).json({
-         success: true,
-         message: 'Database password check completed',
-         totalUsers: users.length,
-         passwordAnalysis: passwordAnalysis
-       });
-       
-     } else if (action === 'test-password' && req.method === 'POST') {
+      // Debug endpoint to check all users in database
+      console.log('🔍 Checking all users in database...');
+      
+      const allUsers = await enrollments.find({}).toArray();
+      await client.close();
+      
+      console.log(`📊 Found ${allUsers.length} users in database`);
+      
+      const passwordAnalysis = allUsers.map(user => ({
+        email: user.email,
+        name: user.name,
+        hasPassword: !!user.password,
+        isHashed: user.password ? user.password.startsWith('$2a$') : false,
+        passwordPreview: user.password ? user.password.substring(0, 20) + '...' : 'none',
+        paymentId: user.paymentId || 'none',
+        createdAt: user.createdAt
+      }));
+      
+      return res.status(200).json({
+        success: true,
+        message: `Found ${allUsers.length} users in database`,
+        totalUsers: allUsers.length,
+        passwordAnalysis: passwordAnalysis
+      });
+      
+    } else if (action === 'test-password' && req.method === 'POST') {
        // Password hashing test endpoint
        const { password } = req.body;
        

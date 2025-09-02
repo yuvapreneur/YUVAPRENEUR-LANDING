@@ -194,16 +194,41 @@ export default async function handler(req, res) {
       paymentId: enrollmentData.paymentId
     });
     
-    const result = await enrollments.findOneAndUpdate(
-      { email: enrollmentData.email },
-      { $set: enrollmentData },
-      { 
-        upsert: true, 
-        returnDocument: 'after'
+    try {
+      const result = await enrollments.findOneAndUpdate(
+        { email: enrollmentData.email },
+        { $set: enrollmentData },
+        { 
+          upsert: true, 
+          returnDocument: 'after'
+        }
+      );
+      
+      console.log('✅ User created/updated successfully in MongoDB');
+      console.log('📊 Database result:', {
+        email: result.value.email,
+        name: result.value.name,
+        paymentId: result.value.paymentId,
+        hasPassword: !!result.value.password,
+        passwordStartsWithHash: result.value.password ? result.value.password.startsWith('$2a$') : false
+      });
+      
+      // Verify user exists in database
+      const verifyUser = await enrollments.findOne({ email: enrollmentData.email });
+      if (verifyUser) {
+        console.log('✅ VERIFICATION: User confirmed in database:', {
+          email: verifyUser.email,
+          name: verifyUser.name,
+          paymentId: verifyUser.paymentId
+        });
+      } else {
+        console.log('❌ VERIFICATION FAILED: User not found in database after creation');
       }
-    );
-    
-    console.log('✅ Database operation completed');
+      
+    } catch (dbError) {
+      console.error('❌ Database operation failed:', dbError);
+      throw dbError;
+    }
     await client.close();
     console.log('🔌 MongoDB connection closed');
     
