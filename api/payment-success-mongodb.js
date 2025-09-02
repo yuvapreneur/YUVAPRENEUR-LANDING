@@ -55,8 +55,81 @@ export default async function handler(req, res) {
     // Connect to MongoDB
     const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
     if (!mongoUri) {
-      console.error('❌ MONGODB_URI is missing');
-      throw new Error('MONGODB_URI is missing. Set it in Vercel → Project → Settings → Environment Variables');
+      console.error('❌ MONGODB_URI is missing - using file-based fallback');
+      
+      // Fallback to file-based system
+      try {
+        const fs = require('fs');
+        const path = require('path');
+        
+        // Read existing enrollments
+        const enrollmentsPath = path.join(process.cwd(), 'enrollments.json');
+        let enrollments = [];
+        
+        if (fs.existsSync(enrollmentsPath)) {
+          const data = fs.readFileSync(enrollmentsPath, 'utf8');
+          enrollments = JSON.parse(data);
+        }
+        
+        // Hash password if provided
+        let hashedPassword = '';
+        if (password && password.trim()) {
+          hashedPassword = await bcrypt.hash(password.trim(), 10);
+          console.log('🔐 Password hashed for new user (file-based)');
+          console.log('🔍 Original password:', password.trim());
+          console.log('🔍 Hashed password:', hashedPassword);
+        }
+        
+        // Create enrollment data
+        const enrollmentData = {
+          name: name.trim(),
+          email: email.toLowerCase().trim(),
+          phone: phone || '',
+          profession: profession || '',
+          city: city || '',
+          state: state || '',
+          hasMainCourse: true,
+          bonuses: [],
+          password: hashedPassword,
+          paymentId: paymentId,
+          paymentDate: paymentDate ? new Date(paymentDate) : new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        
+        // Check if user already exists
+        const existingIndex = enrollments.findIndex(e => e.email === enrollmentData.email);
+        if (existingIndex >= 0) {
+          // Update existing user
+          enrollments[existingIndex] = { ...enrollments[existingIndex], ...enrollmentData };
+          console.log('✅ Updated existing user in file-based system');
+        } else {
+          // Add new user
+          enrollments.push(enrollmentData);
+          console.log('✅ Added new user to file-based system');
+        }
+        
+        // Save to file
+        fs.writeFileSync(enrollmentsPath, JSON.stringify(enrollments, null, 2));
+        console.log('💾 Saved to enrollments.json');
+        
+        return res.status(200).json({
+          success: true,
+          message: 'Enrollment saved successfully (file-based)',
+          enrollment: {
+            name: enrollmentData.name,
+            email: enrollmentData.email,
+            phone: enrollmentData.phone,
+            hasMainCourse: enrollmentData.hasMainCourse,
+            paymentId: enrollmentData.paymentId,
+            createdAt: enrollmentData.createdAt
+          }
+        });
+        
+      } catch (fileError) {
+        console.error('❌ File-based fallback also failed:', fileError);
+        throw new Error('Both MongoDB and file-based systems failed');
+      }
     }
     
     console.log('🔗 Connecting to MongoDB...');
