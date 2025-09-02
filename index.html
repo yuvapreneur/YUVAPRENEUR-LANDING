@@ -475,12 +475,12 @@
             localStorage.setItem('loginTimestamp', Date.now().toString());
             localStorage.removeItem('tempUserData');
             
-            // Save to backend via payment success endpoint (CRITICAL: This creates the user in DB)
+            // Save to backend via payment verification endpoint (CRITICAL: This verifies payment and creates user)
             try {
-              console.log('📝 Calling payment success endpoint...');
+              console.log('📝 Calling payment verification endpoint...');
               console.log('📊 User data to save:', userData);
               
-              const paymentSuccessResponse = await fetch('/api/payment-success-mongodb', {
+              const paymentVerificationResponse = await fetch('/api/payment/verify', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -498,8 +498,8 @@
                 })
               });
               
-              console.log('📡 Payment success API response status:', paymentSuccessResponse.status);
-              console.log('📊 Data sent to payment success:', {
+              console.log('📡 Payment verification API response status:', paymentVerificationResponse.status);
+              console.log('📊 Data sent to payment verification:', {
                 name: userData.name,
                 email: userData.email,
                 phone: userData.phone,
@@ -511,14 +511,22 @@
                 paymentDate: userData.paymentDate
               });
               
-              if (paymentSuccessResponse.ok) {
-                const responseData = await paymentSuccessResponse.json();
-                console.log('✅ Payment success processed:', responseData);
+              if (paymentVerificationResponse.ok) {
+                const responseData = await paymentVerificationResponse.json();
+                console.log('✅ Payment verification processed:', responseData);
+                
+                if (responseData.success) {
+                  console.log('✅ Payment verified and user created successfully');
+                } else {
+                  console.error('❌ Payment verification failed:', responseData.message);
+                  alert('❌ Payment verification failed: ' + responseData.message);
+                  return;
+                }
               } else {
-                const errorData = await paymentSuccessResponse.text();
-                console.error('❌ CRITICAL: Failed to process payment success:', errorData);
-                // Don't continue if user creation fails
-                alert('❌ Payment successful but failed to create account. Please contact support with payment ID: ' + userData.paymentId);
+                const errorData = await paymentVerificationResponse.text();
+                console.error('❌ CRITICAL: Failed to verify payment:', errorData);
+                // Don't continue if payment verification fails
+                alert('❌ Payment verification failed. Please contact support with payment ID: ' + userData.paymentId);
                 return;
               }
             } catch (error) {
