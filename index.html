@@ -492,13 +492,24 @@
                   profession: userData.profession,
                   city: userData.city,
                   state: userData.state,
-                  password: userData.password,
+                  password: userData.password || tempData.password || '',
                   paymentId: userData.paymentId,
                   paymentDate: userData.paymentDate
                 })
               });
               
               console.log('📡 Payment success API response status:', paymentSuccessResponse.status);
+              console.log('📊 Data sent to payment success:', {
+                name: userData.name,
+                email: userData.email,
+                phone: userData.phone,
+                profession: userData.profession,
+                city: userData.city,
+                state: userData.state,
+                password: userData.password || tempData.password || '',
+                paymentId: userData.paymentId,
+                paymentDate: userData.paymentDate
+              });
               
               if (paymentSuccessResponse.ok) {
                 const responseData = await paymentSuccessResponse.json();

@@ -30,7 +30,20 @@ export default async function handler(req, res) {
       paymentDate 
     } = req.body;
     
+    console.log('🔍 DEBUG: Received payment success data:', {
+      name: name ? 'present' : 'missing',
+      email: email ? 'present' : 'missing', 
+      phone: phone ? 'present' : 'missing',
+      profession: profession ? 'present' : 'missing',
+      city: city ? 'present' : 'missing',
+      state: state ? 'present' : 'missing',
+      password: password ? 'present' : 'missing',
+      paymentId: paymentId ? 'present' : 'missing',
+      paymentDate: paymentDate ? 'present' : 'missing'
+    });
+    
     if (!name || !email || !paymentId) {
+      console.log('❌ Missing required fields:', { name: !!name, email: !!email, paymentId: !!paymentId });
       return res.status(400).json({ 
         success: false, 
         message: 'Name, email, and payment ID are required' 
@@ -42,13 +55,18 @@ export default async function handler(req, res) {
     // Connect to MongoDB
     const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
     if (!mongoUri) {
+      console.error('❌ MONGODB_URI is missing');
       throw new Error('MONGODB_URI is missing. Set it in Vercel → Project → Settings → Environment Variables');
     }
     
+    console.log('🔗 Connecting to MongoDB...');
     const client = new MongoClient(mongoUri);
     await client.connect();
+    console.log('✅ Connected to MongoDB successfully');
+    
     const db = client.db('cafe_masterclass');
     const enrollments = db.collection('enrollments');
+    console.log('📊 Using database: cafe_masterclass, collection: enrollments');
     
     // Hash password if provided
     let hashedPassword = '';
@@ -80,6 +98,15 @@ export default async function handler(req, res) {
     };
     
     // Save new enrollment (or update if user already exists) - UPSERT
+    console.log('💾 Saving enrollment data to MongoDB...');
+    console.log('📝 Enrollment data:', {
+      name: enrollmentData.name,
+      email: enrollmentData.email,
+      hasPassword: !!enrollmentData.password,
+      passwordLength: enrollmentData.password ? enrollmentData.password.length : 0,
+      paymentId: enrollmentData.paymentId
+    });
+    
     const result = await enrollments.findOneAndUpdate(
       { email: enrollmentData.email },
       { $set: enrollmentData },
@@ -89,7 +116,9 @@ export default async function handler(req, res) {
       }
     );
     
+    console.log('✅ Database operation completed');
     await client.close();
+    console.log('🔌 MongoDB connection closed');
     
     console.log('✅ Enrollment saved/updated in MongoDB:', { 
       email: result.value.email, 
