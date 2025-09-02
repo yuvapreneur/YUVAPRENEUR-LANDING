@@ -2,6 +2,7 @@
 import { MongoClient } from 'mongodb';
 import bcrypt from 'bcryptjs';
 import Razorpay from 'razorpay';
+import crypto from 'crypto';
 
 export default async function handler(req, res) {
   // Add CORS headers
@@ -28,7 +29,9 @@ export default async function handler(req, res) {
       state, 
       password, 
       paymentId, 
-      paymentDate 
+      paymentDate,
+      razorpay_order_id,
+      razorpay_signature
     } = req.body;
     
     console.log('🔍 DEBUG: Received payment verification request:', {
@@ -40,7 +43,9 @@ export default async function handler(req, res) {
       state: state ? 'present' : 'missing',
       password: password ? 'present' : 'missing',
       paymentId: paymentId ? 'present' : 'missing',
-      paymentDate: paymentDate ? 'present' : 'missing'
+      paymentDate: paymentDate ? 'present' : 'missing',
+      razorpay_order_id: razorpay_order_id ? 'present' : 'missing',
+      razorpay_signature: razorpay_signature ? 'present' : 'missing'
     });
     
     // Validate required fields
@@ -54,9 +59,43 @@ export default async function handler(req, res) {
     
     console.log('💳 Starting payment verification for:', { name, email, paymentId });
     
-    // Step 1: Verify Razorpay payment
+    // Step 1: Verify Razorpay signature (if provided)
+    if (razorpay_order_id && razorpay_signature) {
+      try {
+        console.log('🔍 Step 1: Verifying Razorpay signature...');
+        
+        const generated_signature = crypto
+          .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+          .update(razorpay_order_id + "|" + paymentId)
+          .digest("hex");
+        
+        console.log('🔐 Generated signature:', generated_signature);
+        console.log('🔐 Received signature:', razorpay_signature);
+        
+        if (generated_signature !== razorpay_signature) {
+          console.log('❌ Signature verification failed');
+          return res.status(400).json({
+            success: false,
+            message: 'Payment signature verification failed'
+          });
+        }
+        
+        console.log('✅ Signature verification successful');
+        
+      } catch (signatureError) {
+        console.error('❌ Signature verification error:', signatureError);
+        return res.status(400).json({
+          success: false,
+          message: `Signature verification error: ${signatureError.message}`
+        });
+      }
+    } else {
+      console.log('⚠️ Skipping signature verification (order_id or signature not provided)');
+    }
+    
+    // Step 2: Verify payment with Razorpay API
     try {
-      console.log('🔍 Step 1: Verifying Razorpay payment...');
+      console.log('🔍 Step 2: Verifying payment with Razorpay API...');
       
       const razorpay = new Razorpay({
         key_id: process.env.RAZORPAY_KEY_ID || 'rzp_live_RAD4Q0Jypcn82a',
