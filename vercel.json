@@ -10,6 +10,7 @@
     { "src": "uploads/**", "use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)\\.css", "headers": { "cache-control": "no-cache" }, "dest": "/$1.css" },
     { "src": "/(.*)\\.html", "headers": { "cache-control": "no-cache" }, "dest": "/$1.html" },
     { "src": "/(.*)\\.json", "headers": { "cache-control": "no-cache" }, "dest": "/$1.json" }
