@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Debug Tool - Café Business Masterclass</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .search-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .user-card {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .user-card.found {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        .user-card.not-found {
+            border-color: #dc3545;
+            background: #fff8f8;
+        }
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .info-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9em;
+        }
+        .info-value {
+            color: #333;
+            margin-top: 5px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .all-users {
+            margin-top: 30px;
+        }
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .user-table th, .user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        .user-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .user-table tr:hover {
+            background: #f8f9fa;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 User Debug Tool</h1>
+            <p>Café Business Masterclass - User Authentication Diagnostics</p>
+        </div>
+        
+        <div class="content">
+            <div class="search-section">
+                <h2>Search User</h2>
+                <div class="form-group">
+                    <label for="searchEmail">Email Address:</label>
+                    <input type="email" id="searchEmail" placeholder="Enter email to search">
+                </div>
+                <div class="form-group">
+                    <label for="searchPassword">Password (optional):</label>
+                    <input type="password" id="searchPassword" placeholder="Enter password to test">
+                </div>
+                <button class="btn" onclick="searchUser()">🔍 Search User</button>
+                <button class="btn btn-secondary" onclick="loadAllUsers()">📋 Show All Users</button>
+            </div>
+
+            <div id="results" class="results"></div>
+            
+            <div id="allUsers" class="all-users" style="display: none;">
+                <h2>All Users in System</h2>
+                <div id="usersTable"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function searchUser() {
+            const email = document.getElementById('searchEmail').value.trim();
+            const password = document.getElementById('searchPassword').value;
+            const resultsDiv = document.getElementById('results');
+            
+            if (!email) {
+                showAlert('Please enter an email address', 'warning');
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Searching for user...</div>';
+
+            try {
+                // First, get all users to search locally
+                const response = await fetch('/admin/enrollments');
+                const users = await response.json();
+                
+                // Find the user
+                const user = users.find(u => 
+                    u.email && u.email.toLowerCase().trim() === email.toLowerCase().trim()
+                );
+
+                if (user) {
+                    // Test login if password provided
+                    let loginResult = null;
+                    if (password) {
+                        try {
+                            const loginResponse = await fetch('/api/auth/login', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ email, password })
+                            });
+                            loginResult = await loginResponse.json();
+                        } catch (loginError) {
+                            console.error('Login test error:', loginError);
+                        }
+                    }
+
+                    displayUserResult(user, loginResult, password);
+                } else {
+                    displayUserNotFound(email, users);
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showAlert('Error searching for user: ' + error.message, 'danger');
+            }
+        }
+
+        function displayUserResult(user, loginResult, password) {
+            const resultsDiv = document.getElementById('results');
+            const statusClass = user.hasMainCourse ? 'found' : 'not-found';
+            const statusText = user.hasMainCourse ? 'Active User' : 'Pending Payment';
+            const statusBadgeClass = user.hasMainCourse ? 'status-active' : 'status-pending';
+
+            let loginStatus = '';
+            if (password) {
+                if (loginResult && loginResult.success) {
+                    loginStatus = '<div class="alert alert-success">✅ Login successful!</div>';
+                } else if (loginResult) {
+                    loginStatus = `<div class="alert alert-danger">❌ Login failed: ${loginResult.error}</div>`;
+                }
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="user-card ${statusClass}">
+                    <h3>👤 User Found: ${user.name}</h3>
+                    ${loginStatus}
+                    <div class="user-info">
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">${user.email}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value">${user.phone || 'Not provided'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">User ID</div>
+                            <div class="info-value">${user._id}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value">
+                                <span class="status-badge ${statusBadgeClass}">${statusText}</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Has Password</div>
+                            <div class="info-value">${user.password ? '✅ Yes' : '❌ No'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Course Access</div>
+                            <div class="info-value">${user.hasMainCourse ? '✅ Full Access' : '❌ No Access'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Created</div>
+                            <div class="info-value">${new Date(user.createdAt).toLocaleString()}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Last Updated</div>
+                            <div class="info-value">${new Date(user.updatedAt).toLocaleString()}</div>
+                        </div>
+                    </div>
+                    ${user.bonuses && user.bonuses.length > 0 ? `
+                        <div style="margin-top: 20px;">
+                            <h4>🎁 Purchased Bonuses (${user.bonuses.length})</h4>
+                            <ul>
+                                ${user.bonuses.map(bonus => `<li>${bonus.sku} - ${new Date(bonus.purchasedAt).toLocaleDateString()}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function displayUserNotFound(email, users) {
+            const resultsDiv = document.getElementById('results');
+            const availableEmails = users.slice(0, 5).map(u => u.email).join(', ');
+            
+            resultsDiv.innerHTML = `
+                <div class="user-card not-found">
+                    <h3>❌ User Not Found</h3>
+                    <div class="alert alert-danger">
+                        <strong>Email:</strong> ${email}<br>
+                        <strong>Status:</strong> Not found in system
+                    </div>
+                    <div class="user-info">
+                        <div class="info-item">
+                            <div class="info-label">Available Emails (first 5)</div>
+                            <div class="info-value">${availableEmails || 'No users in system'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Total Users</div>
+                            <div class="info-value">${users.length}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h4>🔧 Troubleshooting Steps:</h4>
+                        <ol>
+                            <li>Check if the email is spelled correctly</li>
+                            <li>Make sure you have purchased the course</li>
+                            <li>Try the forgot password option</li>
+                            <li>Contact support if the issue persists</li>
+                        </ol>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadAllUsers() {
+            const allUsersDiv = document.getElementById('allUsers');
+            const usersTableDiv = document.getElementById('usersTable');
+            
+            allUsersDiv.style.display = 'block';
+            usersTableDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Loading all users...</div>';
+
+            try {
+                const response = await fetch('/admin/enrollments');
+                const users = await response.json();
+                
+                if (users.length === 0) {
+                    usersTableDiv.innerHTML = '<div class="alert alert-warning">No users found in the system.</div>';
+                    return;
+                }
+
+                const tableHTML = `
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Has Password</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${users.map(user => `
+                                <tr>
+                                    <td>${user.name || 'N/A'}</td>
+                                    <td>${user.email}</td>
+                                    <td>${user.phone || 'N/A'}</td>
+                                    <td>
+                                        <span class="status-badge ${user.hasMainCourse ? 'status-active' : 'status-pending'}">
+                                            ${user.hasMainCourse ? 'Active' : 'Pending'}
+                                        </span>
+                                    </td>
+                                    <td>${user.password ? '✅' : '❌'}</td>
+                                    <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+                                    <td>
+                                        <button class="btn" onclick="searchSpecificUser('${user.email}')" style="padding: 5px 10px; font-size: 12px;">
+                                            View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                usersTableDiv.innerHTML = tableHTML;
+            } catch (error) {
+                console.error('Error loading users:', error);
+                usersTableDiv.innerHTML = '<div class="alert alert-danger">Error loading users: ' + error.message + '</div>';
+            }
+        }
+
+        function searchSpecificUser(email) {
+            document.getElementById('searchEmail').value = email;
+            searchUser();
+            document.getElementById('allUsers').style.display = 'none';
+        }
+
+        function showAlert(message, type) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+        }
+
+        // Auto-load all users on page load
+        window.onload = function() {
+            loadAllUsers();
+        };
+    </script>
+</body>
+</html>

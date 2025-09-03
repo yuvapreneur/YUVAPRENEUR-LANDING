@@ -249,9 +249,11 @@ app.post('/users', async (req, res) => {
       });
     }
 
-    // Check if user already exists
+    // Check if user already exists (case-insensitive)
     const enrollments = readEnrollments();
-    const existingUser = enrollments.find(e => e.email === email);
+    const existingUser = enrollments.find(e => 
+      e.email && e.email.toLowerCase().trim() === email.toLowerCase().trim()
+    );
     
     if (existingUser) {
       console.log('👤 Existing user found:', { email, hasPassword: !!existingUser.password, hasMainCourse: existingUser.hasMainCourse });
@@ -839,9 +841,12 @@ app.post('/api/auth/login', async (req, res) => {
     // Read enrollments to find user
     const enrollments = readEnrollments();
     console.log('📋 Total enrollments in system:', enrollments.length);
-    console.log('🔍 Searching for email:', email);
+    console.log('🔍 Searching for email:', email.toLowerCase().trim());
     
-    const user = enrollments.find(e => e.email === email);
+    // Case-insensitive email search
+    const user = enrollments.find(e => 
+      e.email && e.email.toLowerCase().trim() === email.toLowerCase().trim()
+    );
     
     console.log('👤 User lookup result:', user ? 'Found' : 'Not found');
     if (user) {
@@ -864,7 +869,22 @@ app.post('/api/auth/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: 'User not found. Please purchase the course first.'
+        error: 'User not found. Please check your email or purchase the course first.',
+        suggestions: [
+          'Make sure you have purchased the course',
+          'Check if your email is correct',
+          'Try the forgot password option if you have an account'
+        ]
+      });
+    }
+
+    // Check if user has password
+    if (!user.password) {
+      console.log('❌ User has no password set:', email);
+      return res.status(401).json({
+        success: false,
+        error: 'No password set for this account. Please use forgot password to set a password.',
+        needsPasswordReset: true
       });
     }
 
@@ -873,26 +893,31 @@ app.post('/api/auth/login', async (req, res) => {
       console.log('❌ Password mismatch for user:', email);
       return res.status(401).json({
         success: false,
-        error: 'Invalid password'
+        error: 'Invalid password. Please check your password and try again.',
+        suggestions: [
+          'Check if Caps Lock is on',
+          'Make sure you are using the correct password',
+          'Try the forgot password option'
+        ]
       });
     }
 
-         // Check if user has purchased the main course
-     if (!user.hasMainCourse) {
-       console.log('❌ User has no main course access:', email);
-       return res.status(403).json({
-         success: false,
-         error: 'Please purchase the main course (₹199) to access the dashboard. Go to the home page to get started!',
-         needsPurchase: true,
-         helpUrl: '/',
-         instructions: [
-           '1. Go to the home page and fill out the enrollment form',
-           '2. Create your password during enrollment',
-           '3. Make payment of ₹199 to get instant access',
-           '4. Come back here and login with your credentials'
-         ]
-       });
-     }
+    // Check if user has purchased the main course
+    if (!user.hasMainCourse) {
+      console.log('❌ User has no main course access:', email);
+      return res.status(403).json({
+        success: false,
+        error: 'Please purchase the main course (₹199) to access the dashboard. Go to the home page to get started!',
+        needsPurchase: true,
+        helpUrl: '/',
+        instructions: [
+          '1. Go to the home page and fill out the enrollment form',
+          '2. Create your password during enrollment',
+          '3. Make payment of ₹199 to get instant access',
+          '4. Come back here and login with your credentials'
+        ]
+      });
+    }
 
     // Create session
     req.session.user = {
