@@ -6,11 +6,12 @@
     { "src": "*.css", "use": "@vercel/static" },
     { "src": "*.js", "use": "@vercel/static" },
     { "src": "*.pdf", "use": "@vercel/static" },
+    { "src": "*.json", "use": "@vercel/static" },
     { "src": "uploads/**", "use": "@vercel/static" }
-  ]
-  ,
+  ],
   "routes": [
     { "src": "/(.*)\\.css", "headers": { "cache-control": "no-cache" }, "dest": "/$1.css" },
-    { "src": "/(.*)\\.html", "headers": { "cache-control": "no-cache" }, "dest": "/$1.html" }
+    { "src": "/(.*)\\.html", "headers": { "cache-control": "no-cache" }, "dest": "/$1.html" },
+    { "src": "/(.*)\\.json", "headers": { "cache-control": "no-cache" }, "dest": "/$1.json" }
   ]
 }
