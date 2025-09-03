@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Flow Test - Café Business Masterclass</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-danger {
+            background: #dc3545;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .user-info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .user-info h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .info-item {
+            background: white;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9em;
+        }
+        .info-value {
+            color: #333;
+            margin-top: 5px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Complete Flow Test</h1>
+            <p>Café Business Masterclass - Test User Enrollment & Login Flow</p>
+        </div>
+        
+        <div class="content">
+            <!-- Step 1: User Enrollment -->
+            <div class="step">
+                <h3>Step 1: User Enrollment</h3>
+                <div class="form-group">
+                    <label for="enrollName">Name:</label>
+                    <input type="text" id="enrollName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="enrollEmail">Email:</label>
+                    <input type="email" id="enrollEmail" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="enrollPhone">Phone:</label>
+                    <input type="text" id="enrollPhone" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="enrollPassword">Password:</label>
+                    <input type="password" id="enrollPassword" placeholder="Enter password (min 6 characters)">
+                </div>
+                <div class="form-group">
+                    <label for="enrollProfession">Profession:</label>
+                    <input type="text" id="enrollProfession" placeholder="Enter your profession">
+                </div>
+                <div class="form-group">
+                    <label for="enrollCity">City:</label>
+                    <input type="text" id="enrollCity" placeholder="Enter your city">
+                </div>
+                <div class="form-group">
+                    <label for="enrollState">State:</label>
+                    <input type="text" id="enrollState" placeholder="Enter your state">
+                </div>
+                <button class="btn" onclick="enrollUser()">📝 Enroll User</button>
+                <div id="enrollResult"></div>
+            </div>
+
+            <!-- Step 2: Create Payment Order -->
+            <div class="step">
+                <h3>Step 2: Create Payment Order</h3>
+                <div class="form-group">
+                    <label for="orderAmount">Amount (₹):</label>
+                    <input type="text" id="orderAmount" value="199" placeholder="Enter amount">
+                </div>
+                <button class="btn" onclick="createOrder()">💳 Create Order</button>
+                <div id="orderResult"></div>
+            </div>
+
+            <!-- Step 3: Verify Payment -->
+            <div class="step">
+                <h3>Step 3: Verify Payment (Simulated)</h3>
+                <div class="form-group">
+                    <label for="paymentOrderId">Order ID:</label>
+                    <input type="text" id="paymentOrderId" placeholder="Enter order ID from step 2">
+                </div>
+                <div class="form-group">
+                    <label for="paymentEmail">User Email:</label>
+                    <input type="email" id="paymentEmail" placeholder="Enter user email">
+                </div>
+                <button class="btn" onclick="verifyPayment()">✅ Verify Payment</button>
+                <div id="paymentResult"></div>
+            </div>
+
+            <!-- Step 4: Test Login -->
+            <div class="step">
+                <h3>Step 4: Test Login</h3>
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" placeholder="Enter email to login">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password">
+                </div>
+                <button class="btn" onclick="testLogin()">🔐 Test Login</button>
+                <div id="loginResult"></div>
+            </div>
+
+            <!-- Step 5: Check User Data -->
+            <div class="step">
+                <h3>Step 5: Check User Data</h3>
+                <div class="form-group">
+                    <label for="checkEmail">Email:</label>
+                    <input type="email" id="checkEmail" placeholder="Enter email to check">
+                </div>
+                <button class="btn" onclick="checkUser()">🔍 Check User</button>
+                <div id="checkResult"></div>
+            </div>
+
+            <!-- All Users -->
+            <div class="step">
+                <h3>All Users in System</h3>
+                <button class="btn btn-secondary" onclick="loadAllUsers()">📋 Load All Users</button>
+                <div id="allUsersResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentOrderId = '';
+        let currentUserEmail = '';
+
+        async function enrollUser() {
+            const name = document.getElementById('enrollName').value.trim();
+            const email = document.getElementById('enrollEmail').value.trim();
+            const phone = document.getElementById('enrollPhone').value.trim();
+            const password = document.getElementById('enrollPassword').value;
+            const profession = document.getElementById('enrollProfession').value.trim();
+            const city = document.getElementById('enrollCity').value.trim();
+            const state = document.getElementById('enrollState').value.trim();
+
+            if (!name || !email || !phone || !password) {
+                showResult('enrollResult', 'Please fill all required fields', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showResult('enrollResult', 'Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            showLoading('enrollResult');
+
+            try {
+                const response = await fetch('/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name, email, phone, password, profession, city, state
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    currentUserEmail = email;
+                    showResult('enrollResult', 
+                        `✅ Enrollment successful! User ID: ${result.id}<br>
+                         Next step: Create payment order`, 'success');
+                    
+                    // Auto-fill payment email
+                    document.getElementById('paymentEmail').value = email;
+                    document.getElementById('loginEmail').value = email;
+                    document.getElementById('checkEmail').value = email;
+                } else {
+                    showResult('enrollResult', `❌ ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showResult('enrollResult', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function createOrder() {
+            const amount = document.getElementById('orderAmount').value;
+            const userEmail = currentUserEmail;
+
+            if (!amount || !userEmail) {
+                showResult('orderResult', 'Please enroll a user first and enter amount', 'error');
+                return;
+            }
+
+            showLoading('orderResult');
+
+            try {
+                const response = await fetch('/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: parseInt(amount),
+                        currency: 'INR',
+                        userEmail: userEmail
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    currentOrderId = result.order.id;
+                    document.getElementById('paymentOrderId').value = result.order.id;
+                    
+                    showResult('orderResult', 
+                        `✅ Order created successfully!<br>
+                         Order ID: ${result.order.id}<br>
+                         Amount: ₹${result.order.amount / 100}<br>
+                         Next step: Verify payment`, 'success');
+                } else {
+                    showResult('orderResult', `❌ ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showResult('orderResult', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function verifyPayment() {
+            const orderId = document.getElementById('paymentOrderId').value.trim();
+            const userEmail = document.getElementById('paymentEmail').value.trim();
+
+            if (!orderId || !userEmail) {
+                showResult('paymentResult', 'Please enter order ID and user email', 'error');
+                return;
+            }
+
+            showLoading('paymentResult');
+
+            try {
+                // Simulate payment verification
+                const response = await fetch('/verify-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        razorpay_order_id: orderId,
+                        razorpay_payment_id: 'pay_test_' + Date.now(),
+                        razorpay_signature: 'test_signature_' + Date.now(),
+                        userEmail: userEmail
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showResult('paymentResult', 
+                        `✅ Payment verified successfully!<br>
+                         User: ${result.userData.name}<br>
+                         Email: ${result.userData.email}<br>
+                         Course Access: ✅ Granted<br>
+                         Next step: Test login`, 'success');
+                } else {
+                    showResult('paymentResult', `❌ ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showResult('paymentResult', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showResult('loginResult', 'Please enter email and password', 'error');
+                return;
+            }
+
+            showLoading('loginResult');
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showResult('loginResult', 
+                        `✅ Login successful!<br>
+                         User: ${result.user.name}<br>
+                         Course Access: ${result.user.hasMainCourse ? '✅ Yes' : '❌ No'}`, 'success');
+                } else {
+                    showResult('loginResult', `❌ ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showResult('loginResult', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkUser() {
+            const email = document.getElementById('checkEmail').value.trim();
+
+            if (!email) {
+                showResult('checkResult', 'Please enter email to check', 'error');
+                return;
+            }
+
+            showLoading('checkResult');
+
+            try {
+                const response = await fetch(`/api/user/${encodeURIComponent(email)}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const user = result.user;
+                    const userInfo = `
+                        <div class="user-info">
+                            <h4>User Details</h4>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Name</div>
+                                    <div class="info-value">${user.name}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">${user.email}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Phone</div>
+                                    <div class="info-value">${user.phone}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Course Access</div>
+                                    <div class="info-value">${user.hasMainCourse ? '✅ Yes' : '❌ No'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Created</div>
+                                    <div class="info-value">${new Date(user.createdAt).toLocaleString()}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Updated</div>
+                                    <div class="info-value">${new Date(user.updatedAt).toLocaleString()}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    showResult('checkResult', `✅ User found!${userInfo}`, 'success');
+                } else {
+                    showResult('checkResult', `❌ ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showResult('checkResult', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadAllUsers() {
+            showLoading('allUsersResult');
+
+            try {
+                const response = await fetch('/admin/enrollments');
+                const users = await response.json();
+
+                if (users.length === 0) {
+                    showResult('allUsersResult', 'No users found in system', 'info');
+                    return;
+                }
+
+                const usersList = users.map(user => `
+                    <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 3px; border-left: 3px solid ${user.hasMainCourse ? '#28a745' : '#ffc107'}">
+                        <strong>${user.name}</strong> (${user.email}) - 
+                        Course: ${user.hasMainCourse ? '✅ Paid' : '⏳ Pending'} - 
+                        Created: ${new Date(user.createdAt).toLocaleDateString()}
+                    </div>
+                `).join('');
+
+                showResult('allUsersResult', 
+                    `📊 Total Users: ${users.length}<br>${usersList}`, 'info');
+            } catch (error) {
+                showResult('allUsersResult', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function showLoading(elementId) {
+            document.getElementById(elementId).innerHTML = 
+                '<div class="loading"><div class="spinner"></div>Processing...</div>';
+        }
+
+        function showResult(elementId, message, type) {
+            document.getElementById(elementId).innerHTML = 
+                `<div class="result ${type}">${message}</div>`;
+        }
+
+        // Auto-load all users on page load
+        window.onload = function() {
+            loadAllUsers();
+        };
+    </script>
+</body>
+</html>

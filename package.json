@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Café Business Masterclass - HTML/CSS/JS Application",
   "main": "index.html",
-  "type": "module",
   "engines": {
     "node": "22.x"
   },

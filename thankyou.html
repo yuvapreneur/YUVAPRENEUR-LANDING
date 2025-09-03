@@ -11,15 +11,47 @@
   <div class="text-center">
     <div class="glass p-12 max-w-2xl mx-auto">
       <div class="text-6xl mb-6">🎉</div>
-      <h1 class="text-4xl font-bold text-white mb-4">Enrollment Successful!</h1>
+      <h1 class="text-4xl font-bold text-white mb-4">Payment Successful!</h1>
       <p class="text-xl text-white/80 mb-8">
-        Welcome to the Café Business Masterclass! You're now part of an exclusive community of café entrepreneurs.
+        Welcome to the Café Business Masterclass! You now have instant access to all course content.
       </p>
       
-      <div class="space-y-4 text-white/70">
-        <p>✅ You'll receive course access details via email</p>
-        <p>✅ Join our WhatsApp community for updates</p>
-        <p>✅ Get ready to transform your café business!</p>
+      <!-- Login Credentials -->
+      <div id="credentialsSection" class="mt-8 p-6 glass border-2 border-green-500/30" style="display: none;">
+        <h3 class="text-xl font-bold text-white mb-4">🔐 Your Login Credentials</h3>
+        <div class="space-y-3 text-white/80">
+          <div>
+            <strong>Email:</strong> <span id="userEmail"></span>
+          </div>
+          <div>
+            <strong>Password:</strong> <span id="userPassword"></span>
+          </div>
+        </div>
+        <p class="text-sm text-white/60 mt-3">Please save these credentials for future login</p>
+      </div>
+      
+      <!-- Auto Redirect Message -->
+      <div class="mt-6 p-6 glass border-2 border-blue-500/30">
+        <h3 class="text-xl font-bold text-white mb-4">🚀 Instant Access</h3>
+        <div class="space-y-2 text-white/80">
+          <p>✅ You have instant access to all 12 modules</p>
+          <p>✅ Download PDFs and bonus materials</p>
+          <p>✅ Lifetime access to course content</p>
+          <p>✅ Direct support from industry experts</p>
+        </div>
+        <div class="mt-4">
+          <p class="text-white/70">Redirecting to dashboard in <span id="countdown">5</span> seconds...</p>
+        </div>
+      </div>
+      
+      <!-- Manual Login Button -->
+      <div class="mt-8 space-x-4">
+        <button onclick="goToDashboard()" class="glossy px-8 py-3 font-semibold text-lg inline-block bg-green-600 hover:bg-green-700">
+          🚀 Go to Dashboard Now
+        </button>
+        <a href="/login.html" class="glossy px-8 py-3 font-semibold text-lg inline-block">
+          🔐 Login Page
+        </a>
       </div>
       
       <!-- WhatsApp Group Link -->
@@ -32,24 +64,53 @@
           🚀 Join WhatsApp Group
         </a>
       </div>
-      
-      <!-- Course Details -->
-      <div class="mt-6 p-6 glass border-2 border-purple-500/30">
-        <h3 class="text-xl font-bold text-white mb-4">📚 What's Next?</h3>
-        <div class="space-y-2 text-white/80">
-          <p>• Course access email will be sent within 24 hours</p>
-          <p>• 12 comprehensive modules covering everything about café business</p>
-          <p>• Lifetime access to course content and updates</p>
-          <p>• Direct support from industry experts</p>
-        </div>
-      </div>
-      
-      <div class="mt-8">
-        <a href="/" class="glossy px-8 py-3 font-semibold text-lg inline-block">
-          Back to Home
-        </a>
-      </div>
     </div>
   </div>
+
+  <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const userEmail = urlParams.get('email');
+    const userPassword = urlParams.get('password');
+    const redirectUrl = urlParams.get('redirect') || '/dashboard.html';
+    
+    // Show credentials if available
+    if (userEmail && userPassword) {
+      document.getElementById('credentialsSection').style.display = 'block';
+      document.getElementById('userEmail').textContent = userEmail;
+      document.getElementById('userPassword').textContent = userPassword;
+    }
+    
+    // Auto redirect countdown
+    let countdown = 5;
+    const countdownElement = document.getElementById('countdown');
+    
+    const timer = setInterval(() => {
+      countdown--;
+      countdownElement.textContent = countdown;
+      
+      if (countdown <= 0) {
+        clearInterval(timer);
+        goToDashboard();
+      }
+    }, 1000);
+    
+    function goToDashboard() {
+      window.location.href = redirectUrl;
+    }
+    
+    // Check if user is already logged in
+    fetch('/auth-status')
+      .then(response => response.json())
+      .then(data => {
+        if (data.authenticated) {
+          console.log('User is already authenticated, redirecting to dashboard');
+          goToDashboard();
+        }
+      })
+      .catch(error => {
+        console.log('Auth check failed, continuing with normal flow');
+      });
+  </script>
 </body>
 </html>

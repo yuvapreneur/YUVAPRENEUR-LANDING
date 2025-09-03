@@ -1,0 +1,33 @@
+// Test login with specific user
+async function testLogin() {
+  const testData = {
+    email: 'abhijeetwankhede61@gmail.com',
+    password: '123456'
+  };
+  
+  console.log('🧪 Testing login with:', testData);
+  
+  try {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(testData)
+    });
+    
+    const result = await response.json();
+    console.log('🔐 Test result:', result);
+    
+    if (result.success) {
+      console.log('✅ Test login successful!');
+    } else {
+      console.log('❌ Test login failed:', result.error);
+    }
+  } catch (error) {
+    console.error('❌ Test error:', error);
+  }
+}
+
+// Run test
+testLogin();

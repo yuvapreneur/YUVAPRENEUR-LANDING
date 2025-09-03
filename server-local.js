@@ -48,9 +48,9 @@ app.use((req, res, next) => {
 // Razorpay configuration
 let razorpay = null;
 
-// Use the user's provided live keys
-const razorpayKeyId = 'rzp_live_R8p0w858yQYzuu';
-const razorpayKeySecret = 'YN1NQqSwtvKemGAmLk2biNUa';
+// Use test keys for development (replace with live keys for production)
+const razorpayKeyId = 'rzp_test_YourTestKeyId';  // Replace with your test key
+const razorpayKeySecret = 'YourTestKeySecret';    // Replace with your test secret
 
 try {
   razorpay = new Razorpay({
@@ -58,9 +58,9 @@ try {
     key_secret: razorpayKeySecret
   });
 
-  console.log('✅ Razorpay configured successfully with LIVE keys');
+  console.log('✅ Razorpay configured successfully with TEST keys');
   console.log('🔑 Key ID:', razorpayKeyId);
-  console.log('🔐 Mode: LIVE');
+  console.log('🔐 Mode: TEST');
 } catch (error) {
   console.error('❌ Razorpay configuration failed:', error.message);
   razorpay = null;
@@ -70,7 +70,7 @@ try {
 console.log('🔑 Razorpay Config:', {
   key_id: razorpayKeyId ? '✅ Loaded' : '❌ Missing',
   key_secret: razorpayKeySecret ? '✅ Loaded' : '❌ Missing',
-  mode: 'LIVE'
+  mode: 'TEST'
 });
 
 // Simple file-based storage for enrollments
@@ -185,8 +185,8 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
     message: 'Server is running perfectly! 🚀',
-    razorpay: '✅ Configured with LIVE keys',
-    mongodb: '✅ Connected',
+    razorpay: '⚠️ Test mode - configure keys for production',
+    mongodb: '✅ File-based storage (MongoDB disabled)',
     port: PORT,
     timestamp: new Date().toISOString()
   });
@@ -197,8 +197,8 @@ app.get('/test', (req, res) => {
   res.json({ 
     status: 'success', 
     message: 'Server is working! 🎉',
-    razorpay: 'Configured with LIVE keys',
-    mongodb: 'Connected',
+    razorpay: 'Test mode - configure keys for production',
+    mongodb: 'File-based storage (MongoDB disabled)',
     timestamp: new Date().toISOString()
   });
 });
@@ -213,7 +213,9 @@ app.get('/', (req, res) => {
 // Handle form submissions with file storage
 app.post('/users', async (req, res) => {
   try {
-    const { name, phone, email, password } = req.body;
+    const { name, phone, email, password, profession, city, state } = req.body;
+    
+    console.log('📝 New enrollment request:', { name, email, phone, hasPassword: !!password });
     
     // Validate required fields
     if (!name || !phone || !email || !password) {
@@ -263,6 +265,9 @@ app.post('/users', async (req, res) => {
         existingUser.password = password;
         existingUser.name = name;
         existingUser.phone = phone;
+        existingUser.profession = profession || "";
+        existingUser.city = city || "";
+        existingUser.state = state || "";
         existingUser.updatedAt = new Date().toISOString();
         
         if (writeEnrollments(enrollments)) {
@@ -271,7 +276,12 @@ app.post('/users', async (req, res) => {
           res.json({
             status: 'success',
             message: 'Password updated successfully! Now proceed to payment to get instant access.',
-            id: existingUser._id
+            id: existingUser._id,
+            userData: {
+              name: existingUser.name,
+              email: existingUser.email,
+              phone: existingUser.phone
+            }
           });
           return;
         } else {
@@ -288,7 +298,12 @@ app.post('/users', async (req, res) => {
             message: 'Welcome back! You already have an account. Now proceed to payment to get course access.',
             id: existingUser._id,
             existingUser: true,
-            needsPayment: true
+            needsPayment: true,
+            userData: {
+              name: existingUser.name,
+              email: existingUser.email,
+              phone: existingUser.phone
+            }
           });
           return;
         } else {
@@ -307,15 +322,15 @@ app.post('/users', async (req, res) => {
     // Create enrollment payload for new user
     const enrollment = {
       _id: Date.now().toString(), // Simple ID generation
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      password: req.body.password, // Save the password
-      profession: req.body.profession || "",
-      city: req.body.city || "",
-      state: req.body.state || "",
-      hasMainCourse: !!req.body.hasMainCourse,
-      bonuses: Array.isArray(req.body.bonuses) ? req.body.bonuses : [],
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      phone: phone.trim(),
+      password: password, // Save the password
+      profession: profession || "",
+      city: city || "",
+      state: state || "",
+      hasMainCourse: false, // Will be set to true after payment
+      bonuses: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -332,7 +347,13 @@ app.post('/users', async (req, res) => {
       res.json({
         status: 'success',
         message: 'Enrollment successful! Welcome to the Café Business Masterclass!',
-        id: enrollment._id
+        id: enrollment._id,
+        userData: {
+          name: enrollment.name,
+          email: enrollment.email,
+          phone: enrollment.phone
+        },
+        nextStep: 'payment'
       });
     } else {
       throw new Error('Failed to save enrollment to file');
@@ -351,14 +372,27 @@ app.post('/users', async (req, res) => {
 app.get('/test-razorpay', async (req, res) => {
   try {
     console.log('🧪 Testing Razorpay connection...');
+    
+    if (!razorpay) {
+      return res.status(500).json({
+        success: false,
+        error: 'Razorpay not configured. Please add your API keys.',
+        instructions: [
+          '1. Get your Razorpay test keys from dashboard',
+          '2. Update razorpayKeyId and razorpayKeySecret in server-local.js',
+          '3. Restart the server'
+        ]
+      });
+    }
+    
     console.log('🔑 Using keys:', {
-      key_id: 'rzp_live_R8p0w858yQYzuu',
-      mode: 'LIVE'
+      key_id: razorpayKeyId,
+      mode: 'TEST'
     });
     
     // Test creating a simple order
     const testOrder = await razorpay.orders.create({
-              amount: 19900, // ₹199 in paise
+      amount: 19900, // ₹199 in paise
       currency: 'INR',
       receipt: 'test_' + Date.now()
     });
@@ -372,28 +406,47 @@ app.get('/test-razorpay', async (req, res) => {
       code: error.error?.code,
       description: error.error?.description
     });
-    res.status(500).json({ 
-      success: false, 
-      error: error.error?.description || error.message,
-      code: error.error?.code
-    });
+    
+    if (error.statusCode === 401) {
+      res.status(500).json({ 
+        success: false, 
+        error: 'Authentication failed - Please check your Razorpay API keys',
+        instructions: [
+          '1. Go to Razorpay Dashboard',
+          '2. Get your test API keys',
+          '3. Update the keys in server-local.js',
+          '4. Restart the server'
+        ]
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        error: error.error?.description || error.message,
+        code: error.error?.code
+      });
+    }
   }
 });
 
 // Create Razorpay order
 app.post('/create-order', async (req, res) => {
   try {
-    const { amount, currency = 'INR' } = req.body;
+    const { amount, currency = 'INR', userEmail } = req.body;
     
-    console.log('📝 Creating order with:', { amount, currency });
+    console.log('📝 Creating order with:', { amount, currency, userEmail });
     console.log('🔑 Using Razorpay instance:', !!razorpay);
     
-    // Create order without user info (will be collected during payment)
+    // Create order with user info in notes
     const options = {
       amount: amount * 100, // Razorpay expects amount in paise
       currency: currency,
       receipt: 'cafe_masterclass_' + Date.now(),
-      payment_capture: 1
+      payment_capture: 1,
+      notes: {
+        userEmail: userEmail || '',
+        type: 'course_purchase',
+        timestamp: new Date().toISOString()
+      }
     };
 
     console.log('🔧 Razorpay order options:', options);
@@ -403,7 +456,8 @@ app.post('/create-order', async (req, res) => {
     
     res.json({
       status: 'success',
-      order: order
+      order: order,
+      userEmail: userEmail
     });
   } catch (error) {
     console.error('❌ Order creation error:', {
@@ -426,14 +480,20 @@ app.post('/create-order', async (req, res) => {
 // Verify payment and set session
 app.post('/verify-payment', async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, userEmail } = req.body;
     
-         // Verify signature
-     const body = razorpay_order_id + "|" + razorpay_payment_id;
-     const expectedSignature = crypto
-       .createHmac("sha256", razorpayKeySecret)
-       .update(body.toString())
-       .digest("hex");
+    console.log('🔍 Payment verification request:', { 
+      order_id: razorpay_order_id, 
+      payment_id: razorpay_payment_id,
+      userEmail: userEmail 
+    });
+    
+    // Verify signature
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", razorpayKeySecret)
+      .update(body.toString())
+      .digest("hex");
 
     if (expectedSignature === razorpay_signature) {
       // Payment verified successfully
@@ -441,30 +501,42 @@ app.post('/verify-payment', async (req, res) => {
       try {
         console.log('🔍 Processing payment verification for:', razorpay_order_id);
         
-        // Get the order details to see if we can find user info
+        // Get the order details
         const order = await razorpay.orders.fetch(razorpay_order_id);
-        console.log('📋 Order details:', { id: order.id, notes: order.notes, amount: order.amount });
+        console.log('📋 Order details:', { id: order.id, amount: order.amount });
         
-        // Look for existing user who made this payment
-        // Since we're not storing user info in order notes, we need to find the user differently
-        // For now, we'll look for users who have enrolled but haven't paid yet
+        // Find the user who made this payment
         const enrollments = readEnrollments();
+        let user = null;
         
-        // Find users who have a password but no main course access
-        // Prioritize users with the most recent enrollment date
-        const eligibleUsers = enrollments
-          .filter(e => e.password && !e.hasMainCourse)
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        if (userEmail) {
+          // If userEmail is provided, find that specific user
+          user = enrollments.find(e => 
+            e.email && e.email.toLowerCase().trim() === userEmail.toLowerCase().trim()
+          );
+          console.log('👤 Found user by email:', user ? user.email : 'Not found');
+        }
         
-        if (eligibleUsers.length > 0) {
-          // Use the most recent eligible user
-          const user = eligibleUsers[0];
-          console.log('👤 Found eligible user for payment:', user.email, 'ID:', user._id);
+        if (!user) {
+          // Fallback: find users who have a password but no main course access
+          const eligibleUsers = enrollments
+            .filter(e => e.password && !e.hasMainCourse)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           
+          if (eligibleUsers.length > 0) {
+            user = eligibleUsers[0];
+            console.log('👤 Found eligible user for payment:', user.email, 'ID:', user._id);
+          }
+        }
+        
+        if (user) {
           // Update user with course access
           const userIndex = enrollments.findIndex(e => e._id === user._id);
           enrollments[userIndex].hasMainCourse = true;
           enrollments[userIndex].updatedAt = new Date().toISOString();
+          enrollments[userIndex].paymentId = razorpay_payment_id;
+          enrollments[userIndex].orderId = razorpay_order_id;
+          enrollments[userIndex].paymentDate = new Date().toISOString();
           
           // Save updated enrollments
           if (writeEnrollments(enrollments)) {
@@ -480,43 +552,46 @@ app.post('/verify-payment', async (req, res) => {
               order_id: razorpay_order_id
             };
       
-      console.log('✅ Payment verified, user session created');
-      
-      res.json({
-        status: 'success',
-        message: 'Payment verified successfully!',
+            console.log('✅ Payment verified, user session created');
+            
+            res.json({
+              status: 'success',
+              message: 'Payment verified successfully! Welcome to your course!',
               redirect: '/dashboard.html',
+              redirectUrl: '/dashboard.html',
               existingUser: true,
               credentials: {
                 email: user.email,
                 password: user.password,
                 note: 'Use your existing password to login'
+              },
+              userData: {
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                hasMainCourse: true
               }
             });
           } else {
             throw new Error('Failed to save user enrollment');
           }
         } else {
-          // Fallback: create temporary user if no eligible users found
-          console.log('⚠️ No eligible users found, creating temporary user');
-          const userInfo = {
-            email: `user_${Date.now()}@temp.com`,
-            name: 'Customer',
-            password: 'temp_password_' + Date.now(),
-            phone: '0000000000'
-          };
-          
+          // Create new user if no eligible user found
+          console.log('⚠️ No eligible user found, creating new user');
           const newUser = {
             _id: Date.now().toString(),
-            name: userInfo.name,
-            email: userInfo.email,
-            phone: userInfo.phone,
-            password: userInfo.password,
+            name: 'Customer',
+            email: userEmail || `user_${Date.now()}@temp.com`,
+            phone: '0000000000',
+            password: 'temp_password_' + Date.now(),
             profession: "",
             city: "",
             state: "",
             hasMainCourse: true,
             bonuses: [],
+            paymentId: razorpay_payment_id,
+            orderId: razorpay_order_id,
+            paymentDate: new Date().toISOString(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           };
@@ -524,12 +599,12 @@ app.post('/verify-payment', async (req, res) => {
           enrollments.push(newUser);
           
           if (writeEnrollments(enrollments)) {
-            console.log('✅ Temporary user created with course access:', userInfo.email);
+            console.log('✅ New user created with course access:', newUser.email);
             
             req.session.user = {
               id: newUser._id,
-              email: userInfo.email,
-              name: userInfo.name,
+              email: newUser.email,
+              name: newUser.name,
               hasMainCourse: true,
               payment_id: razorpay_payment_id,
               order_id: razorpay_order_id
@@ -537,16 +612,23 @@ app.post('/verify-payment', async (req, res) => {
             
             res.json({
               status: 'success',
-              message: 'Payment verified successfully!',
+              message: 'Payment verified successfully! Welcome to your course!',
               redirect: '/dashboard.html',
+              redirectUrl: '/dashboard.html',
               credentials: {
-                email: userInfo.email,
-                password: userInfo.password,
+                email: newUser.email,
+                password: newUser.password,
                 note: 'Please save these credentials for future login'
+              },
+              userData: {
+                name: newUser.name,
+                email: newUser.email,
+                phone: newUser.phone,
+                hasMainCourse: true
               }
             });
           } else {
-            throw new Error('Failed to save temporary user');
+            throw new Error('Failed to save new user');
           }
         }
       } catch (orderError) {
@@ -557,6 +639,7 @@ app.post('/verify-payment', async (req, res) => {
         });
       }
     } else {
+      console.log('❌ Invalid payment signature');
       res.status(400).json({
         status: 'error',
         error: 'Invalid payment signature'
@@ -888,9 +971,23 @@ app.post('/api/auth/login', async (req, res) => {
       });
     }
 
-    // Simple password check (in production, use bcrypt)
-    if (password !== user.password) {
+    // Strict password check with detailed logging
+    console.log('🔐 Password validation:', {
+      providedPassword: password,
+      storedPassword: user.password,
+      passwordMatch: password === user.password,
+      providedLength: password.length,
+      storedLength: user.password ? user.password.length : 0,
+      providedTrimmed: password.trim(),
+      storedTrimmed: user.password ? user.password.trim() : '',
+      trimmedMatch: password.trim() === user.password.trim()
+    });
+    
+    // Check password with trimming
+    if (password.trim() !== user.password.trim()) {
       console.log('❌ Password mismatch for user:', email);
+      console.log('❌ Provided password (trimmed):', password.trim());
+      console.log('❌ Stored password (trimmed):', user.password.trim());
       return res.status(401).json({
         success: false,
         error: 'Invalid password. Please check your password and try again.',
@@ -904,19 +1001,34 @@ app.post('/api/auth/login', async (req, res) => {
 
     // Check if user has purchased the main course
     if (!user.hasMainCourse) {
-      console.log('❌ User has no main course access:', email);
-      return res.status(403).json({
-        success: false,
-        error: 'Please purchase the main course (₹199) to access the dashboard. Go to the home page to get started!',
+      console.log('⚠️ User has no main course access:', email);
+      console.log('⚠️ User can login but needs to purchase course');
+      
+      // Allow login but show warning
+      req.session.user = {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        hasMainCourse: false,
+        bonuses: user.bonuses || []
+      };
+
+      console.log('✅ User logged in successfully (no course access):', email);
+      
+      res.json({
+        success: true,
+        message: 'Login successful! Please purchase the course to access content.',
         needsPurchase: true,
-        helpUrl: '/',
-        instructions: [
-          '1. Go to the home page and fill out the enrollment form',
-          '2. Create your password during enrollment',
-          '3. Make payment of ₹199 to get instant access',
-          '4. Come back here and login with your credentials'
-        ]
+        user: {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          hasMainCourse: false,
+          bonuses: user.bonuses || []
+        },
+        warning: 'You need to purchase the course to access the dashboard content.'
       });
+      return;
     }
 
     // Create session
@@ -1416,6 +1528,91 @@ app.get('/bonus-pdf/:bonusSku', (req, res) => {
   }
 });
 
+// Get user by email
+app.get('/api/user/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    console.log('🔍 Looking up user by email:', email);
+    
+    const enrollments = readEnrollments();
+    const user = enrollments.find(e => 
+      e.email && e.email.toLowerCase().trim() === email.toLowerCase().trim()
+    );
+    
+    if (user) {
+      // Remove password from response
+      const { password, ...userWithoutPassword } = user;
+      
+      res.json({
+        success: true,
+        user: userWithoutPassword
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+    }
+  } catch (error) {
+    console.error('❌ User lookup error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to lookup user'
+    });
+  }
+});
+
+// Update user data
+app.put('/api/user/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const updateData = req.body;
+    
+    console.log('📝 Updating user:', email, updateData);
+    
+    const enrollments = readEnrollments();
+    const userIndex = enrollments.findIndex(e => 
+      e.email && e.email.toLowerCase().trim() === email.toLowerCase().trim()
+    );
+    
+    if (userIndex !== -1) {
+      // Update user data
+      enrollments[userIndex] = {
+        ...enrollments[userIndex],
+        ...updateData,
+        updatedAt: new Date().toISOString()
+      };
+      
+      if (writeEnrollments(enrollments)) {
+        console.log('✅ User updated successfully:', email);
+        
+        // Remove password from response
+        const { password, ...userWithoutPassword } = enrollments[userIndex];
+        
+        res.json({
+          success: true,
+          message: 'User updated successfully',
+          user: userWithoutPassword
+        });
+      } else {
+        throw new Error('Failed to save user update');
+      }
+    } else {
+      res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+    }
+  } catch (error) {
+    console.error('❌ User update error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update user'
+    });
+  }
+});
+
 // Get all bonuses (public)
 app.get('/bonuses', (req, res) => {
   try {
@@ -1432,10 +1629,12 @@ app.get('/bonuses', (req, res) => {
   }
 });
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://admin:43fVXExJg8en4Y7e@cluster0.pp4ab3i.mongodb.net/?retryWrites=true&w=majority')
-.then(() => console.log('✅ MongoDB Connected'))
-.catch(err => console.log('❌ MongoDB Connection Error:', err));
+// MongoDB Connection (Optional - using file-based storage)
+// mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://admin:43fVXExJg8en4Y7e@cluster0.pp4ab3i.mongodb.net/?retryWrites=true&w=majority')
+// .then(() => console.log('✅ MongoDB Connected'))
+// .catch(err => console.log('❌ MongoDB Connection Error:', err));
+
+console.log('✅ Using file-based storage only (MongoDB disabled)');
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Test - Café Business Masterclass</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        .btn-danger {
+            background: #dc3545;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .result.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .status-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status-card.success {
+            border-left-color: #28a745;
+        }
+        .status-card.warning {
+            border-left-color: #ffc107;
+        }
+        .status-card.error {
+            border-left-color: #dc3545;
+        }
+        .status-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .status-value {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 System Test Dashboard</h1>
+            <p>Café Business Masterclass - Complete System Status Check</p>
+        </div>
+        
+        <div class="content">
+            <!-- Server Status -->
+            <div class="test-section">
+                <h3>🚀 Server Status</h3>
+                <button class="btn" onclick="testServerStatus()">Check Server Status</button>
+                <button class="btn" onclick="testHealth()">Health Check</button>
+                <button class="btn" onclick="testAllEndpoints()">Test All Endpoints</button>
+                <div id="serverResult"></div>
+            </div>
+
+            <!-- User System -->
+            <div class="test-section">
+                <h3>👤 User System</h3>
+                <button class="btn" onclick="testUserEnrollment()">Test User Enrollment</button>
+                <button class="btn" onclick="testUserLogin()">Test User Login</button>
+                <button class="btn" onclick="loadAllUsers()">Load All Users</button>
+                <div id="userResult"></div>
+            </div>
+
+            <!-- Payment System -->
+            <div class="test-section">
+                <h3>💳 Payment System</h3>
+                <button class="btn" onclick="testRazorpay()">Test Razorpay</button>
+                <button class="btn" onclick="testOrderCreation()">Test Order Creation</button>
+                <button class="btn" onclick="testPaymentVerification()">Test Payment Verification</button>
+                <div id="paymentResult"></div>
+            </div>
+
+            <!-- Course Access -->
+            <div class="test-section">
+                <h3>📚 Course Access</h3>
+                <button class="btn" onclick="testCourseAccess()">Test Course Access</button>
+                <button class="btn" onclick="testPDFAccess()">Test PDF Access</button>
+                <button class="btn" onclick="testBonusSystem()">Test Bonus System</button>
+                <div id="courseResult"></div>
+            </div>
+
+            <!-- System Summary -->
+            <div class="test-section">
+                <h3>📊 System Summary</h3>
+                <button class="btn btn-success" onclick="runFullSystemTest()">Run Complete System Test</button>
+                <div id="summaryResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {};
+
+        async function testServerStatus() {
+            showLoading('serverResult');
+            try {
+                const response = await fetch('/test');
+                const result = await response.json();
+                
+                testResults.server = result;
+                
+                const statusHtml = `
+                    <div class="status-grid">
+                        <div class="status-card success">
+                            <div class="status-title">Server Status</div>
+                            <div class="status-value">✅ ${result.status}</div>
+                        </div>
+                        <div class="status-card success">
+                            <div class="status-title">Message</div>
+                            <div class="status-value">${result.message}</div>
+                        </div>
+                        <div class="status-card warning">
+                            <div class="status-title">Razorpay</div>
+                            <div class="status-value">${result.razorpay}</div>
+                        </div>
+                        <div class="status-card success">
+                            <div class="status-title">Database</div>
+                            <div class="status-value">${result.mongodb}</div>
+                        </div>
+                    </div>
+                `;
+                
+                showResult('serverResult', statusHtml, 'success');
+            } catch (error) {
+                showResult('serverResult', `❌ Server test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testHealth() {
+            showLoading('serverResult');
+            try {
+                const response = await fetch('/health');
+                const result = await response.json();
+                
+                testResults.health = result;
+                
+                const healthHtml = `
+                    <div class="status-grid">
+                        <div class="status-card success">
+                            <div class="status-title">Health Status</div>
+                            <div class="status-value">✅ ${result.status}</div>
+                        </div>
+                        <div class="status-card success">
+                            <div class="status-title">Message</div>
+                            <div class="status-value">${result.message}</div>
+                        </div>
+                        <div class="status-card warning">
+                            <div class="status-title">Razorpay</div>
+                            <div class="status-value">${result.razorpay}</div>
+                        </div>
+                        <div class="status-card success">
+                            <div class="status-title">Database</div>
+                            <div class="status-value">${result.mongodb}</div>
+                        </div>
+                        <div class="status-card success">
+                            <div class="status-title">Port</div>
+                            <div class="status-value">${result.port}</div>
+                        </div>
+                    </div>
+                `;
+                
+                showResult('serverResult', healthHtml, 'success');
+            } catch (error) {
+                showResult('serverResult', `❌ Health check failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAllEndpoints() {
+            showLoading('serverResult');
+            const endpoints = [
+                { name: 'Test', url: '/test' },
+                { name: 'Health', url: '/health' },
+                { name: 'Bonuses', url: '/bonuses' },
+                { name: 'Admin Enrollments', url: '/admin/enrollments' }
+            ];
+
+            let results = [];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint.url);
+                    const result = await response.json();
+                    results.push({
+                        name: endpoint.name,
+                        status: '✅ Success',
+                        data: result
+                    });
+                } catch (error) {
+                    results.push({
+                        name: endpoint.name,
+                        status: '❌ Failed',
+                        error: error.message
+                    });
+                }
+            }
+
+            const endpointsHtml = `
+                <h4>Endpoint Test Results:</h4>
+                ${results.map(r => `
+                    <div class="status-card ${r.status.includes('Success') ? 'success' : 'error'}">
+                        <div class="status-title">${r.name}</div>
+                        <div class="status-value">${r.status}</div>
+                    </div>
+                `).join('')}
+            `;
+            
+            showResult('serverResult', endpointsHtml, 'info');
+        }
+
+        async function testUserEnrollment() {
+            showLoading('userResult');
+            try {
+                const testUser = {
+                    name: 'Test User',
+                    email: 'test@example.com',
+                    phone: '1234567890',
+                    password: 'testpass123',
+                    profession: 'Test Profession',
+                    city: 'Test City',
+                    state: 'Test State'
+                };
+
+                const response = await fetch('/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testUser)
+                });
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showResult('userResult', 
+                        `✅ User enrollment test successful!<br>
+                         User ID: ${result.id}<br>
+                         Message: ${result.message}`, 'success');
+                } else {
+                    showResult('userResult', 
+                        `⚠️ User enrollment test: ${result.error}`, 'warning');
+                }
+            } catch (error) {
+                showResult('userResult', `❌ User enrollment test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testUserLogin() {
+            showLoading('userResult');
+            try {
+                const loginData = {
+                    email: 'test@example.com',
+                    password: 'testpass123'
+                };
+
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult('userResult', 
+                        `✅ Login test successful!<br>
+                         User: ${result.user.name}<br>
+                         Course Access: ${result.user.hasMainCourse ? '✅ Yes' : '❌ No'}`, 'success');
+                } else {
+                    showResult('userResult', 
+                        `⚠️ Login test: ${result.error}`, 'warning');
+                }
+            } catch (error) {
+                showResult('userResult', `❌ Login test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadAllUsers() {
+            showLoading('userResult');
+            try {
+                const response = await fetch('/admin/enrollments');
+                const users = await response.json();
+
+                const usersHtml = `
+                    <h4>Total Users: ${users.length}</h4>
+                    ${users.map(user => `
+                        <div class="status-card ${user.hasMainCourse ? 'success' : 'warning'}">
+                            <div class="status-title">${user.name}</div>
+                            <div class="status-value">
+                                Email: ${user.email}<br>
+                                Course: ${user.hasMainCourse ? '✅ Paid' : '⏳ Pending'}<br>
+                                Created: ${new Date(user.createdAt).toLocaleDateString()}
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+                
+                showResult('userResult', usersHtml, 'info');
+            } catch (error) {
+                showResult('userResult', `❌ Failed to load users: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRazorpay() {
+            showLoading('paymentResult');
+            try {
+                const response = await fetch('/test-razorpay');
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult('paymentResult', 
+                        `✅ Razorpay test successful!<br>
+                         Order ID: ${result.order.id}<br>
+                         Amount: ₹${result.order.amount / 100}`, 'success');
+                } else {
+                    showResult('paymentResult', 
+                        `⚠️ Razorpay test: ${result.error}<br>
+                         Instructions: ${result.instructions ? result.instructions.join('<br>') : 'None'}`, 'warning');
+                }
+            } catch (error) {
+                showResult('paymentResult', `❌ Razorpay test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testOrderCreation() {
+            showLoading('paymentResult');
+            try {
+                const orderData = {
+                    amount: 199,
+                    currency: 'INR',
+                    userEmail: 'test@example.com'
+                };
+
+                const response = await fetch('/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showResult('paymentResult', 
+                        `✅ Order creation test successful!<br>
+                         Order ID: ${result.order.id}<br>
+                         Amount: ₹${result.order.amount / 100}`, 'success');
+                } else {
+                    showResult('paymentResult', 
+                        `⚠️ Order creation test: ${result.error}`, 'warning');
+                }
+            } catch (error) {
+                showResult('paymentResult', `❌ Order creation test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPaymentVerification() {
+            showLoading('paymentResult');
+            try {
+                const paymentData = {
+                    razorpay_order_id: 'test_order_' + Date.now(),
+                    razorpay_payment_id: 'test_payment_' + Date.now(),
+                    razorpay_signature: 'test_signature_' + Date.now(),
+                    userEmail: 'test@example.com'
+                };
+
+                const response = await fetch('/verify-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paymentData)
+                });
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showResult('paymentResult', 
+                        `✅ Payment verification test successful!<br>
+                         User: ${result.userData.name}<br>
+                         Course Access: ✅ Granted`, 'success');
+                } else {
+                    showResult('paymentResult', 
+                        `⚠️ Payment verification test: ${result.error}`, 'warning');
+                }
+            } catch (error) {
+                showResult('paymentResult', `❌ Payment verification test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCourseAccess() {
+            showLoading('courseResult');
+            try {
+                const response = await fetch('/api/dashboard/course-access');
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult('courseResult', 
+                        `✅ Course access test successful!<br>
+                         Has Main Course: ${result.hasMainCourse ? '✅ Yes' : '❌ No'}<br>
+                         Available PDFs: ${result.availablePdfs ? result.availablePdfs.length : 0}`, 'success');
+                } else {
+                    showResult('courseResult', 
+                        `⚠️ Course access test: ${result.error}`, 'warning');
+                }
+            } catch (error) {
+                showResult('courseResult', `❌ Course access test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPDFAccess() {
+            showLoading('courseResult');
+            try {
+                const response = await fetch('/pdfs');
+                const result = await response.json();
+                
+                if (result.pdfs) {
+                    showResult('courseResult', 
+                        `✅ PDF access test successful!<br>
+                         Available PDFs: ${result.pdfs.length}<br>
+                         Files: ${result.pdfs.slice(0, 3).join(', ')}...`, 'success');
+                } else {
+                    showResult('courseResult', 
+                        `⚠️ PDF access test: ${result.error}`, 'warning');
+                }
+            } catch (error) {
+                showResult('courseResult', `❌ PDF access test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testBonusSystem() {
+            showLoading('courseResult');
+            try {
+                const response = await fetch('/bonuses');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showResult('courseResult', 
+                        `✅ Bonus system test successful!<br>
+                         Available Bonuses: ${result.bonuses.length}<br>
+                         Bonuses: ${result.bonuses.map(b => b.title).slice(0, 2).join(', ')}...`, 'success');
+                } else {
+                    showResult('courseResult', 
+                        `⚠️ Bonus system test: ${result.error}`, 'warning');
+                }
+            } catch (error) {
+                showResult('courseResult', `❌ Bonus system test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function runFullSystemTest() {
+            showLoading('summaryResult');
+            
+            const tests = [
+                { name: 'Server Status', func: () => fetch('/test').then(r => r.json()) },
+                { name: 'Health Check', func: () => fetch('/health').then(r => r.json()) },
+                { name: 'Bonuses', func: () => fetch('/bonuses').then(r => r.json()) },
+                { name: 'User Enrollment', func: () => fetch('/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: 'System Test User',
+                        email: 'systemtest@example.com',
+                        phone: '9876543210',
+                        password: 'systemtest123',
+                        profession: 'System Tester',
+                        city: 'Test City',
+                        state: 'Test State'
+                    })
+                }).then(r => r.json()) }
+            ];
+
+            let results = [];
+            
+            for (const test of tests) {
+                try {
+                    const result = await test.func();
+                    results.push({
+                        name: test.name,
+                        status: '✅ Success',
+                        data: result
+                    });
+                } catch (error) {
+                    results.push({
+                        name: test.name,
+                        status: '❌ Failed',
+                        error: error.message
+                    });
+                }
+            }
+
+            const summaryHtml = `
+                <h4>Complete System Test Results:</h4>
+                <div class="status-grid">
+                    ${results.map(r => `
+                        <div class="status-card ${r.status.includes('Success') ? 'success' : 'error'}">
+                            <div class="status-title">${r.name}</div>
+                            <div class="status-value">${r.status}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px;">
+                    <strong>Summary:</strong> ${results.filter(r => r.status.includes('Success')).length} out of ${results.length} tests passed
+                </div>
+            `;
+            
+            showResult('summaryResult', summaryHtml, 'info');
+        }
+
+        function showLoading(elementId) {
+            document.getElementById(elementId).innerHTML = 
+                '<div class="loading"><div class="spinner"></div>Testing...</div>';
+        }
+
+        function showResult(elementId, message, type) {
+            document.getElementById(elementId).innerHTML = 
+                `<div class="result ${type}">${message}</div>`;
+        }
+
+        // Auto-run basic tests on page load
+        window.onload = function() {
+            testServerStatus();
+        };
+    </script>
+</body>
+</html>
